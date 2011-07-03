@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -10,38 +9,15 @@ using Lokad.Cqrs;
 using Lokad.Cqrs.Build.Client;
 using Lokad.Cqrs.Build.Engine;
 using Lokad.Cqrs.Core.Dispatch.Events;
+using Lokad.Cqrs.Core.Outbox;
 using Lokad.Cqrs.Core.Reactive;
-using Lokad.Cqrs.Feature.AtomicStorage;
 using Lokad.Cqrs.Feature.FilePartition;
+using Lokad.Cqrs.Feature.TapeStorage;
 using ServiceStack.Text;
 using Autofac;
 
 namespace FarleyFile
 {
-
-    public interface IEvent : IBaseMessage
-    {
-        
-    }
-    public interface ICommand : IBaseMessage
-    {
-        
-    }
-
-    public interface IBaseMessage
-    {
-
-    }
-
-    public interface IEntityBase
-    {
-    }
-
-    public interface IBaseConsume<in TMessage> where TMessage : IBaseMessage
-    {
-        void Consume(TMessage e);
-    }
-
     class Program
     {
         static void Main(string[] args)
@@ -53,27 +29,38 @@ namespace FarleyFile
             }
             else
             {
-                RunCommand(args);
+                RunCommand(Environment.CommandLine);
             }
         }
 
-        private static void RunCommand(string[] args)
+        private static bool RunCommand(string args)
         {
-            var a = args.ToList();
-            if (a[0].Trim() == "/c")
+            var client = GetSender();
+            while (true)
             {
-                a.RemoveAt(0);
-            }
-            switch (a[0])
-            {
-                case "an":
-                    GetSender().SendOne(new AddNote(a[1]));
-                    break;
-                default:
-                    Console.WriteLine("Unkown command sequence: {0}", string.Join(" ", a));
-                    break;
+                if (args == "q")
+                    return true;
+                if (args == "clr")
+                {
+                    Console.Clear();
+                    return false;
+                }
 
+                Process(args, client);
+                return false;
             }
+        }
+
+        static void Process(string args, SystemClient client)
+        {
+            if (args.StartsWith("an "))
+            {
+                var txt = args.Substring(3).TrimStart();
+                client.SendToProject("default", new AddNote(txt));
+                return;
+            }
+
+            Console.WriteLine("Unknown command sequence: {0}", args);
         }
 
         private static void RunHost()
@@ -89,8 +76,11 @@ namespace FarleyFile
                     Console.WriteLine("Starting host");
 
                     var task = host.Start(source.Token);
-                    Console.WriteLine("Press enter to quit");
-                    Console.ReadLine();
+                    Console.WriteLine("Type command or q to quit");
+                    while(!RunCommand(Console.ReadLine()))
+                    {
+                        
+                    }
 
                     source.Cancel();
                     Console.WriteLine("Stopping...");
@@ -100,16 +90,17 @@ namespace FarleyFile
             }
         }
 
-        static IMessageSender GetSender()
+        static SystemClient GetSender()
         {
             var cache = GetDataFolder();
             var builder = new CqrsClientBuilder();
 
-            builder.Domain(m => m.HandlerSample<IBaseConsume<IBaseMessage>>(c => c.Consume(null)));
+            builder.Domain(m => m.HandlerSample<IConsume<IBaseMessage>>(c => c.Consume(null)));
             builder.Advanced.DataSerializer(t => new DevSerializer(t));
             builder.File(m => m.AddFileSender(cache, "router"));
             var cqrsClient = builder.Build();
-            return cqrsClient.Resolve<IMessageSender>();
+            var sender = cqrsClient.Resolve<IMessageSender>();
+            return new SystemClient(sender);
         }
 
         private static FileStorageConfig GetDataFolder()
@@ -126,6 +117,8 @@ namespace FarleyFile
 
         static string SimpleDispatchRule(ImmutableEnvelope e)
         {
+            if (e.GetAttribute("to-entity","")!="")
+                return "files:aggregates";
             if (e.Items.All(i => typeof(IEvent).IsAssignableFrom(i.MappedType)))
                 return "files:events";
             if (e.Items.All(i => typeof(ICommand).IsAssignableFrom(i.MappedType)))
@@ -152,10 +145,7 @@ namespace FarleyFile
 
             builder.Advanced.RegisterObserver(observer);
             builder.Advanced.RegisterQueueWriterFactory(context => new FileQueueWriterFactory(cache, context.Resolve<IEnvelopeStreamer>()));
-            builder.Domain(m =>
-            {
-                m.HandlerSample<IBaseConsume<IBaseMessage>>(c => c.Consume(null));
-            });
+            builder.Domain(m => m.HandlerSample<IConsume<IBaseMessage>>(c => c.Consume(null)));
             builder.Advanced.CustomDataSerializer(t => new DevSerializer(t));
             builder.Storage(c =>
             {
@@ -188,32 +178,20 @@ namespace FarleyFile
                     p.DispatchAsCommandBatch();
                     p.WhereFilter(md => md.WhereMessagesAre<ICommand>());
                 });
+                m.AddFileProcess(cache, "aggregates", p =>
+                    {
+                        p.DispatcherIs((context, infos, arg3) =>
+                            {
+                                var readers = context.Resolve<ITapeReaderFactory>();
+                                var writers = context.Resolve<ISingleThreadTapeWriterFactory>();
+                                var streamer = context.Resolve<IEnvelopeStreamer>();
+                                var reg = context.Resolve<QueueWriterRegistry>();
+                                return new AggregateDispatcher(readers, streamer, writers, "files:router", reg);
+                            });
+                        p.WhereFilter(md => md.WhereMessagesAre<IEntityCommand>());
+                    });
             });
             return builder;
-        }
-    }
-
-    public sealed class DayText : IEntityBase
-    {
-        public IList<string> Notes { get; set; }
-
-        public DayText()
-        {
-            Notes = new List<string>();
-        }
-    }
-
-    public sealed class NoteHandler : IBaseConsume<AddNote>
-    {
-        readonly IAtomicSingletonWriter<DayText> _writer;
-        public NoteHandler(IAtomicSingletonWriter<DayText> writer)
-        {
-            _writer = writer;
-        }
-
-        public void Consume(AddNote e)
-        {
-            _writer.UpdateEnforcingNew(d => d.Notes.Add(e.Text));
         }
     }
 }

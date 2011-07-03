@@ -2,21 +2,18 @@
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{EDAA6D18-2F48-4982-AD9F-1991BB1BCCEB}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <ProjectGuid>{703F8CDC-BD7F-4FD1-AF1A-855567207CDD}</ProjectGuid>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>FarleyFile</RootNamespace>
-    <AssemblyName>ff</AssemblyName>
+    <AssemblyName>FarleyFile.Domain</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <TargetFrameworkProfile>
-    </TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
-    <PlatformTarget>x86</PlatformTarget>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -25,8 +22,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
-    <PlatformTarget>x86</PlatformTarget>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -35,39 +31,18 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Autofac">
-      <HintPath>..\Library\Autofac.dll</HintPath>
-    </Reference>
-    <Reference Include="Lokad.Cqrs.Portable">
-      <HintPath>..\Library\Lokad.Cqrs.Portable.dll</HintPath>
-    </Reference>
-    <Reference Include="ServiceStack.Text">
-      <HintPath>..\Library\ServiceStack.Text.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Data" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AggregateDispatcher.cs" />
-    <Compile Include="AggregateFactory.cs" />
-    <Compile Include="DayText.cs" />
-    <Compile Include="DevSerializer.cs" />
-    <Compile Include="NoteHandler.cs" />
-    <Compile Include="Program.cs" />
-    <Compile Include="SystemClient.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+    <Compile Include="Aggregates\ProjectAggregate.cs" />
+    <Compile Include="Aggregates\ProjectAggregateState.cs" />
+    <Compile Include="RedirectToWhen.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\FarleyFile.Abstractions\FarleyFile.Abstractions.csproj">
       <Project>{B36BB802-B112-417D-9EA4-433A31FFE50B}</Project>
       <Name>FarleyFile.Abstractions</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\FarleyFile.Domain\FarleyFile.Domain.csproj">
-      <Project>{703F8CDC-BD7F-4FD1-AF1A-855567207CDD}</Project>
-      <Name>FarleyFile.Domain</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

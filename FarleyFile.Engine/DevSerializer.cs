@@ -5,7 +5,7 @@ using System.Linq;
 using Lokad.Cqrs;
 using ServiceStack.Text;
 
-namespace FarleyFile.Engine
+namespace FarleyFile
 {
     sealed class DevSerializer : IDataSerializer
     {
