@@ -1,0 +1,1 @@
+Version 2.20 from: https://github.com/ServiceStack/ServiceStack.Text/archives/master

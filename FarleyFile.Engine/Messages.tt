@@ -1,0 +1,36 @@
+﻿<#@ template language="C#" #>
+<#@ assembly name="$(SolutionDir)\Library\Lokad.CodeDsl.dll" #>
+using System;
+
+// this is a DSL to define code contract classes without writing them
+// Good for starting a project quickly
+// pressing Ctrl+S updates CS version immediately
+<# var dsl = @"
+using ? = ICommand;
+using ! = IEvent;
+
+// system
+MidnightPassed! ()
+
+let noteId = long NoteId; 
+let taskId = long TaskId;
+
+AddNote? (string text)
+NoteAdded! (noteId, string text)
+
+AddTask? (string text)
+TaskAdded! (taskId, string text)
+
+
+
+";   
+var generator = new Lokad.CodeDsl.TemplatedGenerator()
+{
+    Namespace = "FarleyFile",
+    ClassNameTemplate = @"
+public sealed class {0}",
+    MemberTemplate = "public {1} {2} {{ get; internal set; }}",
+    PrivateCtorTemplate = @"
+internal {0} () {{}}"
+}; #>
+<#= Lokad.CodeDsl.GeneratorUtil.Build(dsl, generator) #>
