@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Text;
 using FarleyFile.Views;
 using Lokad.Cqrs.Feature.AtomicStorage;
@@ -27,15 +27,29 @@ namespace FarleyFile
             {
                 builder.AppendLine("Empty");
                 return;
+            }
+
+            var tasks = result.Value.Tasks;
+            if (tasks.Count > 0)
+            {
+                for (int i = 0; i < tasks.Count; i++)
+                {
+                    var task = tasks[i];
+                    builder.AppendLine(string.Format("{0,4} {1} {2}", task.TaskId, task.Completed ?"x" : "□", task.Text));
+                }
+                builder.AppendLine();
 
             }
+
+
             var notes = result.Value.Notes;
 
             if (notes.Count > 0)
             {
-                foreach (var note in notes)
+                for (int i = 0; i < notes.Count; i++)
                 {
-                    builder.AppendLine(" " + note.Date.ToString("HH:mm"));
+                    var note = notes[i];
+                    builder.AppendLine((i+1) + ". " + note.Date.ToString("HH:mm"));
                     builder.AppendLine(note.Text);
                     builder.AppendLine();
                 }

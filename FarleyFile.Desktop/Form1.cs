@@ -80,6 +80,18 @@ namespace FarleyFile.Desktop
                 SendToProject(new AddNote(txt, DateTime.Now));
                 return;
             }
+            if (data.StartsWith("at "))
+            {
+                var txt = data.Substring(3).TrimStart();
+                SendToProject(new AddTask(txt, DateTime.Now));
+                return;
+            }
+            if (data.StartsWith("ct "))
+            {
+                var txt = data.Substring(3).TrimStart();
+                var id = int.Parse(txt);
+                SendToProject(new CompleteTask(id, DateTime.Now));
+            }
             if (data == "clr")
             {
                 _rich.Clear();

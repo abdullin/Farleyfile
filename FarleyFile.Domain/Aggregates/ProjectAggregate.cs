@@ -18,9 +18,25 @@ namespace FarleyFile.Aggregates
             RedirectToWhen.InvokeCommand(this, c);
         }
 
+        public void When(AddTask c)
+        {
+            var nextRecord = _state.GetNextRecord();
+            Apply(new TaskAdded(nextRecord, c.Text, c.Date));
+        }
+
+        public void When(CompleteTask c)
+        {
+            var task = _state.GetTask(c.TaskId);
+            if (!task.Completed)
+            {
+                Apply(new TaskCompleted(c.TaskId, c.Date));
+            }
+        }
+
         public void When(AddNote n)
         {
-            Apply(new NoteAdded(0, n.Text, n.Date));
+            var nextRecord = _state.GetNextRecord();
+            Apply(new NoteAdded(nextRecord, n.Text, n.Date));
         }
 
         void Apply(IEvent e)

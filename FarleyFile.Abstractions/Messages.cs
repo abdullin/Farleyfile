@@ -65,4 +65,30 @@ namespace FarleyFile
             Date = date;
         }
     }
+    
+    public sealed class CompleteTask : ICommand
+    {
+        public long TaskId { get; internal set; }
+        public DateTime Date { get; internal set; }
+        
+        internal CompleteTask () {}
+        public CompleteTask (long taskId, DateTime date)
+        {
+            TaskId = taskId;
+            Date = date;
+        }
+    }
+    
+    public sealed class TaskCompleted : IEvent
+    {
+        public long TaskId { get; internal set; }
+        public DateTime Date { get; internal set; }
+        
+        internal TaskCompleted () {}
+        public TaskCompleted (long taskId, DateTime date)
+        {
+            TaskId = taskId;
+            Date = date;
+        }
+    }
 }

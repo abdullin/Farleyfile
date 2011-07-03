@@ -22,6 +22,9 @@ NoteAdded! (noteId, string text, date)
 AddTask? (string text, date)
 TaskAdded! (taskId, string text, date)
 
+CompleteTask? (taskId, date)
+TaskCompleted! (taskId, date)
+
 
 ";   
 var generator = new Lokad.CodeDsl.TemplatedGenerator()
