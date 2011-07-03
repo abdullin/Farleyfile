@@ -13,11 +13,13 @@ namespace FarleyFile
     public sealed class AddNote : ICommand
     {
         public string Text { get; internal set; }
+        public DateTime Date { get; internal set; }
         
         internal AddNote () {}
-        public AddNote (string text)
+        public AddNote (string text, DateTime date)
         {
             Text = text;
+            Date = date;
         }
     }
     
@@ -25,23 +27,27 @@ namespace FarleyFile
     {
         public long NoteId { get; internal set; }
         public string Text { get; internal set; }
+        public DateTime Date { get; internal set; }
         
         internal NoteAdded () {}
-        public NoteAdded (long noteId, string text)
+        public NoteAdded (long noteId, string text, DateTime date)
         {
             NoteId = noteId;
             Text = text;
+            Date = date;
         }
     }
     
     public sealed class AddTask : ICommand
     {
         public string Text { get; internal set; }
+        public DateTime Date { get; internal set; }
         
         internal AddTask () {}
-        public AddTask (string text)
+        public AddTask (string text, DateTime date)
         {
             Text = text;
+            Date = date;
         }
     }
     
@@ -49,12 +55,14 @@ namespace FarleyFile
     {
         public long TaskId { get; internal set; }
         public string Text { get; internal set; }
+        public DateTime Date { get; internal set; }
         
         internal TaskAdded () {}
-        public TaskAdded (long taskId, string text)
+        public TaskAdded (long taskId, string text, DateTime date)
         {
             TaskId = taskId;
             Text = text;
+            Date = date;
         }
     }
 }

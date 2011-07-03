@@ -14,13 +14,13 @@ MidnightPassed! ()
 
 let noteId = long NoteId; 
 let taskId = long TaskId;
+let date = DateTime Date;
 
-AddNote? (string text)
-NoteAdded! (noteId, string text)
+AddNote? (string text, date)
+NoteAdded! (noteId, string text, date)
 
-AddTask? (string text)
-TaskAdded! (taskId, string text)
-
+AddTask? (string text, date)
+TaskAdded! (taskId, string text, date)
 
 
 ";   

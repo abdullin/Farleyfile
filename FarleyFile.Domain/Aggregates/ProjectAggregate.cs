@@ -20,7 +20,7 @@ namespace FarleyFile.Aggregates
 
         public void When(AddNote n)
         {
-            Apply(new NoteAdded(0, n.Text));
+            Apply(new NoteAdded(0, n.Text, n.Date));
         }
 
         void Apply(IEvent e)

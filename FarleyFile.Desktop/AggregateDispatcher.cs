@@ -9,8 +9,6 @@ using Lokad.Cqrs.Feature.TapeStorage;
 
 namespace FarleyFile
 {
-
-    
     public sealed class AggregateDispatcher : ISingleThreadMessageDispatcher
     {
         readonly ITapeReaderFactory _readers;

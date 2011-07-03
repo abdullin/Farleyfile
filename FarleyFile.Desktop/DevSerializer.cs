@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using Lokad.Cqrs;
 using ServiceStack.Text;
 
@@ -20,12 +21,18 @@ namespace FarleyFile
 
         public void Serialize(object instance, Stream destinationStream)
         {
-            JsonSerializer.SerializeToStream(instance, instance.GetType(), destinationStream);
+            using (var writer = new StreamWriter(destinationStream, Encoding.UTF8))
+            {
+                JsonSerializer.SerializeToWriter(instance, instance.GetType(),writer);
+            }
         }
 
         public object Deserialize(Stream sourceStream, Type type)
         {
-            return JsonSerializer.DeserializeFromStream(type, sourceStream);
+            using (var reader = new StreamReader(sourceStream, Encoding.UTF8))
+            {
+                return JsonSerializer.DeserializeFromReader(reader, type);
+            }
         }
 
         public bool TryGetContractNameByType(Type messageType, out string contractName)

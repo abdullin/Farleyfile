@@ -31,10 +31,20 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Autofac">
+      <HintPath>..\Library\Autofac.dll</HintPath>
+    </Reference>
+    <Reference Include="Lokad.Cqrs.Portable">
+      <HintPath>..\Library\Lokad.Cqrs.Portable.dll</HintPath>
+    </Reference>
+    <Reference Include="ServiceStack.Text">
+      <HintPath>..\Library\ServiceStack.Text.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AggregateFactory.cs" />
     <Compile Include="Aggregates\ProjectAggregate.cs" />
     <Compile Include="Aggregates\ProjectAggregateState.cs" />
     <Compile Include="RedirectToWhen.cs" />
