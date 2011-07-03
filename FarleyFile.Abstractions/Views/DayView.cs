@@ -15,10 +15,11 @@ namespace FarleyFile.Views
             Tasks = new List<DayViewTask>();
         }
 
-        public void AddNote(DateTime date, string text)
+        public void AddNote(long noteId, DateTime date, string text)
         {
             Notes.Add(new DayViewNote()
                 {
+                    NoteId = noteId,
                     Date = date,
                     Text = text
                 });

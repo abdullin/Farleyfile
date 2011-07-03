@@ -19,7 +19,7 @@ namespace FarleyFile
         public void Consume(NoteAdded e)
         {
             var key = GrabKey(e.Date);
-            _writer.UpdateEnforcingNew(key, d => d.AddNote(e.Date, e.Text));
+            _writer.UpdateEnforcingNew(key, d => d.AddNote(e.NoteId, e.Date, e.Text));
         }
 
         static string GrabKey(DateTime dateTime)

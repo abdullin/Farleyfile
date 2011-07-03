@@ -32,10 +32,11 @@ namespace FarleyFile
             var tasks = result.Value.Tasks;
             if (tasks.Count > 0)
             {
+                builder.AppendLine("Tasks");
                 for (int i = 0; i < tasks.Count; i++)
                 {
                     var task = tasks[i];
-                    builder.AppendLine(string.Format("{0,4} {1} {2}", task.TaskId, task.Completed ?"x" : "□", task.Text));
+                    builder.AppendLine(string.Format("  {1} {2} ({0})", task.TaskId, task.Completed ? "x" : "□", task.Text));
                 }
                 builder.AppendLine();
 
@@ -49,7 +50,7 @@ namespace FarleyFile
                 for (int i = 0; i < notes.Count; i++)
                 {
                     var note = notes[i];
-                    builder.AppendLine((i+1) + ". " + note.Date.ToString("HH:mm"));
+                    builder.AppendLine(string.Format("{0:HH:mm} ({1})", note.Date, note.NoteId));
                     builder.AppendLine(note.Text);
                     builder.AppendLine();
                 }

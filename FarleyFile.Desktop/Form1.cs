@@ -32,6 +32,12 @@ namespace FarleyFile.Desktop
             _storage = _host.Resolve<NuclearStorage>();
 
             _renderer = new TextRenderers(_storage);
+
+            panel2.BackColor = Color.FromArgb(253, 246, 227); 
+            _rich.BackColor = Color.FromArgb(253, 246, 227);
+            _rich.ForeColor = Color.FromArgb(88, 110, 117);
+            textBox1.BackColor = Color.FromArgb(0, 43, 54);
+            textBox1.ForeColor = Color.FromArgb(147, 161, 161);
         }
 
         public void SendToProject(params ICommand[] commands)
@@ -55,8 +61,15 @@ namespace FarleyFile.Desktop
 
         public void Log(string text, params object[] args)
         {
-            _rich.AppendText(string.Format(text, args));
-            _rich.AppendText(Environment.NewLine);
+            try
+            {
+                _rich.AppendText(string.Format(text, args));
+                _rich.AppendText(Environment.NewLine);
+            }
+            catch(ObjectDisposedException)
+            {
+                
+            }
         }
 
         
@@ -86,11 +99,16 @@ namespace FarleyFile.Desktop
                 SendToProject(new AddTask(txt, DateTime.Now));
                 return;
             }
+            if (data == "q")
+            {
+                Close();
+            }
             if (data.StartsWith("ct "))
             {
                 var txt = data.Substring(3).TrimStart();
                 var id = int.Parse(txt);
                 SendToProject(new CompleteTask(id, DateTime.Now));
+                return;
             }
             if (data == "clr")
             {

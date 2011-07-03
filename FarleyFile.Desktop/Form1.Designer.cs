@@ -48,6 +48,7 @@
             // 
             // textBox1
             // 
+            this.textBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.textBox1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.textBox1.Font = new System.Drawing.Font("Consolas", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.textBox1.Location = new System.Drawing.Point(0, 0);
@@ -73,6 +74,7 @@
             this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel2.Location = new System.Drawing.Point(0, 0);
             this.panel2.Name = "panel2";
+            this.panel2.Padding = new System.Windows.Forms.Padding(5);
             this.panel2.Size = new System.Drawing.Size(740, 456);
             this.panel2.TabIndex = 2;
             // 
@@ -81,10 +83,10 @@
             this._rich.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this._rich.Dock = System.Windows.Forms.DockStyle.Fill;
             this._rich.Font = new System.Drawing.Font("Consolas", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this._rich.Location = new System.Drawing.Point(0, 0);
+            this._rich.Location = new System.Drawing.Point(5, 5);
             this._rich.Name = "_rich";
             this._rich.ReadOnly = true;
-            this._rich.Size = new System.Drawing.Size(740, 456);
+            this._rich.Size = new System.Drawing.Size(730, 446);
             this._rich.TabIndex = 0;
             this._rich.Text = "";
             // 
@@ -97,7 +99,7 @@
             this.Controls.Add(this.splitter1);
             this.Controls.Add(this.panel1);
             this.Name = "Form1";
-            this.Text = "Form1";
+            this.Text = "FarleyFile";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.Load += new System.EventHandler(this.Form1_Load);
             this.panel1.ResumeLayout(false);
