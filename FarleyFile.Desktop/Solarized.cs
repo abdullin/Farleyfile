@@ -2,6 +2,9 @@ using System.Drawing;
 
 namespace FarleyFile.Desktop
 {
+    /// <summary>
+    /// Courtesy of http://ethanschoonover.com/solarized#usage-development
+    /// </summary>
     public static class Solarized
     {
         public static readonly  Color Base03 = Color.FromArgb(0, 43, 54);

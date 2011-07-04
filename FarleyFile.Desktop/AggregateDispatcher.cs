@@ -11,17 +11,16 @@ namespace FarleyFile
 {
     public sealed class AggregateDispatcher : ISingleThreadMessageDispatcher
     {
-        readonly ITapeReaderFactory _readers;
+        readonly ITapeStorageFactory _factory;
         readonly IEnvelopeStreamer _streamer;
-        readonly ISingleThreadTapeWriterFactory _writers;
+        
         readonly string _path;
         readonly QueueWriterRegistry _queue;
 
-        public AggregateDispatcher(ITapeReaderFactory readers, IEnvelopeStreamer streamer, ISingleThreadTapeWriterFactory writers, string path, QueueWriterRegistry queue)
+        public AggregateDispatcher(ITapeStorageFactory factory, IEnvelopeStreamer streamer, string path, QueueWriterRegistry queue)
         {
-            _readers = readers;
+            _factory = factory;
             _streamer = streamer;
-            _writers = writers;
             _path = path;
             _queue = queue;
         }
@@ -39,9 +38,10 @@ namespace FarleyFile
 
         void Dispatch(string id, IEnumerable<ICommand> commands)
         {
-            var reader = _readers.GetReader(id);
+            var stream = _factory.GetOrCreateStream(id);
 
-            var events = reader.ReadRecords(0, int.MaxValue)
+            var records = stream.ReadRecords(0, int.MaxValue).ToList();
+            var events = records
                 .Select(tr => _streamer.ReadAsEnvelopeData(tr.Data))
                 .SelectMany(i => i.Items)
                 .Select(i => (IEvent)i.Content)
@@ -54,9 +54,7 @@ namespace FarleyFile
             if (then.Count == 0)
                 return;
 
-            var writer = _writers.GetOrCreateWriter(id);
-
-            // emply locking
+            
             // events are stored here as envelopes )
             var b = new EnvelopeBuilder("unknown");
             foreach (var e in then)
@@ -64,8 +62,13 @@ namespace FarleyFile
                 b.Items.Add(e);
             }
 
+            var last = records.Count == 0 ? 0 : records.Last().Index;
+
             var data = _streamer.SaveEnvelopeData(b.Build());
-            writer.SaveRecords(new[] { data });
+            var result = stream.TryAppendRecords(new[] { data }, TapeAppendCondition.VersionIs(last));
+            if (!result)
+                throw new InvalidOperationException(
+                    "Data was modified concurrently, and we don't have merging implemented, yet");
 
             var args = _path.Split(':');
             IQueueWriterFactory factory;

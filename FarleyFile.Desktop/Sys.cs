@@ -2,15 +2,11 @@
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading;
 using Lokad.Cqrs;
-using Lokad.Cqrs.Build.Client;
 using Lokad.Cqrs.Build.Engine;
 using Lokad.Cqrs.Core.Dispatch.Events;
 using Lokad.Cqrs.Core.Outbox;
 using Lokad.Cqrs.Core.Reactive;
-using Lokad.Cqrs.Feature.AtomicStorage;
 using Lokad.Cqrs.Feature.FilePartition;
 using Lokad.Cqrs.Feature.TapeStorage;
 using ServiceStack.Text;
@@ -77,11 +73,10 @@ namespace FarleyFile
                     {
                         p.DispatcherIs((context, infos, arg3) =>
                             {
-                                var readers = context.Resolve<ITapeReaderFactory>();
-                                var writers = context.Resolve<ISingleThreadTapeWriterFactory>();
+                                var readers = context.Resolve<ITapeStorageFactory>();
                                 var streamer = context.Resolve<IEnvelopeStreamer>();
                                 var reg = context.Resolve<QueueWriterRegistry>();
-                                return new AggregateDispatcher(readers, streamer, writers, "files:router", reg);
+                                return new AggregateDispatcher(readers, streamer, "files:router", reg);
                             });
                         p.WhereFilter(md => md.WhereMessagesAre<IEntityCommand>());
                     });
