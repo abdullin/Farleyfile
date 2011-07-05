@@ -44,4 +44,21 @@ namespace FarleyFile.Views
             }
         }
     }
+
+    public sealed class StoryListView
+    {
+        public IList<StoryListItem> Items { get; private set; }
+
+        public StoryListView()
+        {
+            Items = new List<StoryListItem>();
+        }
+    }
+
+    public sealed class StoryListItem
+    {
+        public long StoryId { get; set; }
+        public string Name { get; set; }
+        public string Type { get; set; }
+    }
 }

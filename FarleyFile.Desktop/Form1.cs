@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using FarleyFile.Views;
 using Lokad.Cqrs;
 using Lokad.Cqrs.Build.Engine;
+using Lokad.Cqrs.Core.Dispatch.Events;
 using Lokad.Cqrs.Feature.AtomicStorage;
 
 namespace FarleyFile.Desktop
@@ -50,6 +51,17 @@ namespace FarleyFile.Desktop
         private void Form1_Load(object sender, EventArgs e)
         {
             var sub = _observable
+                .Where(i =>
+                    {
+                        var acked = i as EnvelopeAcked;
+                        if (acked != null)
+                        {
+                            return acked.QueueName == "router";
+                        }
+                        if (i is EventHadNoConsumers)
+                            return false;
+                        return true;
+                    })
                 .BufferWithTime(TimeSpan.FromMilliseconds(200), Scheduler.Dispatcher)
                 .Subscribe(list =>
                     {
@@ -61,12 +73,17 @@ namespace FarleyFile.Desktop
             _disposers.Add(sub);
         }
 
+        
+
         public void Log(string text, params object[] args)
         {
             try
             {
-                _rich.AppendText(string.Format(text, args));
-                _rich.AppendText(Environment.NewLine);
+                using (_rich.Styled(Solarized.Base1))
+                {
+                    _rich.AppendLine(text, args);
+                    _rich.ScrollToCaret();
+                }
             }
             catch(ObjectDisposedException)
             {
@@ -82,7 +99,19 @@ namespace FarleyFile.Desktop
                 var data = textBox1.Text;
                 e.SuppressKeyPress = true;
 
-                Handle(data);
+                Log("> " + data);
+                try
+                {
+                    Handle(data);
+                }
+                catch (Exception ex)
+                {
+                    using (_rich.Styled(Solarized.Red))
+                    {
+                        Log(ex.Message);
+                    }
+                }
+                _rich.ScrollToCaret();
                 textBox1.Clear();
             }
         }
@@ -123,7 +152,7 @@ namespace FarleyFile.Desktop
             if (data.StartsWith("ss "))
             {
                 var txt = data.Substring(3).TrimStart();
-                SendToProject(new StartStory(txt));
+                SendToProject(new StartSimpleStory(txt));
                 return;
             }
             if (data.StartsWith("add "))
@@ -133,6 +162,12 @@ namespace FarleyFile.Desktop
                 var story = int.Parse(txt[2]);
                 SendToProject(new AddToStory(item, story));
             }
+            if (data == "stories")
+            {
+                var view = _storage.GetSingletonOrNew<StoryListView>();
+                _renderer.RenderStoryList(_rich, view);
+                return;
+            }
             if (data.StartsWith("story"))
             {
                 var txt = data.Substring(5).TrimStart();
@@ -141,20 +176,18 @@ namespace FarleyFile.Desktop
                 {
                     count = int.Parse(txt);
                 }
-                var builder = new StringBuilder();
 
                 var result = _storage.GetEntity<StoryView>(count);
                 if (result.HasValue)
                 {
                     var story = result.Value;
-                    builder.AppendLine("### " + story.Name);
-                    _renderer.RenderStory(builder, story.Notes, story.Tasks);
+                    
+                    _renderer.RenderStory(_rich, story);
                 }
                 else
                 {
                     Log("Story {0} not found", count);
                 }
-                _rich.Text = builder.ToString();
 
                 return;
             }

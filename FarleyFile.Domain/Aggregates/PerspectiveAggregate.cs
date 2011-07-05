@@ -17,7 +17,7 @@ namespace FarleyFile.Aggregates
             {
                 var storyId = _state.GetNextId();
                 Apply(new PerspectiveCreated(storyId));
-                Apply(new StoryStarted(storyId,"Draft"));
+                Apply(new SimpleStoryStarted(storyId,"Draft"));
             }
         }
 
@@ -26,10 +26,26 @@ namespace FarleyFile.Aggregates
             RedirectToWhen.InvokeCommand(this, c);
         }
 
-        public void When(StartStory c)
+        public void When(StartSimpleStory c)
         {
             var id = _state.GetNextId();
-            Apply(new StoryStarted(id, c.Name));
+            Apply(new SimpleStoryStarted(id, c.Name));
+        }
+
+        public void When(StartContactStory c)
+        {
+            var id = _state.GetNextId();
+            Apply(new ContactStoryStarted(id, c.Name));
+        }
+
+        public void When(StartDayStory c)
+        {
+            if (c.Date.TimeOfDay != TimeSpan.Zero)
+                throw Error("Day story should be specified as date");
+            if (_state.HasDayStory(c.Date))
+                throw Error("Story already exists for day {0:yyyy-MM-dd}. Use it.", c.Date);
+            var id = _state.GetNextId();
+            Apply(new DayStoryStarted(id, c.Date));
         }
 
         public void When(AddTask c)

@@ -57,7 +57,6 @@
     <Compile Include="Solarized.cs" />
     <Compile Include="Sys.cs" />
     <Compile Include="AggregateDispatcher.cs" />
-    <Compile Include="StoryViewHandler.cs" />
     <Compile Include="DevSerializer.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>

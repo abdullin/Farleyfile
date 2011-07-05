@@ -5,10 +5,12 @@ using Lokad.Cqrs.Feature.AtomicStorage;
 namespace FarleyFile
 {
     public sealed class StoryViewHandler : 
-        IConsume<StoryStarted>,
+        IConsume<SimpleStoryStarted>,
         IConsume<TaskAssignedToStory>,
         IConsume<NoteAssignedToStory>,
-        IConsume<TaskCompleted>
+        IConsume<TaskCompleted>,
+        IConsume<ContactStoryStarted>,
+        IConsume<DayStoryStarted>
 
     {
         readonly IAtomicEntityWriter<long,StoryView> _writer;
@@ -27,10 +29,6 @@ namespace FarleyFile
             _writer.UpdateOrThrow(e.StoryId, sv => sv.AddNote(e.NoteId, e.Title, e.Text));
         }
 
-        public void Consume(StoryStarted e)
-        {
-            _writer.Add(e.StoryId, new StoryView {Name = e.Name});
-        }
 
         public void Consume(TaskCompleted e)
         {
@@ -38,6 +36,21 @@ namespace FarleyFile
             {
                 _writer.UpdateOrThrow(storyId, sv => sv.UpdateTask(e.TaskId, t => t.Completed = true));
             }
+        }
+
+        public void Consume(SimpleStoryStarted e)
+        {
+            _writer.Add(e.StoryId, new StoryView { Name = e.Name });
+        }
+
+        public void Consume(ContactStoryStarted e)
+        {
+            _writer.Add(e.ContactId, new StoryView {Name = e.Name});
+        }
+
+        public void Consume(DayStoryStarted e)
+        {
+            _writer.Add(e.DayId, new StoryView { Name = e.Date.ToString("yyyy-MM-dd") });
         }
     }
 

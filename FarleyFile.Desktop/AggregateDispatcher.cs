@@ -63,10 +63,10 @@ namespace FarleyFile
                 b.Items.Add(e);
             }
 
-            var last = records.Count == 0 ? 0 : records.Last().Index + 1;
+            var version = records.Count == 0 ? 0 : records.Last().Version;
 
             var data = _streamer.SaveEnvelopeData(b.Build());
-            var result = stream.TryAppend( data, TapeAppendCondition.VersionIs(last));
+            var result = stream.TryAppend( data, TapeAppendCondition.VersionIs(version));
             if (!result)
                 throw new InvalidOperationException(
                     "Data was modified concurrently, and we don't have merging implemented, yet");

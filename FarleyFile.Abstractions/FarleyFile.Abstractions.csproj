@@ -33,6 +33,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -54,7 +55,6 @@
       <DesignTime>True</DesignTime>
     </Compile>
     <Compile Include="ProjectEvent.cs" />
-    <Compile Include="Views\StagingView.cs" />
     <Compile Include="Views\StoryView.cs" />
     <Compile Include="Views\StoryViewNote.cs" />
     <Compile Include="Views\StoryViewTask.cs" />

@@ -13,10 +13,25 @@ namespace FarleyFile.Aggregates
         readonly Dictionary<long, AbstractStory> _stories = new Dictionary<long, AbstractStory>();
         readonly Dictionary<long, AbstractItem> _items = new Dictionary<long, AbstractItem>();
 
-        public void When(StoryStarted e)
+        readonly HashSet<DateTime> _dayStories = new HashSet<DateTime>();
+
+        public void When(SimpleStoryStarted e)
         {
             StepRecordId(e.StoryId);
-            _stories.Add(e.StoryId, new PlainStory(e.StoryId, e.Name));
+            _stories.Add(e.StoryId, new SimpleStory(e.Name));
+        }
+
+        public void When(ContactStoryStarted e)
+        {
+            StepRecordId(e.ContactId);
+            _stories.Add(e.ContactId, new ContactStory(e.Name));
+        }
+
+        public void When(DayStoryStarted e)
+        {
+            StepRecordId(e.DayId);
+            _stories.Add(e.DayId, new DayStory(e.Date));
+            _dayStories.Add(e.Date);
         }
 
         public void When(NoteAdded e)
@@ -84,6 +99,12 @@ namespace FarleyFile.Aggregates
             return _recordId + 1;
         }
 
+
+        public bool HasDayStory(DateTime date)
+        {
+            return _dayStories.Contains(date);
+        }
+
       
 
         void StepRecordId(long recordId)
@@ -128,22 +149,39 @@ namespace FarleyFile.Aggregates
     public abstract class AbstractStory
     {
         public HashSet<long> AsItGoes = new HashSet<long>();
-        public readonly long ItemId;
-        public AbstractStory(long itemId)
-        {
-            ItemId = itemId;
-        }
+
+        
     }
 
-    public sealed class PlainStory : AbstractStory
+    public sealed class SimpleStory : AbstractStory
     {
         public readonly string Name;
 
-        public PlainStory(long storyId, string name) : base(storyId)
+        public SimpleStory(string name) 
         {
             Name = name;
         }
     }
+
+    public sealed class DayStory : AbstractStory
+    {
+        public readonly DateTime Day;
+        public DayStory(DateTime day)
+        {
+            Day = day;
+        }
+    }
+
+    public sealed class ContactStory : AbstractStory
+    {
+        public readonly string Name;
+        public ContactStory(string name)
+        {
+            Name = name;
+        }
+    }
+
+    
 
 
 

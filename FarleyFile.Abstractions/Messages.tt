@@ -1,7 +1,7 @@
 ﻿<#@ template language="C#" #>
 <#@ assembly name="$(SolutionDir)\Library\Lokad.CodeDsl.dll" #>
 using System;
-
+using System.Runtime.Serialization;
 
 // this is a DSL to define code contract classes without writing them
 // Good for starting a project quickly
@@ -21,8 +21,17 @@ let date = DateTime Date;
 PerspectiveCreated! (long draftId)
 
 // generic story
-StartStory? (string name)
-StoryStarted! (storyId, string name)
+StartSimpleStory? (string name)
+SimpleStoryStarted! (storyId, string name)
+
+// story about a day
+StartDayStory?(DateTime date)
+DayStoryStarted!(dayId, DateTime date)
+
+// story about a person
+StartContactStory?(string name)
+ContactStoryStarted!(contactId, string name)
+
 
 AddNote? (string title, string text)
 NoteAdded! (noteId, string title, string text)
@@ -39,15 +48,6 @@ AddToStory? (long itemId, storyId)
 AddTaskToStory? (taskId, storyId)
 
 
-// story about a day
-AddCalendarDay?(DateTime date)
-CalendarDayAdded!(DateTime date, dayId)
-
-// story about a person
-AddContact?(string name)
-ContactAdded!(string name, contactId)
-
-
 CompleteTask? (taskId)
 //TaskCompleted! (taskId, longs storyIds) 
 
@@ -62,8 +62,8 @@ var generator = new Lokad.CodeDsl.TemplatedGenerator()
 {
     Namespace = "FarleyFile",
     ClassNameTemplate = @"
-public sealed class {0}",
-    MemberTemplate = "public {1} {2} {{ get; internal set; }}",
+[DataContract] public sealed class {0}",
+    MemberTemplate = "[DataMember(Order = {0})] public {1} {2} {{ get; internal set; }}",
     PrivateCtorTemplate = @"
 internal {0} () {{}}"
 }; #>

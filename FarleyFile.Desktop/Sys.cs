@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using FarleyFile.Views;
 using Lokad.Cqrs;
 using Lokad.Cqrs.Build.Engine;
 using Lokad.Cqrs.Core.Dispatch.Events;
@@ -47,7 +48,13 @@ namespace FarleyFile
 
             builder.Advanced.RegisterObserver(observer);
             builder.Advanced.RegisterQueueWriterFactory(context => new FileQueueWriterFactory(cache, context.Resolve<IEnvelopeStreamer>()));
-            builder.Domain(m => m.HandlerSample<IConsume<IBaseMessage>>(c => c.Consume(null)));
+            builder.Domain(m =>
+                {
+                    m.HandlerSample<IConsume<IBaseMessage>>(c => c.Consume(null));
+                    m.InAssemblyOf<StoryViewHandler>();
+                    m.InAssemblyOf<AddNote>();
+                    m.InAssemblyOf<StoryListView>();
+                });
             builder.Advanced.CustomDataSerializer(t => new DevSerializer(t));
             //builder.Advanced.CustomEnvelopeSerializer(new DevEnvelopeSerializer());
             builder.Storage(c =>
