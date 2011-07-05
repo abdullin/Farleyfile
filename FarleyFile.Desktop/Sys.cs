@@ -7,6 +7,7 @@ using Lokad.Cqrs.Build.Engine;
 using Lokad.Cqrs.Core.Dispatch.Events;
 using Lokad.Cqrs.Core.Outbox;
 using Lokad.Cqrs.Core.Reactive;
+using Lokad.Cqrs.Evil;
 using Lokad.Cqrs.Feature.FilePartition;
 using Lokad.Cqrs.Feature.TapeStorage;
 using ServiceStack.Text;
@@ -48,6 +49,7 @@ namespace FarleyFile
             builder.Advanced.RegisterQueueWriterFactory(context => new FileQueueWriterFactory(cache, context.Resolve<IEnvelopeStreamer>()));
             builder.Domain(m => m.HandlerSample<IConsume<IBaseMessage>>(c => c.Consume(null)));
             builder.Advanced.CustomDataSerializer(t => new DevSerializer(t));
+            //builder.Advanced.CustomEnvelopeSerializer(new DevEnvelopeSerializer());
             builder.Storage(c =>
                 {
                     RegisterAtomicStorage(cache, c);
@@ -57,7 +59,6 @@ namespace FarleyFile
             builder.File(m =>
             {
                 m.AddFileSender(cache, "router", cm => cm.IdGeneratorForTests());
-
                 m.AddFileRouter(cache, "router", SimpleDispatchRule);
                 m.AddFileProcess(cache, "events", p =>
                 {

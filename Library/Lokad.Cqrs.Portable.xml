@@ -1,0 +1,1221 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Lokad.Cqrs.Portable</name>
+    </assembly>
+    <members>
+        <member name="T:Lokad.Cqrs.Feature.StreamingStorage.StreamingItemIntegrityException">
+            <summary>
+            Happens, when data corruption was detected. Normally retrying the operation should solve the problem
+            </summary>
+        </member>
+        <member name="T:Lokad.Cqrs.Core.Directory.Default.IConsume`1">
+            <summary>
+            <para>Default CQRS interface for interface-base domain setup of message consumers. By default Lokad.CQRS 
+            scans user assemblies for message handlers inheriting from this interface.</para>
+            <para>If you don't want to reference Lokad.CQRS assemblies in your domain, 
+            you can declare your own consumer interface and point to it in the configuration,
+            as shown in the samples.</para>
+            </summary>
+            <remarks>Look in the samples for more details on the usage</remarks>
+        </member>
+        <member name="T:Lokad.Cqrs.Core.Directory.Default.IConsumeMessage">
+            <summary>
+            <para>Default CQRS interface for interface-base domain setup. By default Lokad.CQRS 
+            scans user assemblies for message handlers inheriting from this interface. You don't need to inherit from interface,
+            use <see cref="T:Lokad.Cqrs.Core.Directory.Default.IConsume`1"/> instead.</para>
+            <para>If you don't want to reference Lokad.CQRS assemblies in your domain, 
+            you can declare your own consumer interface and point to it in the configuration,
+            as shown in the samples.</para>
+            </summary>
+            <remarks>Look in the samples for more details on the usage</remarks>
+        </member>
+        <member name="M:Lokad.Cqrs.Core.Directory.Default.IConsume`1.Consume(`0)">
+            <summary>
+            Consumes the specified message.
+            </summary>
+            <param name="message">The message.</param>
+        </member>
+        <member name="T:Lokad.Cqrs.ISystemEvent">
+            <summary>
+            System event representing something that happened
+            within the infrastructure
+            </summary>
+        </member>
+        <member name="T:Lokad.Cqrs.HideObjectMembersFromIntelliSense">
+            <summary>
+            Helper class for creating fluent APIs, that hides unused signatures
+            </summary>
+        </member>
+        <member name="M:Lokad.Cqrs.HideObjectMembersFromIntelliSense.ToString">
+            <summary>
+            Returns a <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
+            </summary>
+            <returns>
+            A <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
+            </returns>
+        </member>
+        <member name="M:Lokad.Cqrs.HideObjectMembersFromIntelliSense.Equals(System.Object)">
+            <summary>
+            Determines whether the specified <see cref="T:System.Object"/> is equal to the current <see cref="T:System.Object"/>.
+            </summary>
+            <param name="obj">The <see cref="T:System.Object"/> to compare with the current <see cref="T:System.Object"/>.</param>
+            <returns>
+            true if the specified <see cref="T:System.Object"/> is equal to the current <see cref="T:System.Object"/>; otherwise, false.
+            </returns>
+            <exception cref="T:System.NullReferenceException">
+            The <paramref name="obj"/> parameter is null.
+            </exception>
+        </member>
+        <member name="M:Lokad.Cqrs.HideObjectMembersFromIntelliSense.GetHashCode">
+            <summary>
+            Serves as a hash function for a particular type.
+            </summary>
+            <returns>
+            A hash code for the current <see cref="T:System.Object"/>.
+            </returns>
+        </member>
+        <member name="M:Lokad.Cqrs.HideObjectMembersFromIntelliSense.GetType">
+            <summary>
+            Gets the <see cref="T:System.Type"/> of the current instance.
+            </summary>
+            <returns>
+            The <see cref="T:System.Type"/> instance that represents the exact runtime type of the current instance.
+            </returns>
+        </member>
+        <member name="T:Lokad.Cqrs.Build.Engine.MemoryModule">
+            <summary>
+            Autofac syntax for configuring Azure storage
+            </summary>
+        </member>
+        <member name="M:Lokad.Cqrs.Build.Client.IAdvancedClientBuilder.RegisterModule(Autofac.Core.IModule)">
+            <summary>
+            Registers custom container module
+            </summary>
+            <param name="module">The module to register.</param>
+        </member>
+        <member name="M:Lokad.Cqrs.Build.Client.IAdvancedClientBuilder.RegisterObserver(System.IObserver{Lokad.Cqrs.ISystemEvent})">
+            <summary>
+            Registers custom Reactive observer.
+            </summary>
+            <param name="observer">The observer.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Lokad.Cqrs.Build.Client.IAdvancedClientBuilder.DataSerializer(System.Func{System.Type[],Lokad.Cqrs.IDataSerializer})">
+            <summary>
+            Overrides custom data serializer with a provided factory
+            </summary>
+            <param name="serializer">The serializer factory (taking collection of message types as inputs).</param>
+        </member>
+        <member name="M:Lokad.Cqrs.Build.Client.IAdvancedClientBuilder.EnvelopeSerializer(Lokad.Cqrs.IEnvelopeSerializer)">
+            <summary>
+            Overrides custom envelope serializer with a provided factory
+            </summary>
+            <param name="serializer">The serializer.</param>
+        </member>
+        <member name="M:Lokad.Cqrs.Build.Client.IAdvancedClientBuilder.ConfigureContainer(System.Action{Autofac.ContainerBuilder})">
+            <summary>
+            Applies custom configuration to the container
+            </summary>
+            <param name="build">The build.</param>
+        </member>
+        <member name="M:Lokad.Cqrs.Build.Client.IAdvancedClientBuilder.UpdateContainer(Autofac.Core.IComponentRegistry)">
+            <summary>
+            Builds this client into the existing container.
+            If you have an instance of <see cref="T:Autofac.IContainer"/>, pass it's <see cref="P:Autofac.IComponentContext.ComponentRegistry"/> property.
+            </summary>
+            <param name="registry">The container.</param>
+        </member>
+        <member name="P:Lokad.Cqrs.Build.Client.IAdvancedClientBuilder.Observers">
+            <summary>
+            Lists currect reactive observers
+            </summary>
+        </member>
+        <member name="M:Lokad.Cqrs.Build.Client.CqrsClientBuilder.Domain(System.Action{Lokad.Cqrs.Core.Directory.MessageDirectoryModule})">
+            <summary>
+            Configures the message domain for the instance of <see cref="T:Lokad.Cqrs.Build.Engine.CqrsEngineHost"/>.
+            </summary>
+            <param name="config">configuration syntax.</param>
+            <returns>same builder for inline multiple configuration statements</returns>
+        </member>
+        <member name="M:Lokad.Cqrs.Feature.AtomicStorage.IAtomicStorageFactory.Initialize">
+            <summary>
+            Call this once on start-up to initialize folders
+            </summary>
+        </member>
+        <member name="M:Lokad.Cqrs.Feature.AtomicStorage.FileAtomicStorageFactory.Initialize">
+            <summary>
+            Call this once on start-up to initialize folders
+            </summary>
+        </member>
+        <member name="T:Lokad.Cqrs.Feature.StreamingStorage.ExtendStreamingItem">
+            <summary>
+            Helper extensions for the <see cref="T:Lokad.Cqrs.Feature.StreamingStorage.IStreamingItem"/>
+            </summary>
+        </member>
+        <member name="T:Lokad.Cqrs.Feature.AtomicStorage.IAtomicSingletonWriter`1">
+            <summary>
+            Strongly-typed view singleton writer
+            </summary>
+            <typeparam name="TSingleton">The type of the view.</typeparam>
+        </member>
+        <member name="M:Lokad.Cqrs.Feature.AtomicStorage.IAtomicSingletonWriter`1.TryDelete">
+            <summary>
+            Deletes this view singleton.
+            </summary>
+        </member>
+        <member name="T:Lokad.Cqrs.Feature.AtomicStorage.IAtomicSingletonReader`1">
+            <summary>
+            Strongly-typed reader for the view singletons.
+            </summary>
+            <typeparam name="TSingleton">The type of the view.</typeparam>
+        </member>
+        <member name="M:Lokad.Cqrs.Feature.AtomicStorage.IAtomicSingletonReader`1.TryGet(`0@)">
+            <summary>
+            Gets view singleton (if it's available).
+            </summary>
+            <returns>View singleton (if it's available)</returns>
+        </member>
+        <member name="T:Lokad.Cqrs.Feature.AtomicStorage.DefaultAtomicStorageStrategyBuilder">
+            <summary>
+            Allows to configure default implementation of <see cref="T:Lokad.Cqrs.Feature.AtomicStorage.IAtomicStorageStrategy"/>
+            </summary>
+        </member>
+        <member name="M:Lokad.Cqrs.Feature.AtomicStorage.DefaultAtomicStorageStrategyBuilder.FolderForSingleton(System.String)">
+            <summary>
+            Provides custom folder for storing singletons.
+            </summary>
+            <param name="folderName">Name of the folder.</param>
+        </member>
+        <member name="M:Lokad.Cqrs.Feature.AtomicStorage.DefaultAtomicStorageStrategyBuilder.CleanName(System.String)">
+            <summary>
+            Helper to clean the name, making it suitable for azure storage
+            </summary>
+            <param name="typeName">Name of the type.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Lokad.Cqrs.Feature.AtomicStorage.DefaultAtomicStorageStrategyBuilder.NameForSingleton(System.Func{System.Type,System.String})">
+            <summary>
+            Provides custom naming convention for the singleton files
+            </summary>
+            <param name="namingConvention">The naming convention.</param>
+        </member>
+        <member name="M:Lokad.Cqrs.Feature.AtomicStorage.DefaultAtomicStorageStrategyBuilder.FolderForEntity(System.Func{System.Type,System.String})">
+            <summary>
+            Provides custom naming convention for entity folders.
+            </summary>
+            <param name="namingConvention">The naming convention.</param>
+        </member>
+        <member name="M:Lokad.Cqrs.Feature.AtomicStorage.DefaultAtomicStorageStrategyBuilder.NameForEntity(System.Func{System.Type,System.Object,System.String})">
+            <summary>
+            Provides custom naming convention for entity files.
+            </summary>
+            <param name="namingConvention">The naming convention.</param>
+        </member>
+        <member name="M:Lokad.Cqrs.Feature.AtomicStorage.DefaultAtomicStorageStrategyBuilder.WhereEntityIs``1">
+            <summary>
+            Specifies base entity type to use in assembly scans. Default is <see cref="T:Lokad.Cqrs.Define.AtomicEntity"/>
+            </summary>
+            <typeparam name="TEntityBase">Base entity class from which all atomic entities are derived.</typeparam>
+        </member>
+        <member name="M:Lokad.Cqrs.Feature.AtomicStorage.DefaultAtomicStorageStrategyBuilder.WhereEntity(System.Predicate{System.Type})">
+            <summary>
+            Allows to specify completely custom search pattern for entity types. Default is to look for inheritors from 
+            <see cref="T:Lokad.Cqrs.Define.AtomicEntity"/>
+            </summary>
+            <param name="predicate">The predicate.</param>
+        </member>
+        <member name="M:Lokad.Cqrs.Feature.AtomicStorage.DefaultAtomicStorageStrategyBuilder.WhereSingleton(System.Predicate{System.Type})">
+            <summary>
+            Allows to specify completely cstom search pattern for singleton types. Default behavior is to look for
+            inheritors from <see cref="T:Lokad.Cqrs.Define.AtomicSingleton"/>
+            </summary>
+            <param name="predicate">The predicate.</param>
+        </member>
+        <member name="M:Lokad.Cqrs.Feature.AtomicStorage.DefaultAtomicStorageStrategyBuilder.WhereSingletonIs``1">
+            <summary>
+            Specifies base singleton type to use in assembly scans. Default is <see cref="T:Lokad.Cqrs.Define.AtomicSingleton"/>
+            </summary>
+            <typeparam name="TSingletonBase">Base singleton class from which all atomic singletons are derived.</typeparam>
+        </member>
+        <member name="M:Lokad.Cqrs.Feature.AtomicStorage.DefaultAtomicStorageStrategyBuilder.WithAssembly(System.Reflection.Assembly)">
+            <summary>
+            Specifies an additional assembly to scan for atomic types (in addition to the loaded assemblies)
+            </summary>
+            <param name="assembly">The assembly to include into scan for atomic types.</param>
+        </member>
+        <member name="M:Lokad.Cqrs.Feature.AtomicStorage.DefaultAtomicStorageStrategyBuilder.WithAssemblyOf``1">
+            <summary>
+            Specifies an additional assembly to scan for atomic types (in addition to the loaded assemblies)
+            </summary>
+            <typeparam name="T">type, located in assembly to include in scan</typeparam>
+        </member>
+        <member name="M:Lokad.Cqrs.Feature.AtomicStorage.DefaultAtomicStorageStrategyBuilder.Build">
+            <summary>
+            Builds new instance of immutable <see cref="T:Lokad.Cqrs.Feature.AtomicStorage.IAtomicStorageStrategy"/>
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Lokad.Cqrs.Core.Dispatch.IMessageDispatchScope">
+            <summary>
+            Logical transaction and resolution hierarchy for dispatching this specific message.
+            </summary>
+        </member>
+        <member name="M:Lokad.Cqrs.Core.Dispatch.IMessageDispatchScope.Dispatch(System.Type,Lokad.Cqrs.ImmutableEnvelope,Lokad.Cqrs.ImmutableMessage)">
+            <summary>
+            Dispatches the specified message to instance of the consumer type.
+            </summary>
+            <param name="consumerType">Type of the consumer expected.</param>
+            <param name="envelope">The envelope context.</param>
+            <param name="message">The actual message to dispatch.</param>
+        </member>
+        <member name="M:Lokad.Cqrs.Core.Dispatch.IMessageDispatchScope.Complete">
+            <summary>
+            Completes this scope.
+            </summary>
+        </member>
+        <member name="T:Lokad.Cqrs.Feature.StreamingStorage.IStreamingRoot">
+            <summary>
+            Storage root (Azure Blob account or file drive)
+            </summary>
+        </member>
+        <member name="M:Lokad.Cqrs.Feature.StreamingStorage.IStreamingRoot.GetContainer(System.String)">
+            <summary>
+            Gets the container reference, identified by it's name
+            </summary>
+            <param name="name">The name.</param>
+            <returns>new container referece</returns>
+        </member>
+        <member name="T:Lokad.Cqrs.Feature.TapeStorage.TapeRecord">
+            <summary>
+            Contains information about the committed data
+            </summary>
+        </member>
+        <member name="T:Lokad.Cqrs.Feature.TapeStorage.FileTapeStream">
+            <summary>
+            <para>Persists records in a tape stream, using SHA1 hashing and "magic" number sequences
+            to detect corruption and offer partial recovery.</para>
+            <para>System information is written in such a way, that if data is unicode human-readable, 
+            then the file will be human-readable as well.</para>
+            </summary>
+            <remarks>
+            </remarks>
+        </member>
+        <member name="T:Lokad.Cqrs.Feature.TapeStorage.ITapeStream">
+            <summary>
+            Named tape stream, that usually matches to an aggregate instance
+            </summary>
+        </member>
+        <member name="M:Lokad.Cqrs.Feature.TapeStorage.ITapeStream.ReadRecords(System.Int64,System.Int32)">
+            <summary>
+            Reads up to <see cref="!:maxCount"/> records with <see cref="!:offset"/>.
+            </summary>
+            <param name="offset">The number of records to skip.</param>
+            <param name="maxCount">The max number of records to load.</param>
+            <returns>collection of blocks</returns>
+        </member>
+        <member name="M:Lokad.Cqrs.Feature.TapeStorage.ITapeStream.GetCurrentVersion">
+            <summary>
+            Returns current storage version
+            </summary>
+            <returns>current version of the storage</returns>
+        </member>
+        <member name="M:Lokad.Cqrs.Feature.TapeStorage.ITapeStream.TryAppend(System.Byte[],Lokad.Cqrs.Feature.TapeStorage.TapeAppendCondition)">
+            <summary>
+            Tries the append data to the tape storage, ensuring that
+            the version condition is met (if the condition is specified).
+            </summary>
+            <param name="buffer">The data to append.</param>
+            <param name="appendCondition">The append condition.</param>
+            <returns>whether the data was appended</returns>
+        </member>
+        <member name="T:Lokad.Cqrs.IEngineProcess">
+            <summary>
+            Generic process interface, that is registered in the container and managed by the Engine. 
+            It is used internally by the infrastructure. 
+            </summary>
+            <remarks>
+            You can implement this interface and register it int the container, if you want to add some custom 
+            start-up or long-running task (order is not guaranteed).
+            </remarks>
+        </member>
+        <member name="M:Lokad.Cqrs.IEngineProcess.Initialize">
+            <summary>
+            Is executed by the engine on initialization phase.
+            </summary>
+        </member>
+        <member name="M:Lokad.Cqrs.IEngineProcess.Start(System.Threading.CancellationToken)">
+            <summary>
+            Creates and starts a long-running task, given the cancellation token to stop it.
+            </summary>
+            <param name="token">The cancellation token.</param>
+            <returns>Long-running task instance</returns>
+        </member>
+        <member name="T:Lokad.Cqrs.Feature.TapeStorage.TapeAppendCondition">
+            <summary>
+            <para>Allows to specify optional condition for appending to the storage.</para>
+            <para>This is defined as struct to allow proper use in optional params</para>
+            </summary>
+        </member>
+        <member name="F:Lokad.Cqrs.Feature.TapeStorage.TapeAppendCondition.Version">
+            <summary>
+            Version to match against, if <see cref="F:Lokad.Cqrs.Feature.TapeStorage.TapeAppendCondition.IsSpecified"/> is set to <em>True</em>.
+            </summary>
+        </member>
+        <member name="F:Lokad.Cqrs.Feature.TapeStorage.TapeAppendCondition.IsSpecified">
+            <summary>
+            If the condition has been specified
+            </summary>
+        </member>
+        <member name="M:Lokad.Cqrs.Feature.TapeStorage.TapeAppendCondition.VersionIs(System.Int64)">
+            <summary>
+            Constructs condition that matches the specified version
+            </summary>
+            <param name="version">The version.</param>
+            <returns>new condition instance</returns>
+        </member>
+        <member name="F:Lokad.Cqrs.Feature.TapeStorage.TapeAppendCondition.None">
+            <summary>
+            Condition that always matches
+            </summary>
+        </member>
+        <member name="M:Lokad.Cqrs.Feature.TapeStorage.TapeAppendCondition.Enforce(System.Int64)">
+            <summary>
+            Enforces the specified version, throwing exception if the condition was not met.
+            </summary>
+            <param name="version">The version to match.</param>
+            <exception cref="T:Lokad.Cqrs.Feature.TapeStorage.TapeAppendConditionException">when the condition was not met by the version specified</exception>
+        </member>
+        <member name="T:Lokad.Cqrs.Core.Directory.MessageMapping.BusNull">
+            <summary>
+            Indicates that the message is orphaned (not consumed)
+            </summary>
+        </member>
+        <member name="T:Lokad.Cqrs.Core.Directory.MessageDirectoryBuilder">
+            <summary>
+            Default implementation of the message directory builder
+            </summary>
+        </member>
+        <member name="M:Lokad.Cqrs.Core.Directory.MessageDirectoryBuilder.#ctor(System.Collections.Generic.IEnumerable{Lokad.Cqrs.Core.Directory.MessageMapping})">
+            <summary>
+            Initializes a new instance of the <see cref="T:Lokad.Cqrs.Core.Directory.MessageDirectoryBuilder"/> class.
+            </summary>
+            <param name="mappings">The message mappings.</param>
+        </member>
+        <member name="M:Lokad.Cqrs.Feature.StreamingStorage.StreamingCondition.IfMatch(System.String)">
+            <summary>
+            <see cref="F:Lokad.Cqrs.Feature.StreamingStorage.StreamingConditionType.IfMatch"/>
+            </summary>
+            <param name="tag">The tag to use in constructing this condition.</param>
+            <returns>new storage condition</returns>
+        </member>
+        <member name="T:Lokad.Cqrs.Feature.StreamingStorage.IStreamingItem">
+            <summary>
+            Base interface for performing storage operations against local or remote persistence.
+            </summary>
+        </member>
+        <member name="M:Lokad.Cqrs.Feature.StreamingStorage.IStreamingItem.Write(System.Action{System.IO.Stream},Lokad.Cqrs.Feature.StreamingStorage.StreamingCondition,Lokad.Cqrs.Feature.StreamingStorage.StreamingWriteOptions)">
+            <summary>
+            Performs the write operation, ensuring that the condition is met.
+            </summary>
+            <param name="writer">The writer.</param>
+            <param name="condition">The condition.</param>
+            <param name="options">The options.</param>
+            <returns>number of bytes written</returns>
+            <exception cref="T:Lokad.Cqrs.Feature.StreamingStorage.StreamingItemIntegrityException">when integrity check fails during the upload</exception>
+        </member>
+        <member name="M:Lokad.Cqrs.Feature.StreamingStorage.IStreamingItem.ReadInto(Lokad.Cqrs.Feature.StreamingStorage.ReaderDelegate,Lokad.Cqrs.Feature.StreamingStorage.StreamingCondition)">
+            <summary>
+            Attempts to read the storage item.
+            </summary>
+            <param name="reader">The reader.</param>
+            <param name="condition">The condition.</param>
+            <exception cref="T:Lokad.Cqrs.Feature.StreamingStorage.StreamingItemNotFoundException">if the item does not exist.</exception>
+            <exception cref="T:Lokad.Cqrs.Feature.StreamingStorage.StreamingContainerNotFoundException">if the container for the item does not exist</exception>
+            <exception cref="T:Lokad.Cqrs.Feature.StreamingStorage.StreamingItemIntegrityException">when integrity check fails</exception>
+        </member>
+        <member name="M:Lokad.Cqrs.Feature.StreamingStorage.IStreamingItem.Delete(Lokad.Cqrs.Feature.StreamingStorage.StreamingCondition)">
+            <summary>
+            Removes the item, ensuring that the specified condition is met.
+            </summary>
+            <param name="condition">The condition.</param>
+        </member>
+        <member name="M:Lokad.Cqrs.Feature.StreamingStorage.IStreamingItem.GetInfo(Lokad.Cqrs.Feature.StreamingStorage.StreamingCondition)">
+            <summary>
+            Gets the info about this item. It returns empty result if the item does not exist or does not match the condition
+            </summary>
+            <param name="condition">The condition.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Lokad.Cqrs.Feature.StreamingStorage.IStreamingItem.CopyFrom(Lokad.Cqrs.Feature.StreamingStorage.IStreamingItem,Lokad.Cqrs.Feature.StreamingStorage.StreamingCondition,Lokad.Cqrs.Feature.StreamingStorage.StreamingCondition,Lokad.Cqrs.Feature.StreamingStorage.StreamingWriteOptions)">
+            <summary>
+            Creates this storage item from another.
+            </summary>
+            <param name="sourceItem">The target.</param>
+            <param name="condition">The condition.</param>
+            <param name="copySourceCondition">The copy source condition.</param>
+            <param name="options">The options.</param>
+            <exception cref="T:Lokad.Cqrs.Feature.StreamingStorage.StreamingItemNotFoundException">when source storage is not found</exception>
+            <exception cref="T:Lokad.Cqrs.Feature.StreamingStorage.StreamingItemIntegrityException">when integrity check fails</exception>
+        </member>
+        <member name="P:Lokad.Cqrs.Feature.StreamingStorage.IStreamingItem.FullPath">
+            <summary>
+            Gets the full path of the current iteб.
+            </summary>
+            <value>The full path.</value>
+        </member>
+        <member name="T:Lokad.Cqrs.Core.Dispatch.ISingleThreadMessageDispatcher">
+            <summary>
+            Generic message dispatch interface
+            </summary>
+        </member>
+        <member name="M:Lokad.Cqrs.Core.Dispatch.ISingleThreadMessageDispatcher.DispatchMessage(Lokad.Cqrs.ImmutableEnvelope)">
+            <summary>
+            Dispatches the message.
+            </summary>
+            <param name="message">The message.</param>
+        </member>
+        <member name="M:Lokad.Cqrs.Core.Dispatch.ISingleThreadMessageDispatcher.Init">
+            <summary>
+            Initializes this instance
+            </summary>
+        </member>
+        <member name="M:Lokad.Cqrs.Core.Directory.MessageDirectoryFilter.WhereMappings(System.Func{Lokad.Cqrs.Core.Directory.MessageMapping,System.Boolean})">
+            <summary>
+            Adds custom filters for <see cref="T:Lokad.Cqrs.Core.Directory.MessageMapping"/>, that will be used
+            for configuring this message handler.
+            </summary>
+            <param name="filter">The filter.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Lokad.Cqrs.Core.Directory.MessageDirectoryFilter.WhereMessagesAreNot``1">
+            <summary>
+            Adds filter to exclude all message mappings, where messages derive from the specified class
+            </summary>
+            <typeparam name="TMessage">The type of the message.</typeparam>
+            <returns>same module instance for chaining fluent configurations</returns>
+        </member>
+        <member name="M:Lokad.Cqrs.Core.Directory.MessageDirectoryFilter.WhereMessagesAre``1">
+            <summary>
+            Adds filter to include only message mappings, where messages derive from the specified class
+            </summary>
+            <typeparam name="TMessage">The type of the message.</typeparam>
+            <returns>same module instance for chaining fluent configurations</returns>
+        </member>
+        <member name="M:Lokad.Cqrs.Core.Directory.MessageDirectoryFilter.WhereConsumersAre``1">
+            <summary>
+            Adds filter to include only message mappings, where consumers derive from the specified class
+            </summary>
+            <typeparam name="TConsumer">The type of the consumer.</typeparam>
+            <returns>same module instance for chaining fluent configurations</returns>
+        </member>
+        <member name="M:Lokad.Cqrs.Core.Directory.MessageDirectoryFilter.WhereConsumersAreNot``1">
+            <summary>
+            Adds filter to exclude all message mappings, where consumers derive from the specified class
+            </summary>
+            <typeparam name="TConsumer">The type of the consumer.</typeparam>
+            <returns>same module instance for chaining fluent configurations</returns>
+        </member>
+        <member name="T:Lokad.Cqrs.Core.Dispatch.IEnvelopeQuarantine">
+            <summary>
+            Implements quarantine logic for the specific message handler. Default implementation 
+            is <see cref="T:Lokad.Cqrs.Core.Dispatch.MemoryQuarantine"/>
+            </summary>
+        </member>
+        <member name="M:Lokad.Cqrs.Core.Dispatch.IEnvelopeQuarantine.TryToQuarantine(Lokad.Cqrs.Core.Inbox.EnvelopeTransportContext,System.Exception)">
+            <summary>
+            Tries to quarantine the specified envelope. Implementation can decide whether we need to give another
+            try to process the envelope (by returning <em>False</em>) or if quarantine should accept the envelope
+            completely. Then processor will discard the queue from it's incoming queue and leave it up to the
+            quarantine to record it, push to poison etc. 
+            </summary>
+            <param name="context">The envelope transport context.</param>
+            <param name="ex">The exception.</param>
+            <returns><em>True</em> if envelope should be quarantined right away (i.e. exception happened 4 times)
+            and is not excepted to be processed by the queue any more; <em>False</em> otherwise</returns>
+        </member>
+        <member name="M:Lokad.Cqrs.Core.Dispatch.IEnvelopeQuarantine.TryRelease(Lokad.Cqrs.Core.Inbox.EnvelopeTransportContext)">
+            <summary>
+            Tries to release envelope record from the partial or full quarantine (I.e.: when message
+            has been successfully processed and quarantine can forget about it forever).
+            </summary>
+            <param name="context">The envelope transport context.</param>
+        </member>
+        <member name="T:Lokad.Cqrs.ISystemObserver">
+            <summary>
+            Sends notification to the system. This is a strongly-typed equivalent of logging
+            </summary>
+        </member>
+        <member name="M:Lokad.Cqrs.ISystemObserver.Notify(Lokad.Cqrs.ISystemEvent)">
+            <summary>
+            Notifies the observer about the specified @event.
+            </summary>
+            <param name="event">The @event.</param>
+        </member>
+        <member name="T:Lokad.Cqrs.Core.Dispatch.MessageDuplicationManager">
+            <summary>
+             Shoud be registered as singleton, manages actual memories
+             and performs cleanups in async
+            </summary>
+        </member>
+        <member name="T:Lokad.Cqrs.Core.Dispatch.DispatchCommandBatch">
+            <summary>
+            Dispatch command batches to a single consumer. Uses sliding cache to 
+            reduce message duplication
+            </summary>
+        </member>
+        <member name="T:Lokad.Cqrs.Feature.StreamingStorage.IStreamingContainer">
+            <summary>
+            Represents storage container reference.
+            </summary>
+        </member>
+        <member name="M:Lokad.Cqrs.Feature.StreamingStorage.IStreamingContainer.GetContainer(System.String)">
+            <summary>
+            Gets the child container nested within the current container reference.
+            </summary>
+            <param name="name">The name.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Lokad.Cqrs.Feature.StreamingStorage.IStreamingContainer.GetItem(System.String)">
+            <summary>
+            Gets the storage item reference within the current container.
+            </summary>
+            <param name="name">The name.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Lokad.Cqrs.Feature.StreamingStorage.IStreamingContainer.Create">
+            <summary>
+            Ensures that the current reference represents valid container
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Lokad.Cqrs.Feature.StreamingStorage.IStreamingContainer.Delete">
+            <summary>
+            Deletes this container
+            </summary>
+        </member>
+        <member name="M:Lokad.Cqrs.Feature.StreamingStorage.IStreamingContainer.Exists">
+            <summary>
+            Checks if the underlying container exists
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:Lokad.Cqrs.Feature.StreamingStorage.IStreamingContainer.FullPath">
+            <summary>
+            Gets the full path.
+            </summary>
+            <value>The full path.</value>
+        </member>
+        <member name="T:Lokad.Cqrs.Feature.AtomicStorage.NuclearStorage">
+            <summary>
+            Basic usability wrapper for the atomic storage operations, that does not enforce concurrency handling. 
+            If you want to work with advanced functionality, either request specific interfaces from the container 
+            or go through the advanced members on this instance. 
+            </summary>
+        </member>
+        <member name="T:Lokad.Cqrs.Build.Engine.CqrsEngineBuilder">
+            <summary>
+            Fluent API for creating and configuring <see cref="T:Lokad.Cqrs.Build.Engine.CqrsEngineHost"/>
+            </summary>
+        </member>
+        <member name="M:Lokad.Cqrs.Build.Engine.CqrsEngineBuilder.Domain(System.Action{Lokad.Cqrs.Core.Directory.MessageDirectoryModule})">
+            <summary>
+            Configures the message domain for the instance of <see cref="T:Lokad.Cqrs.Build.Engine.CqrsEngineHost"/>.
+            </summary>
+            <param name="config">configuration syntax.</param>
+            <returns>same builder for inline multiple configuration statements</returns>
+        </member>
+        <member name="M:Lokad.Cqrs.Build.Engine.CqrsEngineBuilder.Build">
+            <summary>
+            Builds this <see cref="T:Lokad.Cqrs.Build.Engine.CqrsEngineHost"/>.
+            </summary>
+            <returns>new instance of cloud engine host</returns>
+        </member>
+        <member name="F:Lokad.Cqrs.Feature.StreamingStorage.StreamingWriteOptions.CompressIfPossible">
+            <summary>
+            We'll compress data if possible.
+            </summary>
+        </member>
+        <member name="M:Lokad.Cqrs.FileStorage.CreateNuclear(System.String)">
+            <summary>
+            Creates the simplified nuclear storage wrapper around Atomic storage, using the default
+            storage configuration and atomic strategy.
+            </summary>
+            <param name="storageFolder">The storage folder.</param>
+            <returns>
+            new instance of the nuclear storage
+            </returns>
+        </member>
+        <member name="M:Lokad.Cqrs.FileStorage.CreateNuclear(System.String,System.Action{Lokad.Cqrs.Feature.AtomicStorage.DefaultAtomicStorageStrategyBuilder})">
+            <summary>
+            Creates the simplified nuclear storage wrapper around Atomic storage.
+            </summary>
+            <param name="storageFolder">The storage folder.</param>
+            <param name="configStrategy">The config strategy.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Lokad.Cqrs.FileStorage.CreateNuclear(System.String,Lokad.Cqrs.Feature.AtomicStorage.IAtomicStorageStrategy)">
+            <summary>
+            Creates the simplified nuclear storage wrapper around Atomic storage.
+            </summary>
+            <param name="storageFolder">The storage folder.</param>
+            <param name="strategy">The atomic storage strategy.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Lokad.Cqrs.ImmutableEnvelope">
+            <summary>
+            Deserialized message representation
+            </summary>
+        </member>
+        <member name="T:Lokad.Cqrs.Feature.StreamingStorage.StreamingErrors">
+            <summary>
+            Helper class for throwing storage exceptions in a consistent way.
+            </summary>
+        </member>
+        <member name="T:Lokad.Cqrs.Define">
+            <summary>
+            Default implementations of the domain-specific interfaces
+            </summary>
+        </member>
+        <member name="T:Lokad.Cqrs.Core.Directory.Default.IMessage">
+            <summary>
+            <para>Default CQRS message interface for the domain setup. By default Lokad.CQRS 
+            scans assemblies for message contracts deriving from this interface.</para>
+            <para>If you don't want to reference Lokad.CQRS assemblies in your domain, 
+            you can declare your own message interface and point to it in the configuration,
+            as shown in the samples.</para>
+            </summary>
+            <remarks>Look in the samples for more details on the usage</remarks>
+        </member>
+        <member name="T:Lokad.Cqrs.IMessageSender">
+            <summary>
+            Generic message publishing interface that is provided by the infrastructure, should user configure it for publishing
+            </summary>
+        </member>
+        <member name="M:Lokad.Cqrs.IMessageSender.SendOne(System.Object)">
+            <summary>
+            Sends the specified messages to the designated recipient.
+            </summary>
+            <param name="content">The message to send.</param>
+        </member>
+        <member name="T:Lokad.Cqrs.Feature.TapeStorage.ITapeStorageFactory">
+            <summary>
+            Factory for storing blocks of data into append-only storage,
+            that is easily to scale and replicate. This is the foundation
+            for event sourcing.
+            </summary>
+        </member>
+        <member name="M:Lokad.Cqrs.Feature.TapeStorage.ITapeStorageFactory.GetOrCreateStream(System.String)">
+            <summary>
+            Gets or creates a new named stream.
+            </summary>
+            <param name="name">The name of the stream.</param>
+            <returns>new stream instance</returns>
+        </member>
+        <member name="M:Lokad.Cqrs.Feature.TapeStorage.ITapeStorageFactory.InitializeForWriting">
+            <summary>
+            Initializes this storage for writing
+            </summary>
+        </member>
+        <member name="T:Lokad.Cqrs.Core.Serialization.DataContractUtil">
+            <summary>
+            Helper class to work with <see cref="T:System.Runtime.Serialization.DataContract"/>
+            </summary>
+        </member>
+        <member name="M:Lokad.Cqrs.Core.Serialization.DataContractUtil.ThrowOnMessagesWithoutDataContracts(System.Collections.Generic.IEnumerable{System.Type})">
+            <summary>
+            Throws detailed exception the on messages without data contracts.
+            </summary>
+            <param name="knownTypes">The known types.</param>
+        </member>
+        <member name="M:Lokad.Cqrs.Core.Serialization.DataContractUtil.GetContractReference(System.Type)">
+            <summary>
+            Gets the contract reference, combining contract properties.
+            </summary>
+            <param name="type">The type.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Lokad.Cqrs.Feature.FilePartition.FilePartitionModule.DecayPolicy(System.TimeSpan)">
+            <summary>
+            Sets the custom decay policy used to throttle File checks, when there are no messages for some time.
+            This overload eventually slows down requests till the max of <paramref name="maxInterval"/>.
+            </summary>
+            <param name="maxInterval">The maximum interval to keep between checks, when there are no messages in the queue.</param>
+        </member>
+        <member name="M:Lokad.Cqrs.Feature.FilePartition.FilePartitionModule.DecayPolicy(System.Func{System.UInt32,System.TimeSpan})">
+            <summary>
+            Sets the custom decay policy used to throttle file queue checks, when there are no messages for some time.
+            </summary>
+            <param name="decayPolicy">The decay policy, which is function that returns time to sleep after Nth empty check.</param>
+        </member>
+        <member name="T:Lokad.Cqrs.Core.Serialization.DataSerializerWithDataContracts">
+            <summary>
+            Message serializer for the <see cref="T:System.Runtime.Serialization.DataContractSerializer"/>
+            </summary>
+        </member>
+        <member name="T:Lokad.Cqrs.IDataSerializer">
+            <summary>
+            Joins data serializer and contract mapper
+            </summary>
+        </member>
+        <member name="M:Lokad.Cqrs.IDataSerializer.Serialize(System.Object,System.IO.Stream)">
+            <summary>
+            Serializes the object to the specified stream
+            </summary>
+            <param name="instance">The instance.</param>
+            <param name="destinationStream">The destination stream.</param>
+        </member>
+        <member name="M:Lokad.Cqrs.IDataSerializer.Deserialize(System.IO.Stream,System.Type)">
+            <summary>
+            Deserializes the object from specified source stream.
+            </summary>
+            <param name="sourceStream">The source stream.</param>
+            <param name="type">The type of the object to deserialize.</param>
+            <returns>deserialized object</returns>
+        </member>
+        <member name="M:Lokad.Cqrs.IDataSerializer.TryGetContractNameByType(System.Type,System.String@)">
+            <summary>
+            Gets the contract name by the type
+            </summary>
+            <param name="messageType">Type of the message.</param>
+            <returns>contract name (if found)</returns>
+        </member>
+        <member name="M:Lokad.Cqrs.IDataSerializer.TryGetContractTypeByName(System.String,System.Type@)">
+            <summary>
+            Gets the type by contract name.
+            </summary>
+            <param name="contractName">Name of the contract.</param>
+            <returns>type that could be used for contract deserialization (if found)</returns>
+        </member>
+        <member name="M:Lokad.Cqrs.Core.Serialization.DataSerializerWithDataContracts.#ctor(System.Collections.Generic.ICollection{System.Type})">
+            <summary>
+            Initializes a new instance of the <see cref="T:Lokad.Cqrs.Core.Serialization.DataSerializerWithDataContracts"/> class.
+            </summary>
+            <param name="knownTypes">The known types.</param>
+        </member>
+        <member name="M:Lokad.Cqrs.Core.Serialization.DataSerializerWithDataContracts.Serialize(System.Object,System.IO.Stream)">
+            <summary>
+            Serializes the object to the specified stream
+            </summary>
+            <param name="instance">The instance.</param>
+            <param name="destination">The destination stream.</param>
+        </member>
+        <member name="M:Lokad.Cqrs.Core.Serialization.DataSerializerWithDataContracts.Deserialize(System.IO.Stream,System.Type)">
+            <summary>
+            Deserializes the object from specified source stream.
+            </summary>
+            <param name="sourceStream">The source stream.</param>
+            <param name="type">The type of the object to deserialize.</param>
+            <returns>deserialized object</returns>
+        </member>
+        <member name="M:Lokad.Cqrs.Core.Serialization.DataSerializerWithDataContracts.TryGetContractNameByType(System.Type,System.String@)">
+            <summary>
+            Gets the contract name by the type
+            </summary>
+            <param name="messageType">Type of the message.</param>
+            <returns>contract name (if found)</returns>
+        </member>
+        <member name="M:Lokad.Cqrs.Core.Serialization.DataSerializerWithDataContracts.TryGetContractTypeByName(System.String,System.Type@)">
+            <summary>
+            Gets the type by contract name.
+            </summary>
+            <param name="contractName">Name of the contract.</param>
+            <returns>type that could be used for contract deserialization (if found)</returns>
+        </member>
+        <member name="T:Lokad.Cqrs.Evil.InvocationUtil">
+            <summary>
+            Helper class for generating exceptions
+            </summary>
+        </member>
+        <member name="M:Lokad.Cqrs.Evil.InvocationUtil.Inner(System.Reflection.TargetInvocationException)">
+            <summary>
+            Returns inner exception, while preserving the stack trace
+            </summary>
+            <param name="e">The target invocation exception to unwrap.</param>
+            <returns>inner exception</returns>
+        </member>
+        <member name="T:Lokad.Cqrs.Core.Dispatch.DispatchOneEvent">
+            <summary>
+             Dispatcher that sends a single event to multiple consumers within this worker.
+             No transactions are used here, we keep track of duplication.
+            </summary>
+        </member>
+        <member name="T:Lokad.Cqrs.Core.Directory.MessageDirectoryModule">
+            <summary>
+            Module for building CQRS domains.
+            </summary>
+        </member>
+        <member name="M:Lokad.Cqrs.Core.Directory.MessageDirectoryModule.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Lokad.Cqrs.Core.Directory.MessageDirectoryModule"/> class.
+            </summary>
+        </member>
+        <member name="M:Lokad.Cqrs.Core.Directory.MessageDirectoryModule.ContextFactory``1(System.Func{Lokad.Cqrs.ImmutableEnvelope,Lokad.Cqrs.ImmutableMessage,``0})">
+            <summary>
+            Allows to specify custom context factory to expose transport-level
+            information to message handlers via IoC. By default this is configured
+            as <see cref="T:System.Func`1"/> returning <see cref="T:Lokad.Cqrs.MessageContext"/>
+            </summary>
+            <typeparam name="TContext">The type of the context to return.</typeparam>
+            <param name="contextFactory">The context factory.</param>
+        </member>
+        <member name="M:Lokad.Cqrs.Core.Directory.MessageDirectoryModule.HandlerSample``1(System.Linq.Expressions.Expression{System.Action{``0}})">
+            <summary>
+            Specifies expression describing your interface lookup rules for handlers and messages.
+            Defaults to <code><![CDATA[HandlerSample<IConsume<IMessage>>(h => h.Consume(null))]]></code>
+            </summary>
+            <typeparam name="THandler">The base type of the handler.</typeparam>
+            <param name="handlerSampleExpression">The handler sample expression.</param>
+        </member>
+        <member name="M:Lokad.Cqrs.Core.Directory.MessageDirectoryModule.InAssemblyOf``1">
+            <summary>
+            Includes assemblies of the specified types into the discovery process
+            </summary>
+            <typeparam name="T"></typeparam>
+            <returns>same module instance for chaining fluent configurations</returns>
+        </member>
+        <member name="T:Lokad.Cqrs.Core.Dispatch.DispatchLifetimeScopeTags">
+            <summary>
+            Tags used to differentiate lifetime scopes for handling message envelopes.
+            </summary>
+        </member>
+        <member name="F:Lokad.Cqrs.Core.Dispatch.DispatchLifetimeScopeTags.MessageEnvelopeScopeTag">
+            <summary>
+            Used to mark <see cref="T:Autofac.ILifetimeScope"/> created for processing message envelopes.
+            </summary>
+        </member>
+        <member name="F:Lokad.Cqrs.Core.Dispatch.DispatchLifetimeScopeTags.MessageItemScopeTag">
+            <summary>
+            Used to mark nested <see cref="T:Autofac.ILifetimeScope"/> created for processing individual message items within an envelope.
+            </summary>
+        </member>
+        <member name="M:Lokad.Cqrs.MemoryStorage.CreateNuclear(System.Collections.Concurrent.ConcurrentDictionary{System.String,System.Byte[]})">
+            <summary>
+            Creates the simplified nuclear storage wrapper around Atomic storage, using the default
+            storage configuration and atomic strategy.
+            </summary>
+            <param name="dictionary">The dictionary.</param>
+            <returns>
+            new instance of the nuclear storage
+            </returns>
+        </member>
+        <member name="M:Lokad.Cqrs.MemoryStorage.CreateNuclear">
+            <summary>
+            Creates the simplified nuclear storage wrapper around Atomic storage, using the default
+            storage configuration and atomic strategy.
+            </summary>
+            <returns>
+            new instance of the nuclear storage
+            </returns>
+        </member>
+        <member name="M:Lokad.Cqrs.MemoryStorage.CreateNuclear(System.Collections.Concurrent.ConcurrentDictionary{System.String,System.Byte[]},System.Action{Lokad.Cqrs.Feature.AtomicStorage.DefaultAtomicStorageStrategyBuilder})">
+            <summary>
+            Creates the simplified nuclear storage wrapper around Atomic storage.
+            </summary>
+            <param name="dictionary">The dictionary.</param>
+            <param name="configStrategy">The config strategy.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Lokad.Cqrs.MemoryStorage.CreateNuclear(System.Collections.Concurrent.ConcurrentDictionary{System.String,System.Byte[]},Lokad.Cqrs.Feature.AtomicStorage.IAtomicStorageStrategy)">
+            <summary>
+            Creates the simplified nuclear storage wrapper around Atomic storage.
+            </summary>
+            <param name="dictionary">The dictionary.</param>
+            <param name="strategy">The atomic storage strategy.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Lokad.Cqrs.Feature.AtomicStorage.IAtomicEntityReader`2.TryGet(`0,`1@)">
+            <summary>
+            Gets the view with the specified key.
+            </summary>
+            <param name="key">The key.</param>
+            <param name="view">The view.</param>
+            <returns>
+            true, if it exists
+            </returns>
+        </member>
+        <member name="T:Lokad.Cqrs.Feature.AtomicStorage.IAtomicEntityWriter`2">
+            <summary>
+            View writer interface, used by the event handlers
+            </summary>
+            <typeparam name="TEntity">The type of the view.</typeparam>
+            <typeparam name="TKey">type of the key</typeparam>
+        </member>
+        <member name="T:Lokad.Cqrs.Feature.StreamingStorage.FileStreamingItem">
+            <summary>
+            File-based implementation of the <see cref="T:Lokad.Cqrs.Feature.StreamingStorage.IStreamingItem"/>
+            </summary>
+        </member>
+        <member name="M:Lokad.Cqrs.Feature.StreamingStorage.FileStreamingItem.#ctor(System.IO.FileInfo)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Lokad.Cqrs.Feature.StreamingStorage.FileStreamingItem"/> class.
+            </summary>
+            <param name="file">The file.</param>
+        </member>
+        <member name="M:Lokad.Cqrs.Feature.StreamingStorage.FileStreamingItem.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Lokad.Cqrs.Feature.StreamingStorage.FileStreamingItem"/> class.
+            </summary>
+            <param name="filePath">The file path.</param>
+        </member>
+        <member name="M:Lokad.Cqrs.Feature.StreamingStorage.FileStreamingItem.Write(System.Action{System.IO.Stream},Lokad.Cqrs.Feature.StreamingStorage.StreamingCondition,Lokad.Cqrs.Feature.StreamingStorage.StreamingWriteOptions)">
+            <summary>
+            Performs the write operation, ensuring that the condition is met.
+            </summary>
+            <param name="writer">The writer.</param>
+            <param name="condition">The condition.</param>
+            <param name="options">The options.</param>
+            <returns>number of bytes written</returns>
+            <exception cref="T:Lokad.Cqrs.Feature.StreamingStorage.StreamingItemIntegrityException">when integrity check fails during the upload</exception>
+        </member>
+        <member name="M:Lokad.Cqrs.Feature.StreamingStorage.FileStreamingItem.ReadInto(Lokad.Cqrs.Feature.StreamingStorage.ReaderDelegate,Lokad.Cqrs.Feature.StreamingStorage.StreamingCondition)">
+            <summary>
+            Attempts to read the storage item.
+            </summary>
+            <param name="reader">The reader.</param>
+            <param name="condition">The condition.</param>
+            <exception cref="T:Lokad.Cqrs.Feature.StreamingStorage.StreamingItemNotFoundException">if the item does not exist.</exception>
+            <exception cref="T:Lokad.Cqrs.Feature.StreamingStorage.StreamingContainerNotFoundException">if the container for the item does not exist</exception>
+            <exception cref="T:Lokad.Cqrs.Feature.StreamingStorage.StreamingItemIntegrityException">when integrity check fails</exception>
+        </member>
+        <member name="M:Lokad.Cqrs.Feature.StreamingStorage.FileStreamingItem.Delete(Lokad.Cqrs.Feature.StreamingStorage.StreamingCondition)">
+            <summary>
+            Removes the item, ensuring that the specified condition is met.
+            </summary>
+            <param name="condition">The condition.</param>
+        </member>
+        <member name="M:Lokad.Cqrs.Feature.StreamingStorage.FileStreamingItem.GetInfo(Lokad.Cqrs.Feature.StreamingStorage.StreamingCondition)">
+            <summary>
+            Gets the info about this item. It returns empty result if the item does not exist or does not match the condition
+            </summary>
+            <param name="condition">The condition.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Lokad.Cqrs.Feature.StreamingStorage.FileStreamingItem.CopyFrom(Lokad.Cqrs.Feature.StreamingStorage.IStreamingItem,Lokad.Cqrs.Feature.StreamingStorage.StreamingCondition,Lokad.Cqrs.Feature.StreamingStorage.StreamingCondition,Lokad.Cqrs.Feature.StreamingStorage.StreamingWriteOptions)">
+            <summary>
+            Creates this storage item from another.
+            </summary>
+            <param name="sourceItem">The target.</param>
+            <param name="condition">The condition.</param>
+            <param name="copySourceCondition">The copy source condition.</param>
+            <param name="options">The options.</param>
+            <exception cref="T:Lokad.Cqrs.Feature.StreamingStorage.StreamingItemNotFoundException">when source storage is not found</exception>
+            <exception cref="T:Lokad.Cqrs.Feature.StreamingStorage.StreamingItemIntegrityException">when integrity check fails</exception>
+        </member>
+        <member name="P:Lokad.Cqrs.Feature.StreamingStorage.FileStreamingItem.FullPath">
+            <summary>
+            Gets the full path of the current item.
+            </summary>
+            <value>The full path.</value>
+        </member>
+        <member name="P:Lokad.Cqrs.Feature.StreamingStorage.FileStreamingItem.Reference">
+            <summary>
+            Gets the file reference behind this instance.
+            </summary>
+            <value>The reference.</value>
+        </member>
+        <member name="T:Lokad.Cqrs.Core.Directory.MethodContextManager`1">
+            <summary>
+            Default implementation of the Lazy thread-safe context manager. It wires optional
+            handler context (derived from the message transport information) back to the handler.
+            </summary>
+            <typeparam name="TContext">The type of the context.</typeparam>
+        </member>
+        <member name="T:Lokad.Cqrs.Feature.StreamingStorage.FileStreamingContainer">
+            <summary>
+            Storage container using <see cref="N:System.IO"/> for persisting data
+            </summary>
+        </member>
+        <member name="M:Lokad.Cqrs.Feature.StreamingStorage.FileStreamingContainer.#ctor(System.IO.DirectoryInfo)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Lokad.Cqrs.Feature.StreamingStorage.FileStreamingContainer"/> class.
+            </summary>
+            <param name="root">The root.</param>
+        </member>
+        <member name="M:Lokad.Cqrs.Feature.StreamingStorage.FileStreamingContainer.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Lokad.Cqrs.Feature.StreamingStorage.FileStreamingContainer"/> class.
+            </summary>
+            <param name="path">The path.</param>
+        </member>
+        <member name="T:Lokad.Cqrs.Optional`1">
+            <summary>
+            Helper class that indicates nullable value in a good-citizenship code
+            </summary>
+            <typeparam name="T">underlying type</typeparam>
+        </member>
+        <member name="F:Lokad.Cqrs.Optional`1.Empty">
+            <summary>
+            Default empty instance.
+            </summary>
+        </member>
+        <member name="M:Lokad.Cqrs.Optional`1.GetValue(`0)">
+            <summary>
+            Retrieves value from this instance, using a 
+            <paramref name="defaultValue"/> if it is absent.
+            </summary>
+            <param name="defaultValue">The default value.</param>
+            <returns>value</returns>
+        </member>
+        <member name="M:Lokad.Cqrs.Optional`1.GetValue(System.Func{`0})">
+            <summary>
+            Retrieves value from this instance, using a 
+            <paramref name="defaultValue"/> if it is absent.
+            </summary>
+            <param name="defaultValue">The default value.</param>
+            <returns>value</returns>
+        </member>
+        <member name="M:Lokad.Cqrs.Optional`1.Combine(System.Func{Lokad.Cqrs.Optional{`0}})">
+            <summary>
+            Retrieves value from this instance, using a <paramref name="defaultValue"/>
+            factory, if it is absent
+            </summary>
+            <param name="defaultValue">The default value to provide.</param>
+            <returns>maybe value</returns>
+        </member>
+        <member name="M:Lokad.Cqrs.Optional`1.Convert``1(System.Func{`0,``0})">
+            <summary>
+            Converts this instance to <see cref="T:Lokad.Cqrs.Optional`1"/>, 
+            while applying <paramref name="converter"/> if there is a value.
+            </summary>
+            <typeparam name="TTarget">The type of the target.</typeparam>
+            <param name="converter">The converter.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Lokad.Cqrs.Optional`1.Convert``1(System.Func{`0,``0},System.Func{``0})">
+            <summary>
+            Retrieves converted value, using a 
+            <paramref name="defaultValue"/> if it is absent.
+            </summary>
+            <typeparam name="TTarget">type of the conversion target</typeparam>
+            <param name="converter">The converter.</param>
+            <param name="defaultValue">The default value.</param>
+            <returns>value</returns>
+        </member>
+        <member name="M:Lokad.Cqrs.Optional`1.Convert``1(System.Func{`0,``0},``0)">
+            <summary>
+            Retrieves converted value, using a 
+            <paramref name="defaultValue"/> if it is absent.
+            </summary>
+            <typeparam name="TTarget">type of the conversion target</typeparam>
+            <param name="converter">The converter.</param>
+            <param name="defaultValue">The default value.</param>
+            <returns>value</returns>
+        </member>
+        <member name="M:Lokad.Cqrs.Optional`1.Combine``1(System.Func{`0,Lokad.Cqrs.Optional{``0}})">
+            <returns>value</returns>
+        </member>
+        <member name="M:Lokad.Cqrs.Optional`1.Equals(Lokad.Cqrs.Optional{`0})">
+            <summary>
+            Determines whether the specified <see cref="T:Lokad.Cqrs.Optional`1"/> is equal to the current <see cref="T:Lokad.Cqrs.Optional`1"/>.
+            </summary>
+            <param name="optional">The <see cref="T:Lokad.Cqrs.Optional`1"/> to compare with.</param>
+            <returns>true if the objects are equal</returns>
+        </member>
+        <member name="M:Lokad.Cqrs.Optional`1.Equals(System.Object)">
+            <summary>
+            Determines whether the specified <see cref="T:System.Object"/> is equal to the current <see cref="T:System.Object"/>.
+            </summary>
+            <param name="obj">The <see cref="T:System.Object"/> to compare with the current <see cref="T:System.Object"/>.</param>
+            <returns>
+            true if the specified <see cref="T:System.Object"/> is equal to the current <see cref="T:System.Object"/>; otherwise, false.
+            </returns>
+            <exception cref="T:System.NullReferenceException">
+            The <paramref name="obj"/> parameter is null.
+            </exception>
+        </member>
+        <member name="M:Lokad.Cqrs.Optional`1.GetHashCode">
+            <summary>
+            Serves as a hash function for this instance.
+            </summary>
+            <returns>
+            A hash code for the current <see cref="T:Lokad.Cqrs.Optional`1"/>.
+            </returns>
+        </member>
+        <member name="M:Lokad.Cqrs.Optional`1.op_Equality(Lokad.Cqrs.Optional{`0},Lokad.Cqrs.Optional{`0})">
+            <summary>
+            Implements the operator ==.
+            </summary>
+            <param name="left">The left.</param>
+            <param name="right">The right.</param>
+            <returns>The result of the operator.</returns>
+        </member>
+        <member name="M:Lokad.Cqrs.Optional`1.op_Inequality(Lokad.Cqrs.Optional{`0},Lokad.Cqrs.Optional{`0})">
+            <summary>
+            Implements the operator !=.
+            </summary>
+            <param name="left">The left.</param>
+            <param name="right">The right.</param>
+            <returns>The result of the operator.</returns>
+        </member>
+        <member name="M:Lokad.Cqrs.Optional`1.op_Implicit(`0)~Lokad.Cqrs.Optional{`0}">
+            <summary>
+            Performs an implicit conversion from <typeparamref name="T"/> to <see cref="T:Lokad.Cqrs.Optional`1"/>.
+            </summary>
+            <param name="item">The item.</param>
+            <returns>The result of the conversion.</returns>
+        </member>
+        <member name="M:Lokad.Cqrs.Optional`1.ToString">
+            <summary>
+            Returns a <see cref="T:System.String"/> that represents this instance.
+            </summary>
+            <returns>
+            A <see cref="T:System.String"/> that represents this instance.
+            </returns>
+        </member>
+        <member name="P:Lokad.Cqrs.Optional`1.Value">
+            <summary>
+            Gets the underlying value.
+            </summary>
+            <value>The value.</value>
+        </member>
+        <member name="P:Lokad.Cqrs.Optional`1.HasValue">
+            <summary>
+            Gets a value indicating whether this instance has value.
+            </summary>
+            <value><c>true</c> if this instance has value; otherwise, <c>false</c>.</value>
+        </member>
+        <member name="F:Lokad.Cqrs.Feature.StreamingStorage.StreamingConditionType.IfMatch">
+            <summary>
+            Only perform the action if the client supplied entity matches the same entity on the server. 
+            This is mainly for methods like PUT to only update a resource if it has not been modified since 
+            the user last updated it.
+            </summary>
+        </member>
+        <member name="T:Lokad.Cqrs.Core.Dispatch.DispatchMessagesToRoute">
+            <summary>
+             Simple dispatcher that forwards messages according to the rules.
+             We don't care about duplication management, since recipients will do that.
+            </summary>
+        </member>
+        <member name="M:Lokad.Cqrs.Core.Dispatch.DispatchMessagesToRoute.#ctor(Lokad.Cqrs.Core.Outbox.QueueWriterRegistry,System.Func{Lokad.Cqrs.ImmutableEnvelope,System.String})">
+            <summary>
+            Initializes a new instance of the <see cref="T:Lokad.Cqrs.Core.Dispatch.DispatchMessagesToRoute"/> class.
+            </summary>
+            <param name="queueRegistry">The queue registry.</param>
+            <param name="routingRules">The routing rules.</param>
+        </member>
+        <member name="M:Lokad.Cqrs.Core.Dispatch.DispatchMessagesToRoute.DispatchMessage(Lokad.Cqrs.ImmutableEnvelope)">
+            <summary>
+            Dispatches the message by forwarding it according to the routing rules.
+            </summary>
+            <param name="message">The message.</param>
+        </member>
+        <member name="M:Lokad.Cqrs.Core.Dispatch.DispatchMessagesToRoute.Init">
+            <summary>
+            Initializes this instance
+            </summary>
+        </member>
+        <member name="T:Lokad.Cqrs.Feature.TapeStorage.TapeAppendConditionException">
+            <summary>
+            Is thrown internally, when storage version does not match the condition specified in <see cref="T:Lokad.Cqrs.Feature.TapeStorage.TapeAppendCondition"/>
+            </summary>
+        </member>
+        <member name="M:Lokad.Cqrs.Feature.FilePartition.StatelessFileQueueReader.AckMessage(Lokad.Cqrs.Core.Inbox.EnvelopeTransportContext)">
+            <summary>
+            ACKs the message by deleting it from the queue.
+            </summary>
+            <param name="envelope">The message context to ACK.</param>
+        </member>
+    </members>
+</doc>

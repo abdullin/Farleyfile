@@ -54,7 +54,10 @@
       <DesignTime>True</DesignTime>
     </Compile>
     <Compile Include="ProjectEvent.cs" />
-    <Compile Include="Views\DayView.cs" />
+    <Compile Include="Views\StagingView.cs" />
+    <Compile Include="Views\StoryView.cs" />
+    <Compile Include="Views\StoryViewNote.cs" />
+    <Compile Include="Views\StoryViewTask.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Messages.tt">

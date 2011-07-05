@@ -19,8 +19,6 @@ namespace FarleyFile.Desktop
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-
-
             
             var cache = GetDataFolder();
             using (var source = new CancellationTokenSource())

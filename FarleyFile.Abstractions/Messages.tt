@@ -2,6 +2,7 @@
 <#@ assembly name="$(SolutionDir)\Library\Lokad.CodeDsl.dll" #>
 using System;
 
+
 // this is a DSL to define code contract classes without writing them
 // Good for starting a project quickly
 // pressing Ctrl+S updates CS version immediately
@@ -9,21 +10,48 @@ using System;
 using ? = ICommand;
 using ! = IEvent;
 
-// system
-MidnightPassed! ()
 
 let noteId = long NoteId; 
+let storyId = long StoryId;
 let taskId = long TaskId;
+let contactId = long ContactId;
+let dayId = long DayId;
 let date = DateTime Date;
 
-AddNote? (string text, date)
-NoteAdded! (noteId, string text, date)
+PerspectiveCreated! (long draftId)
 
-AddTask? (string text, date)
-TaskAdded! (taskId, string text, date)
+// generic story
+StartStory? (string name)
+StoryStarted! (storyId, string name)
 
-CompleteTask? (taskId, date)
-TaskCompleted! (taskId, date)
+AddNote? (string title, string text)
+NoteAdded! (noteId, string title, string text)
+NoteAssignedToStory! (noteId, storyId, string title, string text)
+
+AddTask? (string text)
+TaskAdded! (taskId, string text)
+TaskAssignedToStory! (taskId, storyId, string text, bool completed)
+
+// helpers
+AddTaskToStory? (taskId, storyId)
+
+
+// story about a day
+AddCalendarDay?(DateTime date)
+CalendarDayAdded!(DateTime date, dayId)
+
+// story about a person
+AddContact?(string name)
+ContactAdded!(string name, contactId)
+
+
+CompleteTask? (taskId)
+//TaskCompleted! (taskId, longs storyIds) 
+
+
+
+
+
 
 
 ";   

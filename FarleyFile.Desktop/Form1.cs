@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using FarleyFile.Views;
 using Lokad.Cqrs;
 using Lokad.Cqrs.Build.Engine;
 using Lokad.Cqrs.Feature.AtomicStorage;
@@ -86,18 +87,21 @@ namespace FarleyFile.Desktop
             }
         }
 
+        DateTime _currentDay = DateTime.Now.Date;
+
         void Handle(string data)
         {
             if (data.StartsWith("an "))
             {
                 var txt = data.Substring(3).TrimStart();
-                SendToProject(new AddNote(txt, DateTime.Now));
+                var title = DateTime.Now.ToString("HH:mm");
+                SendToProject(new AddNote(title, txt));
                 return;
             }
             if (data.StartsWith("at "))
             {
                 var txt = data.Substring(3).TrimStart();
-                SendToProject(new AddTask(txt, DateTime.Now));
+                SendToProject(new AddTask(txt));
                 return;
             }
             if (data == "q")
@@ -108,7 +112,7 @@ namespace FarleyFile.Desktop
             {
                 var txt = data.Substring(3).TrimStart();
                 var id = int.Parse(txt);
-                SendToProject(new CompleteTask(id, DateTime.Now));
+                SendToProject(new CompleteTask(id));
                 return;
             }
             if (data == "clr")
@@ -116,16 +120,33 @@ namespace FarleyFile.Desktop
                 _rich.Clear();
                 return;
             }
-            if (data.StartsWith("day"))
+            if (data.StartsWith("ss "))
             {
                 var txt = data.Substring(3).TrimStart();
-                int count = 0;
+                SendToProject(new StartStory(txt));
+                return;
+            }
+            if (data.StartsWith("story"))
+            {
+                var txt = data.Substring(5).TrimStart();
+                int count = 1;
                 if (!string.IsNullOrEmpty(txt))
                 {
                     count = int.Parse(txt);
                 }
                 var builder = new StringBuilder();
-                _renderer.RenderDay(count, builder);
+
+                var result = _storage.GetEntity<StoryView>(count);
+                if (result.HasValue)
+                {
+                    var story = result.Value;
+                    builder.AppendLine("### " + story.Name);
+                    _renderer.RenderStory(builder, story.Notes, story.Tasks);
+                }
+                else
+                {
+                    Log("Story {0} not found", count);
+                }
                 _rich.Text = builder.ToString();
 
                 return;

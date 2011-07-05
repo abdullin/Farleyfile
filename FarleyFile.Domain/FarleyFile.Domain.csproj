@@ -45,8 +45,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AggregateFactory.cs" />
-    <Compile Include="Aggregates\ProjectAggregate.cs" />
-    <Compile Include="Aggregates\ProjectAggregateState.cs" />
+    <Compile Include="Aggregates\PerspectiveAggregate.cs" />
+    <Compile Include="Aggregates\PerspectiveAggregateState.cs" />
     <Compile Include="RedirectToWhen.cs" />
   </ItemGroup>
   <ItemGroup>

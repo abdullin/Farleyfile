@@ -7,14 +7,14 @@ namespace FarleyFile
     {
         public static IEnumerable<IEvent> LoadProject(IEnumerable<IEvent> given, IEnumerable<ICommand> when)
         {
-            var state = new ProjectAggregateState();
+            var state = new PerspectiveAggregateState();
             foreach (var @event in given)
             {
                 state.Apply(@event);
             }
 
             var result = new List<IEvent>();
-            var ar = new ProjectAggregate(result.Add, state);
+            var ar = new PerspectiveAggregate(result.Add, state);
             foreach (var c in when)
             {
                 ar.Execute(c);

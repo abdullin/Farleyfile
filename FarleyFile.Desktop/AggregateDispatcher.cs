@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Lokad.Cqrs;
 using Lokad.Cqrs.Core.Dispatch;
@@ -62,10 +63,10 @@ namespace FarleyFile
                 b.Items.Add(e);
             }
 
-            var last = records.Count == 0 ? 0 : records.Last().Index;
+            var last = records.Count == 0 ? 0 : records.Last().Index + 1;
 
             var data = _streamer.SaveEnvelopeData(b.Build());
-            var result = stream.TryAppendRecords(new[] { data }, TapeAppendCondition.VersionIs(last));
+            var result = stream.TryAppend( data, TapeAppendCondition.VersionIs(last));
             if (!result)
                 throw new InvalidOperationException(
                     "Data was modified concurrently, and we don't have merging implemented, yet");
