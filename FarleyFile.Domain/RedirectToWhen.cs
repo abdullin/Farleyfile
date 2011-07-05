@@ -33,7 +33,6 @@ namespace FarleyFile
             {
                 throw ex.InnerException;
             }
-
         }
 
         public static void InvokeCommand<T>(T instance, ICommand command)
