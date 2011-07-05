@@ -22,14 +22,14 @@ namespace FarleyFile.Aggregates
         public void When(NoteAdded e)
         {
             StepRecordId(e.NoteId);
-            var item = new NoteItem(e.NoteId, e.Text);
+            var item = new NoteItem(e.Title, e.Text);
             _items.Add(e.NoteId, item);
         }
 
         public void When(TaskAdded e)
         {
             StepRecordId(e.TaskId);
-            var item = new TaskItem(e.TaskId, e.Text);
+            var item = new TaskItem(e.Text);
             _items.Add(e.TaskId, item);
         }
 
@@ -38,8 +38,8 @@ namespace FarleyFile.Aggregates
             var note = (NoteItem)_items[e.NoteId];
             var story = _stories[e.StoryId];
 
-            story.AsItGoes.Add(note);
-            note.FeaturedIn.Add(story);
+            story.AsItGoes.Add(e.NoteId);
+            note.FeaturedIn.Add(e.StoryId);
         }
 
         public void When(PerspectiveCreated e)
@@ -53,8 +53,8 @@ namespace FarleyFile.Aggregates
             var task = (TaskItem) _items[e.TaskId];
             var story = _stories[e.StoryId];
 
-            story.AsItGoes.Add(task);
-            task.FeaturedIn.Add(story);
+            story.AsItGoes.Add(e.TaskId);
+            task.FeaturedIn.Add(e.StoryId);
         }
 
         public bool TryGetStory(long storyId, out AbstractStory story)
@@ -108,9 +108,11 @@ namespace FarleyFile.Aggregates
     public sealed class NoteItem : AbstractItem
     {
         public readonly string Text;
+        public readonly string Title;
 
-        public NoteItem(long noteId, string text) : base(noteId)
+        public NoteItem(string title, string text)
         {
+            Title = title;
             Text = text;
         }
     }
@@ -119,17 +121,13 @@ namespace FarleyFile.Aggregates
 
     public abstract class AbstractItem
     {
-        public IList<AbstractStory> FeaturedIn = new List<AbstractStory>();
-        public readonly long ItemId;
-        public AbstractItem(long itemId)
-        {
-            ItemId = itemId;
-        }
+        public HashSet<long> FeaturedIn = new HashSet<long>();
+        
     }
 
     public abstract class AbstractStory
     {
-        public IList<AbstractItem> AsItGoes = new List<AbstractItem>();
+        public HashSet<long> AsItGoes = new HashSet<long>();
         public readonly long ItemId;
         public AbstractStory(long itemId)
         {
@@ -155,7 +153,7 @@ namespace FarleyFile.Aggregates
         public string Name { get; set; }
         public bool Completed { get; set; }
 
-        public TaskItem(long taskId, string name) : base(taskId)
+        public TaskItem(string name) 
         {
             Name = name;
         }

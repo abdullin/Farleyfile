@@ -129,6 +129,19 @@ namespace FarleyFile
         }
     }
     
+    public sealed class AddToStory : ICommand
+    {
+        public long ItemId { get; internal set; }
+        public long StoryId { get; internal set; }
+        
+        internal AddToStory () {}
+        public AddToStory (long itemId, long storyId)
+        {
+            ItemId = itemId;
+            StoryId = storyId;
+        }
+    }
+    
     public sealed class AddTaskToStory : ICommand
     {
         public long TaskId { get; internal set; }

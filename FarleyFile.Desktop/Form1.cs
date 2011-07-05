@@ -126,6 +126,13 @@ namespace FarleyFile.Desktop
                 SendToProject(new StartStory(txt));
                 return;
             }
+            if (data.StartsWith("add "))
+            {
+                var txt = data.Split(new[] {' '}, StringSplitOptions.RemoveEmptyEntries);
+                var item = int.Parse(txt[1]);
+                var story = int.Parse(txt[2]);
+                SendToProject(new AddToStory(item, story));
+            }
             if (data.StartsWith("story"))
             {
                 var txt = data.Substring(5).TrimStart();

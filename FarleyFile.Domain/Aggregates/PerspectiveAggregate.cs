@@ -44,6 +44,41 @@ namespace FarleyFile.Aggregates
             Apply(new NoteAdded(nextRecord, n.Title, n.Text));
             Apply(new NoteAssignedToStory(nextRecord, _state.DraftId, n.Title, n.Text));
         }
+        public void When(AddToStory c)
+        {
+            AbstractItem item;
+            if (!_state.TryGet(c.ItemId, out item))
+            {
+                throw Error("Item {0} was not found", c.ItemId);
+            }
+            AbstractStory story;
+            if (!_state.TryGetStory(c.StoryId, out story))
+            {
+                throw Error("Story {0} was not found", c.StoryId);
+            }
+            if (item.FeaturedIn.Contains(c.StoryId))
+            {
+                return;
+            }
+
+
+            var note = item as NoteItem;
+            if (note != null)
+            {
+                Apply(new NoteAssignedToStory(c.ItemId, c.StoryId, note.Title, note.Text));
+                return;
+            }
+
+            var task = item as TaskItem;
+
+            if (task != null)
+            {
+                Apply(new TaskAssignedToStory(c.ItemId, c.StoryId, task.Name, task.Completed));
+                return;
+            }
+
+            throw Error("We can't move item {0} of type {1} around.", c.ItemId, item.GetType());
+        }
 
         public void When(CompleteTask c)
         {
@@ -55,7 +90,7 @@ namespace FarleyFile.Aggregates
 
             if (!item.Completed)
             {
-                var stories = item.FeaturedIn.Select(f => f.ItemId).ToArray();
+                var stories = item.FeaturedIn.ToArray();
                 Apply(new TaskCompleted(c.TaskId,stories));
             }
         }

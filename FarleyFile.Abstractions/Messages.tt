@@ -32,6 +32,9 @@ AddTask? (string text)
 TaskAdded! (taskId, string text)
 TaskAssignedToStory! (taskId, storyId, string text, bool completed)
 
+AddToStory? (long itemId, storyId)
+
+
 // helpers
 AddTaskToStory? (taskId, storyId)
 
