@@ -10,7 +10,9 @@ namespace FarleyFile
         IConsume<NoteAssignedToStory>,
         IConsume<TaskCompleted>,
         IConsume<ContactStoryStarted>,
-        IConsume<DayStoryStarted>
+        IConsume<DayStoryStarted>,
+        IConsume<NoteRemovedFromStory>,
+        IConsume<TaskRemovedFromStory>
 
     {
         readonly IAtomicEntityWriter<long,StoryView> _writer;
@@ -51,6 +53,16 @@ namespace FarleyFile
         public void Consume(DayStoryStarted e)
         {
             _writer.Add(e.DayId, new StoryView { Name = e.Date.ToString("yyyy-MM-dd") });
+        }
+
+        public void Consume(NoteRemovedFromStory e)
+        {
+            _writer.UpdateOrThrow(e.StoryId, sv => sv.RemoveNote(e.NoteId));
+        }
+
+        public void Consume(TaskRemovedFromStory e)
+        {
+            _writer.UpdateOrThrow(e.StoryId, sv => sv.RemoveTask(e.TaskId));
         }
     }
 

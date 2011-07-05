@@ -87,16 +87,14 @@ namespace FarleyFile
             }
         }
 
-        public void RenderStory(RichTextBox text, StoryView view)
+        public void RenderStory(RichTextBox text, StoryView view, long id)
         {
-            using (text.Styled(Solarized.Base01, true))
+            using (text.Styled(Solarized.Base00))
             {
-                text.AppendLine(view.Name);
+                text.AppendLine("Story: {0} ({1})", view.Name, id);
             }
-
             if (view.Tasks.Count > 0)
             {
-                text.AppendLine();
                 foreach (var task in view.Tasks.OrderBy(c => c.Completed))
                 {
                     var color = task.Completed ? Color.Empty : Solarized.Green;
@@ -106,13 +104,13 @@ namespace FarleyFile
                             task.Text));
                     }
                 }
+                text.AppendLine();
             }
 
             if (view.Notes.Count > 0)
             {
                 foreach (var note in view.Notes)
                 {
-                    text.AppendLine();
                     using (text.Styled(Solarized.Blue))
                     {
                         text.AppendLine("{0} ({1})", note.Title, note.NoteId);
@@ -123,7 +121,16 @@ namespace FarleyFile
                         text.AppendLine(note.Text);
                     }
                 }
+                text.AppendLine();
             }
+            if (view.Notes.Count == 0 && view.Tasks.Count == 0)
+            {
+                using (text.Styled(Solarized.Red))
+                {
+                    text.AppendLine("  Story is empty");
+                }
+            }
+
         }
     }
 

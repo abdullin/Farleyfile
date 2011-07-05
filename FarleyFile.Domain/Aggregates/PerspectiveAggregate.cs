@@ -51,14 +51,22 @@ namespace FarleyFile.Aggregates
         public void When(AddTask c)
         {
             var nextRecord = _state.GetNextId();
+            if (!_state.StoryExists(c.StoryId))
+            {
+                throw Error("Story {0} was not found", c.StoryId);
+            }
             Apply(new TaskAdded(nextRecord, c.Text));
-            Apply(new TaskAssignedToStory(nextRecord, _state.DraftId, c.Text, false));
+            Apply(new TaskAssignedToStory(nextRecord, c.StoryId, c.Text, false));
         }
-        public void When(AddNote n)
+        public void When(AddNote c)
         {
             var nextRecord = _state.GetNextId();
-            Apply(new NoteAdded(nextRecord, n.Title, n.Text));
-            Apply(new NoteAssignedToStory(nextRecord, _state.DraftId, n.Title, n.Text));
+            if (!_state.StoryExists(c.StoryId))
+            {
+                throw Error("Story {0} was not found", c.StoryId);
+            }
+            Apply(new NoteAdded(nextRecord, c.Title, c.Text));
+            Apply(new NoteAssignedToStory(nextRecord, c.StoryId, c.Title, c.Text));
         }
         public void When(AddToStory c)
         {
@@ -76,8 +84,6 @@ namespace FarleyFile.Aggregates
             {
                 return;
             }
-
-
             var note = item as NoteItem;
             if (note != null)
             {
@@ -92,7 +98,39 @@ namespace FarleyFile.Aggregates
                 Apply(new TaskAssignedToStory(c.ItemId, c.StoryId, task.Name, task.Completed));
                 return;
             }
+            throw Error("We can't move item {0} of type {1} around.", c.ItemId, item.GetType());
+        }
 
+        public void When(RemoveFromStory c)
+        {
+            AbstractItem item;
+            if (!_state.TryGet(c.ItemId, out item))
+            {
+                throw Error("Item {0} was not found", c.ItemId);
+            }
+            AbstractStory story;
+            if (!_state.TryGetStory(c.StoryId, out story))
+            {
+                throw Error("Story {0} was not found", c.StoryId);
+            }
+            if (!item.FeaturedIn.Contains(c.StoryId))
+            {
+                return;
+            }
+            var note = item as NoteItem;
+            if (note != null)
+            {
+                Apply(new NoteRemovedFromStory(c.ItemId, c.StoryId));
+                return;
+            }
+
+            var task = item as TaskItem;
+
+            if (task != null)
+            {
+                Apply(new TaskRemovedFromStory(c.ItemId, c.StoryId));
+                return;
+            }
             throw Error("We can't move item {0} of type {1} around.", c.ItemId, item.GetType());
         }
 

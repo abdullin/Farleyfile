@@ -8,8 +8,6 @@ namespace FarleyFile.Aggregates
         long _recordId;
         public bool Created { get; private set; }
 
-        public long DraftId { get; private set; }
-
         readonly Dictionary<long, AbstractStory> _stories = new Dictionary<long, AbstractStory>();
         readonly Dictionary<long, AbstractItem> _items = new Dictionary<long, AbstractItem>();
 
@@ -56,11 +54,18 @@ namespace FarleyFile.Aggregates
             story.AsItGoes.Add(e.NoteId);
             note.FeaturedIn.Add(e.StoryId);
         }
+        public void When(NoteRemovedFromStory e)
+        {
+            var note = (NoteItem)_items[e.NoteId];
+            var story = _stories[e.StoryId];
+
+            story.AsItGoes.Remove(e.NoteId);
+            note.FeaturedIn.Remove(e.StoryId);
+        }
 
         public void When(PerspectiveCreated e)
         {
             Created = true;
-            DraftId = e.DraftId;
         }
 
         public void When(TaskAssignedToStory e)
@@ -72,9 +77,23 @@ namespace FarleyFile.Aggregates
             task.FeaturedIn.Add(e.StoryId);
         }
 
+        public void When(TaskRemovedFromStory e)
+        {
+            var task = (TaskItem)_items[e.TaskId];
+            var story = _stories[e.StoryId];
+
+            story.AsItGoes.Remove(e.TaskId);
+            task.FeaturedIn.Remove(e.StoryId);
+        }
+
         public bool TryGetStory(long storyId, out AbstractStory story)
         {
             return _stories.TryGetValue(storyId, out story);
+        }
+
+        public bool StoryExists(long storyId)
+        {
+            return _stories.ContainsKey(storyId);
         }
 
         public bool TryGet<TItem>(long itemId, out TItem item)

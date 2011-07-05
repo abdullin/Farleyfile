@@ -33,15 +33,18 @@ StartContactStory?(string name)
 ContactStoryStarted!(contactId, string name)
 
 
-AddNote? (string title, string text)
+AddNote? (string title, string text, storyId)
 NoteAdded! (noteId, string title, string text)
-NoteAssignedToStory! (noteId, storyId, string title, string text)
+NoteAssignedToStory!  (noteId, storyId, string title, string text)
+NoteRemovedFromStory! (noteId, storyId)
 
-AddTask? (string text)
+AddTask? (string text, storyId)
 TaskAdded! (taskId, string text)
 TaskAssignedToStory! (taskId, storyId, string text, bool completed)
+TaskRemovedFromStory! (taskId, storyId)
 
 AddToStory? (long itemId, storyId)
+RemoveFromStory? (long itemId, storyId)
 
 
 // helpers

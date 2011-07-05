@@ -17,6 +17,24 @@ namespace FarleyFile.Views
             Tasks = new List<StoryViewTask>();
         }
 
+        public void RemoveNote(long noteId)
+        {
+            var notes = Notes.Where(n => n.NoteId == noteId).ToList();
+            foreach (var note in notes)
+            {
+                Notes.Remove(note);
+            }
+        }
+
+        public void RemoveTask(long taskId)
+        {
+            var tasks = Tasks.Where(n => n.TaskId == taskId).ToList();
+            foreach (var task in tasks)
+            {
+                Tasks.Remove(task);
+            }
+        }
+
         public void AddNote(long noteId, string title, string text)
         {
             Notes.Add(new StoryViewNote()

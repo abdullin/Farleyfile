@@ -35,13 +35,17 @@ namespace FarleyFile.Desktop
 
             _renderer = new TextRenderers(_storage);
 
+            label1.BackColor = Solarized.Base03;
+            label1.ForeColor = Solarized.Base01;
+
             panel2.BackColor = Color.FromArgb(253, 246, 227); 
             _rich.BackColor = Solarized.Base3;
             _rich.ForeColor = Solarized.Base00;
             textBox1.BackColor = Solarized.Base03;
             textBox1.ForeColor = Solarized.Base0;
-
         }
+
+        long CurrentStoryId { get; set; }
 
         public void SendToProject(params ICommand[] commands)
         {
@@ -71,6 +75,8 @@ namespace FarleyFile.Desktop
                         }
                     });
             _disposers.Add(sub);
+            SelectStory(1, "Draft");
+            LoadStory(1);
         }
 
         
@@ -90,6 +96,14 @@ namespace FarleyFile.Desktop
                 
             }
         }
+        public void Error(string text, params object[] args)
+        {
+            using (_rich.Styled(Solarized.Red))
+            {
+                _rich.AppendLine(text, args); 
+                _rich.ScrollToCaret();
+            }
+        }
 
         
         private void textBox1_KeyDown(object sender, KeyEventArgs e)
@@ -106,17 +120,12 @@ namespace FarleyFile.Desktop
                 }
                 catch (Exception ex)
                 {
-                    using (_rich.Styled(Solarized.Red))
-                    {
-                        Log(ex.Message);
-                    }
+                    Error(ex.Message);
                 }
                 _rich.ScrollToCaret();
                 textBox1.Clear();
             }
         }
-
-        DateTime _currentDay = DateTime.Now.Date;
 
         void Handle(string data)
         {
@@ -124,13 +133,13 @@ namespace FarleyFile.Desktop
             {
                 var txt = data.Substring(3).TrimStart();
                 var title = DateTime.Now.ToString("HH:mm");
-                SendToProject(new AddNote(title, txt));
+                SendToProject(new AddNote(title, txt, CurrentStoryId));
                 return;
             }
             if (data.StartsWith("at "))
             {
                 var txt = data.Substring(3).TrimStart();
-                SendToProject(new AddTask(txt));
+                SendToProject(new AddTask(txt, CurrentStoryId));
                 return;
             }
             if (data == "q")
@@ -149,50 +158,82 @@ namespace FarleyFile.Desktop
                 _rich.Clear();
                 return;
             }
-            if (data.StartsWith("ss "))
+            if (data.StartsWith("new "))
             {
-                var txt = data.Substring(3).TrimStart();
+                var txt = data.Substring(4).TrimStart();
                 SendToProject(new StartSimpleStory(txt));
                 return;
             }
-            if (data.StartsWith("add "))
+            if (data.StartsWith("cp "))
             {
                 var txt = data.Split(new[] {' '}, StringSplitOptions.RemoveEmptyEntries);
-                var item = int.Parse(txt[1]);
+                var item = (txt[1].Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries));
                 var story = int.Parse(txt[2]);
-                SendToProject(new AddToStory(item, story));
+                SendToProject(item.Select(i => new AddToStory(int.Parse(i), story)).ToArray());
+                return;
             }
-            if (data == "stories")
+            if (data.StartsWith("rm "))
+            {
+                var txt = data.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+
+                var item = (txt[1].Split(new[]{','}, StringSplitOptions.RemoveEmptyEntries));
+                var story = int.Parse(txt[2]);
+                SendToProject(item.Select(i => new RemoveFromStory(int.Parse(i), story)).ToArray());
+                return;
+            }
+            if (data == "list")
             {
                 var view = _storage.GetSingletonOrNew<StoryListView>();
                 _renderer.RenderStoryList(_rich, view);
                 return;
             }
-            if (data.StartsWith("story"))
+            if (data.StartsWith("set"))
             {
-                var txt = data.Substring(5).TrimStart();
-                int count = 1;
+                var txt = data.Substring(3).TrimStart();
+                int storyId = 1;
                 if (!string.IsNullOrEmpty(txt))
                 {
-                    count = int.Parse(txt);
+                    storyId = int.Parse(txt);
                 }
-
-                var result = _storage.GetEntity<StoryView>(count);
-                if (result.HasValue)
-                {
-                    var story = result.Value;
-                    
-                    _renderer.RenderStory(_rich, story);
-                }
-                else
-                {
-                    Log("Story {0} not found", count);
-                }
-
+                LoadStory(storyId);
+                return;
+            }
+            if (data == "")
+            {
+                LoadStory(CurrentStoryId);
+                return;
+            }
+            if (data == " ")
+            {
+                _rich.Clear();
+                LoadStory(CurrentStoryId);
                 return;
             }
 
             Log("Unknown command sequence: {0}", data);
+        }
+
+        void LoadStory(long storyId)
+        {
+            var result = _storage.GetEntity<StoryView>(storyId);
+            if (result.HasValue)
+            {
+                //_rich.Clear();
+                var story = result.Value;
+                _renderer.RenderStory(_rich, story, storyId);
+                SelectStory(storyId, story.Name);
+            }
+            else
+            {
+                Log("Story {0} not found", storyId);
+            }
+
+        }
+
+        public void SelectStory(long storyId, string storyName)
+        {
+            label1.Text = string.Format("Story: {0} ({1})", storyName, storyId);
+            CurrentStoryId = storyId;
         }
 
 

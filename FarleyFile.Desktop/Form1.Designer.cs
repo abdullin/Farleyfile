@@ -33,6 +33,7 @@
             this.splitter1 = new System.Windows.Forms.Splitter();
             this.panel2 = new System.Windows.Forms.Panel();
             this._rich = new System.Windows.Forms.RichTextBox();
+            this.label1 = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.SuspendLayout();
@@ -41,7 +42,7 @@
             // 
             this.panel1.Controls.Add(this.textBox1);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel1.Location = new System.Drawing.Point(0, 459);
+            this.panel1.Location = new System.Drawing.Point(0, 436);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(740, 100);
             this.panel1.TabIndex = 0;
@@ -62,7 +63,7 @@
             // splitter1
             // 
             this.splitter1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.splitter1.Location = new System.Drawing.Point(0, 456);
+            this.splitter1.Location = new System.Drawing.Point(0, 433);
             this.splitter1.Name = "splitter1";
             this.splitter1.Size = new System.Drawing.Size(740, 3);
             this.splitter1.TabIndex = 1;
@@ -74,8 +75,8 @@
             this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel2.Location = new System.Drawing.Point(0, 0);
             this.panel2.Name = "panel2";
-            this.panel2.Padding = new System.Windows.Forms.Padding(5);
-            this.panel2.Size = new System.Drawing.Size(740, 456);
+            this.panel2.Padding = new System.Windows.Forms.Padding(5, 2, 5, 5);
+            this.panel2.Size = new System.Drawing.Size(740, 433);
             this.panel2.TabIndex = 2;
             // 
             // _rich
@@ -83,12 +84,24 @@
             this._rich.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this._rich.Dock = System.Windows.Forms.DockStyle.Fill;
             this._rich.Font = new System.Drawing.Font("Consolas", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this._rich.Location = new System.Drawing.Point(5, 5);
+            this._rich.Location = new System.Drawing.Point(5, 2);
             this._rich.Name = "_rich";
             this._rich.ReadOnly = true;
-            this._rich.Size = new System.Drawing.Size(730, 446);
+            this._rich.Size = new System.Drawing.Size(730, 426);
             this._rich.TabIndex = 0;
             this._rich.Text = "";
+            // 
+            // label1
+            // 
+            this.label1.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.label1.Font = new System.Drawing.Font("Consolas", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(0, 536);
+            this.label1.Name = "label1";
+            this.label1.Padding = new System.Windows.Forms.Padding(3);
+            this.label1.Size = new System.Drawing.Size(740, 23);
+            this.label1.TabIndex = 1;
+            this.label1.Text = "Farley File";
+            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // Form1
             // 
@@ -98,6 +111,7 @@
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.splitter1);
             this.Controls.Add(this.panel1);
+            this.Controls.Add(this.label1);
             this.Name = "Form1";
             this.Text = "FarleyFile";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
@@ -116,6 +130,7 @@
         private System.Windows.Forms.Splitter splitter1;
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.RichTextBox _rich;
+        private System.Windows.Forms.Label label1;
     }
 }
 
