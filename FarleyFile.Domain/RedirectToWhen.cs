@@ -25,7 +25,14 @@ namespace FarleyFile
                 // they are persisted anyway
                 return;
             }
-            info.Invoke(instance, new[] { command });
+            try
+            {
+                info.Invoke(instance, new[] {command});
+            }
+            catch (TargetInvocationException ex)
+            {
+                throw ex.InnerException;
+            }
 
         }
 
@@ -38,7 +45,14 @@ namespace FarleyFile
                 var s = string.Format("Failed to locate {0}.When({1})", typeof(T).Name, type.Name);
                 throw new InvalidOperationException(s);
             }
-            info.Invoke(instance, new[] { command });
+            try
+            {
+                info.Invoke(instance, new[] {command});
+            }
+            catch (TargetInvocationException ex)
+            {
+                throw ex.InnerException;
+            }
         }
     }
 }
