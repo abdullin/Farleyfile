@@ -181,13 +181,13 @@ namespace FarleyFile.Desktop
                 SendToProject(item.Select(i => new RemoveFromStory(int.Parse(i), story)).ToArray());
                 return;
             }
-            if (data == "list")
+            if (data == "ls")
             {
                 var view = _storage.GetSingletonOrNew<StoryListView>();
                 _renderer.RenderStoryList(_rich, view);
                 return;
             }
-            if (data.StartsWith("set"))
+            if (data.StartsWith("cd "))
             {
                 var txt = data.Substring(3).TrimStart();
                 int storyId = 1;
