@@ -66,5 +66,21 @@ namespace FarleyFile
         }
     }
 
-    
+    public sealed class NoteViewHandler : IConsume<NoteAdded>
+    {
+        readonly IAtomicEntityWriter<long, NoteView> _writer;
+        public NoteViewHandler(IAtomicEntityWriter<long, NoteView> writer)
+        {
+            _writer = writer;
+        }
+
+        public void Consume(NoteAdded e)
+        {
+            _writer.Add(e.NoteId, new NoteView()
+                {
+                    Text = e.Text,
+                    Title = e.Title
+                });
+        }
+    }
 }

@@ -55,6 +55,7 @@
       <DesignTime>True</DesignTime>
     </Compile>
     <Compile Include="ProjectEvent.cs" />
+    <Compile Include="Views\NoteView.cs" />
     <Compile Include="Views\StoryView.cs" />
     <Compile Include="Views\StoryViewNote.cs" />
     <Compile Include="Views\StoryViewTask.cs" />

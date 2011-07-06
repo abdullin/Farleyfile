@@ -38,6 +38,9 @@ NoteAdded! (noteId, string title, string text)
 NoteAssignedToStory!  (noteId, storyId, string title, string text)
 NoteRemovedFromStory! (noteId, storyId)
 
+EditNote? (noteId, string text, string oldText)
+NoteEdited! (noteId, string newText, string oldText)
+
 AddTask? (string text, storyId)
 TaskAdded! (taskId, string text)
 TaskAssignedToStory! (taskId, storyId, string text, bool completed)

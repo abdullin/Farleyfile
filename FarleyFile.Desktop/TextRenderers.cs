@@ -79,8 +79,9 @@ namespace FarleyFile
         {
             using (text.Styled(Solarized.Yellow))
             {
-                text.AppendLine("## Stories");
+                text.AppendLine("Stories");
             }
+            text.AppendLine("=======");
             foreach (var item in list.Items)
             {
                 text.AppendLine("{0}. [{1}] {2}", item.StoryId, item.Type, item.Name);
@@ -89,15 +90,17 @@ namespace FarleyFile
 
         public void RenderStory(RichTextBox text, StoryView view, long id)
         {
-            using (text.Styled(Solarized.Base00))
+            var txt = string.Format("Story: {0} ({1})", view.Name, id);
+            using (text.Styled(Solarized.Yellow))
             {
-                text.AppendLine("Story: {0} ({1})", view.Name, id);
+                text.AppendLine(txt);
             }
+            text.AppendLine(new string('=', txt.Length));
             if (view.Tasks.Count > 0)
             {
                 foreach (var task in view.Tasks.OrderBy(c => c.Completed))
                 {
-                    var color = task.Completed ? Color.Empty : Solarized.Green;
+                    var color = task.Completed ? Solarized.Base1 : Solarized.Base00;
                     using (text.Styled(color))
                     {
                         text.AppendLine(string.Format("  {1} {2} ({0})", task.TaskId, task.Completed ? "x" : "□",
@@ -111,12 +114,12 @@ namespace FarleyFile
             {
                 foreach (var note in view.Notes)
                 {
-                    using (text.Styled(Solarized.Blue))
+                    using (text.Styled(Solarized.Base1))
                     {
                         text.AppendLine("{0} ({1})", note.Title, note.NoteId);
                     }
                     
-                    using (text.Styled(Color.Empty, indent:10))
+                    using (text.Styled(Solarized.Base00, indent:16))
                     {
                         text.AppendLine(note.Text);
                     }

@@ -2,9 +2,12 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Concurrency;
+using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using FarleyFile.Views;
 using Lokad.Cqrs;
@@ -132,7 +135,7 @@ namespace FarleyFile.Desktop
             if (data.StartsWith("an "))
             {
                 var txt = data.Substring(3).TrimStart();
-                var title = DateTime.Now.ToString("HH:mm");
+                var title = DateTime.Now.ToString("yyyy-MM-hh HH:mm");
                 SendToProject(new AddNote(title, txt, CurrentStoryId));
                 return;
             }
@@ -196,6 +199,33 @@ namespace FarleyFile.Desktop
                     storyId = int.Parse(txt);
                 }
                 LoadStory(storyId);
+                return;
+            }
+            if (data.StartsWith("vim "))
+            {
+                var txt = data.Substring(3).TrimStart();
+                int id = int.Parse(txt);
+
+                var optional = _storage.GetEntity<NoteView>(id);
+                if (!optional.HasValue)
+                {
+                    Log("Note {0} does not exist", id);
+                }
+                else
+                {
+                    var temp = Path.Combine(Path.GetTempPath(),Guid.NewGuid() + ".md");
+                    File.WriteAllText(temp, optional.Value.Text, Encoding.UTF8);
+                    var process = Process.Start("gvim.exe", temp);
+                    var changed = File.GetLastWriteTimeUtc(temp);
+                    if (null != process)
+                    {
+                        Task.Factory.StartNew(() =>
+                            {
+                                process.WaitForExit();
+                                File.Delete(temp);
+                            });
+                    }
+                }
                 return;
             }
             if (data == "")

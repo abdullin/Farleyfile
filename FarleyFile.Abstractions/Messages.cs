@@ -151,6 +151,36 @@ namespace FarleyFile
         }
     }
     
+    [DataContract] public sealed class EditNote : ICommand
+    {
+        [DataMember(Order = 1)] public long NoteId { get; internal set; }
+        [DataMember(Order = 2)] public string Text { get; internal set; }
+        [DataMember(Order = 3)] public string OldText { get; internal set; }
+        
+        internal EditNote () {}
+        public EditNote (long noteId, string text, string oldText)
+        {
+            NoteId = noteId;
+            Text = text;
+            OldText = oldText;
+        }
+    }
+    
+    [DataContract] public sealed class NoteEdited : IEvent
+    {
+        [DataMember(Order = 1)] public long NoteId { get; internal set; }
+        [DataMember(Order = 2)] public string NewText { get; internal set; }
+        [DataMember(Order = 3)] public string OldText { get; internal set; }
+        
+        internal NoteEdited () {}
+        public NoteEdited (long noteId, string newText, string oldText)
+        {
+            NoteId = noteId;
+            NewText = newText;
+            OldText = oldText;
+        }
+    }
+    
     [DataContract] public sealed class AddTask : ICommand
     {
         [DataMember(Order = 1)] public string Text { get; internal set; }
