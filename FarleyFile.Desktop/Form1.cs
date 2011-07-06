@@ -132,11 +132,20 @@ namespace FarleyFile.Desktop
 
         void Handle(string data)
         {
-            if (data.StartsWith("an "))
+            if (data.StartsWith("an"))
             {
-                var txt = data.Substring(3).TrimStart();
+                var txt = data.Substring(2).TrimStart();
                 var title = DateTime.Now.ToString("yyyy-MM-hh HH:mm");
-                SendToProject(new AddNote(title, txt, CurrentStoryId));
+
+                if (!string.IsNullOrEmpty(txt))
+                {
+                    SendToProject(new AddNote(title, txt, CurrentStoryId));
+                }
+                else
+                {
+                    var storyId = CurrentStoryId;
+                    GrabFile("", (s, s1) => SendToProject(new AddNote(title, s, storyId)));
+                }
                 return;
             }
             if (data.StartsWith("at "))
@@ -180,7 +189,11 @@ namespace FarleyFile.Desktop
                 var txt = data.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 
                 var item = (txt[1].Split(new[]{','}, StringSplitOptions.RemoveEmptyEntries));
-                var story = int.Parse(txt[2]);
+                var story = CurrentStoryId;
+                if (txt.Length > 2)
+                {
+                    story = int.Parse(txt[2]);
+                }
                 SendToProject(item.Select(i => new RemoveFromStory(int.Parse(i), story)).ToArray());
                 return;
             }
@@ -213,18 +226,8 @@ namespace FarleyFile.Desktop
                 }
                 else
                 {
-                    var temp = Path.Combine(Path.GetTempPath(),Guid.NewGuid() + ".md");
-                    File.WriteAllText(temp, optional.Value.Text, Encoding.UTF8);
-                    var process = Process.Start("gvim.exe", temp);
-                    var changed = File.GetLastWriteTimeUtc(temp);
-                    if (null != process)
-                    {
-                        Task.Factory.StartNew(() =>
-                            {
-                                process.WaitForExit();
-                                File.Delete(temp);
-                            });
-                    }
+                    var note = optional.Value;
+                    GrabFile(note.Text, (s, s1) => SendToProject(new EditNote(id,s,s1)));
                 }
                 return;
             }
@@ -241,6 +244,31 @@ namespace FarleyFile.Desktop
             }
 
             Log("Unknown command sequence: {0}", data);
+        }
+
+        static void GrabFile(string text, Action<string, string> whenDone)
+        {
+            var temp = Path.Combine(Path.GetTempPath(), Guid.NewGuid() + ".md");
+            File.WriteAllText(temp, text, Encoding.UTF8);
+            var process = Process.Start("gvim.exe", temp);
+            var changed = File.GetLastWriteTimeUtc(temp);
+            if (null != process)
+            {
+                Task.Factory.StartNew(() => GrabInner(text, whenDone, process, temp, changed));
+            }
+        }
+
+        static void GrabInner(string text, Action<string, string> whenDone, Process process, string temp, DateTime changed)
+        {
+            process.WaitForExit();
+            if (File.Exists(temp))
+            {
+                if (changed < File.GetLastWriteTimeUtc(temp))
+                {
+                    var newText = File.ReadAllText(temp, Encoding.UTF8);
+                    whenDone(newText, text);
+                }
+            }
         }
 
         void LoadStory(long storyId)

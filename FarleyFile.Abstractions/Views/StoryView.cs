@@ -61,6 +61,14 @@ namespace FarleyFile.Views
                 update(task);
             }
         }
+
+        public void UpdateNote(long noteId, Action<StoryViewNote> update)
+        {
+            foreach (var note in Notes.Where(t => t.NoteId == noteId))
+            {
+                update(note);
+            }
+        }
     }
 
     public sealed class StoryListView

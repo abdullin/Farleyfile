@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.Serialization;
+using System.Collections.Generic;
 
 // this is a DSL to define code contract classes without writing them
 // Good for starting a project quickly
@@ -171,13 +172,15 @@ namespace FarleyFile
         [DataMember(Order = 1)] public long NoteId { get; internal set; }
         [DataMember(Order = 2)] public string NewText { get; internal set; }
         [DataMember(Order = 3)] public string OldText { get; internal set; }
+        [DataMember(Order = 4)] public ICollection<long> StoryIds { get; internal set; }
         
         internal NoteEdited () {}
-        public NoteEdited (long noteId, string newText, string oldText)
+        public NoteEdited (long noteId, string newText, string oldText, ICollection<long> storyIds)
         {
             NoteId = noteId;
             NewText = newText;
             OldText = oldText;
+            StoryIds = storyIds;
         }
     }
     

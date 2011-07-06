@@ -68,6 +68,12 @@ namespace FarleyFile.Aggregates
             Created = true;
         }
 
+        public void Whe(NoteEdited e)
+        {
+            var note = (NoteItem) _items[e.NoteId];
+            note.Edit(e.NewText);
+        }
+
         public void When(TaskAssignedToStory e)
         {
             var task = (TaskItem) _items[e.TaskId];
@@ -147,13 +153,17 @@ namespace FarleyFile.Aggregates
 
     public sealed class NoteItem : AbstractItem
     {
-        public readonly string Text;
-        public readonly string Title;
+        public string Text { get; private set; }
+        public string Title { get; private set; }
 
         public NoteItem(string title, string text)
         {
             Title = title;
             Text = text;
+        }
+        public void Edit(string newText)
+        {
+            Text = newText;
         }
     }
 

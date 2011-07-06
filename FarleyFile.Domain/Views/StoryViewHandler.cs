@@ -12,7 +12,8 @@ namespace FarleyFile
         IConsume<ContactStoryStarted>,
         IConsume<DayStoryStarted>,
         IConsume<NoteRemovedFromStory>,
-        IConsume<TaskRemovedFromStory>
+        IConsume<TaskRemovedFromStory>,
+        IConsume<NoteEdited>
 
     {
         readonly IAtomicEntityWriter<long,StoryView> _writer;
@@ -64,23 +65,14 @@ namespace FarleyFile
         {
             _writer.UpdateOrThrow(e.StoryId, sv => sv.RemoveTask(e.TaskId));
         }
-    }
 
-    public sealed class NoteViewHandler : IConsume<NoteAdded>
-    {
-        readonly IAtomicEntityWriter<long, NoteView> _writer;
-        public NoteViewHandler(IAtomicEntityWriter<long, NoteView> writer)
+        public void Consume(NoteEdited e)
         {
-            _writer = writer;
-        }
-
-        public void Consume(NoteAdded e)
-        {
-            _writer.Add(e.NoteId, new NoteView()
-                {
-                    Text = e.Text,
-                    Title = e.Title
-                });
+            if (e.StoryIds == null) return;
+            foreach (var storyId in e.StoryIds)
+            {
+                _writer.UpdateOrThrow(storyId, sv => sv.UpdateNote(e.NoteId, n => n.Text = e.NewText));
+            }
         }
     }
 }

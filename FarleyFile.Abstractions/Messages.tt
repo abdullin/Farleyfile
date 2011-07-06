@@ -2,6 +2,7 @@
 <#@ assembly name="$(SolutionDir)\Library\Lokad.CodeDsl.dll" #>
 using System;
 using System.Runtime.Serialization;
+using System.Collections.Generic;
 
 // this is a DSL to define code contract classes without writing them
 // Good for starting a project quickly
@@ -39,7 +40,7 @@ NoteAssignedToStory!  (noteId, storyId, string title, string text)
 NoteRemovedFromStory! (noteId, storyId)
 
 EditNote? (noteId, string text, string oldText)
-NoteEdited! (noteId, string newText, string oldText)
+NoteEdited! (noteId, string newText, string oldText, ICollection<long> storyIds)
 
 AddTask? (string text, storyId)
 TaskAdded! (taskId, string text)

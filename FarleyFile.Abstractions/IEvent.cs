@@ -5,6 +5,10 @@ namespace FarleyFile
 
     }
 
+    /// <summary>
+    /// because we can't use [] for now
+    /// </summary>
+    
     public sealed class TaskCompleted : IEvent
     {
         public long TaskId { get; internal set; }

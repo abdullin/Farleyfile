@@ -48,6 +48,7 @@
     <Compile Include="Aggregates\PerspectiveAggregate.cs" />
     <Compile Include="Aggregates\PerspectiveAggregateState.cs" />
     <Compile Include="RedirectToWhen.cs" />
+    <Compile Include="Views\NoteViewHandler.cs" />
     <Compile Include="Views\StoryListHandler.cs" />
     <Compile Include="Views\StoryViewHandler.cs" />
   </ItemGroup>

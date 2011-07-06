@@ -17,7 +17,7 @@ namespace FarleyFile.Aggregates
             {
                 var storyId = _state.GetNextId();
                 Apply(new PerspectiveCreated(storyId));
-                Apply(new SimpleStoryStarted(storyId,"Draft"));
+                Apply(new SimpleStoryStarted(storyId, "Draft"));
             }
         }
 
@@ -36,6 +36,16 @@ namespace FarleyFile.Aggregates
         {
             var id = _state.GetNextId();
             Apply(new ContactStoryStarted(id, c.Name));
+        }
+
+        public void When(EditNote c)
+        {
+            NoteItem item;
+            if (!_state.TryGet(c.NoteId, out item))
+            {
+                throw Error("Note {0} does not exist", c.NoteId);
+            }
+            Apply(new NoteEdited(c.NoteId, c.Text, c.OldText, item.FeaturedIn));
         }
 
         public void When(StartDayStory c)
@@ -58,6 +68,7 @@ namespace FarleyFile.Aggregates
             Apply(new TaskAdded(nextRecord, c.Text));
             Apply(new TaskAssignedToStory(nextRecord, c.StoryId, c.Text, false));
         }
+
         public void When(AddNote c)
         {
             var nextRecord = _state.GetNextId();
@@ -68,6 +79,7 @@ namespace FarleyFile.Aggregates
             Apply(new NoteAdded(nextRecord, c.Title, c.Text));
             Apply(new NoteAssignedToStory(nextRecord, c.StoryId, c.Title, c.Text));
         }
+
         public void When(AddToStory c)
         {
             AbstractItem item;
@@ -137,7 +149,7 @@ namespace FarleyFile.Aggregates
         public void When(CompleteTask c)
         {
             TaskItem item;
-            if (!_state.TryGet(c.TaskId,out item))
+            if (!_state.TryGet(c.TaskId, out item))
             {
                 throw Error("Task {0} was not found", c.TaskId);
             }
@@ -145,7 +157,7 @@ namespace FarleyFile.Aggregates
             if (!item.Completed)
             {
                 var stories = item.FeaturedIn.ToArray();
-                Apply(new TaskCompleted(c.TaskId,stories));
+                Apply(new TaskCompleted(c.TaskId, stories));
             }
         }
 
