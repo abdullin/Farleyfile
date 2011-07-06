@@ -41,6 +41,10 @@ NoteRemovedFromStory! (noteId, storyId)
 
 EditNote? (noteId, string text, string oldText)
 NoteEdited! (noteId, string newText, string oldText, ICollection<long> storyIds)
+NoteRemoved! (noteId)
+
+MergeNotes? (noteId, long secondary)
+
 
 AddTask? (string text, storyId)
 TaskAdded! (taskId, string text)

@@ -84,7 +84,7 @@ namespace FarleyFile
             text.AppendLine("=======");
             foreach (var item in list.Items)
             {
-                text.AppendLine("{0}. [{1}] {2}", item.StoryId, item.Type, item.Name);
+                text.AppendLine("[{1}] {2} ({0})", item.StoryId, item.Type, item.Name);
             }
         }
 

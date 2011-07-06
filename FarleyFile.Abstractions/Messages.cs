@@ -184,6 +184,30 @@ namespace FarleyFile
         }
     }
     
+    [DataContract] public sealed class NoteRemoved : IEvent
+    {
+        [DataMember(Order = 1)] public long NoteId { get; internal set; }
+        
+        internal NoteRemoved () {}
+        public NoteRemoved (long noteId)
+        {
+            NoteId = noteId;
+        }
+    }
+    
+    [DataContract] public sealed class MergeNotes : ICommand
+    {
+        [DataMember(Order = 1)] public long NoteId { get; internal set; }
+        [DataMember(Order = 2)] public long Secondary { get; internal set; }
+        
+        internal MergeNotes () {}
+        public MergeNotes (long noteId, long secondary)
+        {
+            NoteId = noteId;
+            Secondary = secondary;
+        }
+    }
+    
     [DataContract] public sealed class AddTask : ICommand
     {
         [DataMember(Order = 1)] public string Text { get; internal set; }

@@ -74,5 +74,7 @@ namespace FarleyFile
                 _writer.UpdateOrThrow(storyId, sv => sv.UpdateNote(e.NoteId, n => n.Text = e.NewText));
             }
         }
+
+        
     }
 }

@@ -32,6 +32,34 @@ namespace FarleyFile.Aggregates
             Apply(new SimpleStoryStarted(id, c.Name));
         }
 
+        public void When(MergeNotes c)
+        {
+            NoteItem first;
+            if (!_state.TryGet(c.NoteId, out first))
+            {
+                throw Error("Note not found {0}", c.NoteId);
+            }
+            NoteItem second;
+            if (!_state.TryGet(c.Secondary, out second))
+            {
+                throw Error("Note not found {0}", c.Secondary);
+            }
+
+            var oldText = first.Text;
+            var newText = oldText + Environment.NewLine + Environment.NewLine + second.Text;
+            Apply(new NoteEdited(c.NoteId, newText, oldText, first.FeaturedIn));
+
+            foreach (var l in second.FeaturedIn.ToList())
+            {
+                Apply(new NoteRemovedFromStory(c.Secondary, l));
+                if (!first.FeaturedIn.Contains(l))
+                {
+                    Apply(new NoteAssignedToStory(c.NoteId, l, first.Title, newText));
+                }
+            }
+            Apply(new NoteRemoved(c.Secondary));
+        }
+
         public void When(StartContactStory c)
         {
             var id = _state.GetNextId();

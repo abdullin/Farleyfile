@@ -231,6 +231,14 @@ namespace FarleyFile.Desktop
                 }
                 return;
             }
+            if (data.StartsWith("merge "))
+            {
+                var txt = data.Split(new[] { ' ',',' }, StringSplitOptions.RemoveEmptyEntries);
+                long first = long.Parse(txt[1]);
+
+                var commands = txt.Skip(2).Select(c => new MergeNotes(first, long.Parse(c))).ToArray();
+                SendToProject(commands);
+            }
             if (data == "")
             {
                 LoadStory(CurrentStoryId);

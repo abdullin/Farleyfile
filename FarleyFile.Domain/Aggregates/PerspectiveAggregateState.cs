@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace FarleyFile.Aggregates
 {
@@ -68,10 +69,21 @@ namespace FarleyFile.Aggregates
             Created = true;
         }
 
-        public void Whe(NoteEdited e)
+        public void When(NoteEdited e)
         {
             var note = (NoteItem) _items[e.NoteId];
             note.Edit(e.NewText);
+        }
+
+        public void When(NoteRemoved e)
+        {
+            var note = (NoteItem) _items[e.NoteId];
+            if (note.FeaturedIn.Any())
+            {
+                throw new InvalidOperationException("Sanity check failure");
+            }
+            _items.Remove(e.NoteId);
+
         }
 
         public void When(TaskAssignedToStory e)
