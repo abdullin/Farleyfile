@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Concurrency;
 using System.IO;
-using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
 using Lokad.Cqrs;
@@ -19,7 +17,7 @@ namespace FarleyFile.Desktop
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            
+
             var cache = GetDataFolder();
             using (var source = new CancellationTokenSource())
             {
@@ -36,16 +34,16 @@ namespace FarleyFile.Desktop
 
 
                     Application.Run(form);
-                    
+
                     task.Wait(5000);
                 }
             }
-
         }
-        private static FileStorageConfig GetDataFolder()
-        {
 
-            var cache = @"C:\temp\farley";
+        static FileStorageConfig GetDataFolder()
+        {
+            var current = Directory.GetCurrentDirectory();
+            var cache = Path.Combine(current, "data");
             if (!Directory.Exists(cache))
             {
                 Directory.CreateDirectory(cache);
@@ -54,6 +52,4 @@ namespace FarleyFile.Desktop
             return FileStorage.CreateConfig(cache, "files");
         }
     }
-
-
 }

@@ -8,7 +8,6 @@ using Lokad.Cqrs.Build.Engine;
 using Lokad.Cqrs.Core.Dispatch.Events;
 using Lokad.Cqrs.Core.Outbox;
 using Lokad.Cqrs.Core.Reactive;
-using Lokad.Cqrs.Evil;
 using Lokad.Cqrs.Feature.FilePartition;
 using Lokad.Cqrs.Feature.TapeStorage;
 using ServiceStack.Text;
