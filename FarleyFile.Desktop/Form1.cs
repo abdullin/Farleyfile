@@ -23,7 +23,7 @@ namespace FarleyFile.Desktop
         readonly IObservable<ISystemEvent> _observable;
         IMessageSender _sender;
         NuclearStorage _storage;
-        TextRenderers _renderer;
+        LifelineViewport _viewport;
 
         IList<IDisposable> _disposers = new List<IDisposable>();
 
@@ -36,7 +36,7 @@ namespace FarleyFile.Desktop
             _sender = _host.Resolve<IMessageSender>();
             _storage = _host.Resolve<NuclearStorage>();
 
-            _renderer = new TextRenderers(_rich);
+            _viewport = new LifelineViewport(_rich);
 
             label1.BackColor = Solarized.Base03;
             label1.ForeColor = Solarized.Base01;
@@ -74,7 +74,7 @@ namespace FarleyFile.Desktop
                     {
                         foreach (var @event in list)
                         {
-                            Log(@event.ToString());
+                            _viewport.Log(@event.ToString());
                         }
                     });
             _disposers.Add(sub);
@@ -84,21 +84,7 @@ namespace FarleyFile.Desktop
 
         
 
-        public void Log(string text, params object[] args)
-        {
-            try
-            {
-                using (_rich.Styled(Solarized.Base1))
-                {
-                    _rich.AppendLine(text, args);
-                    _rich.ScrollToCaret();
-                }
-            }
-            catch(ObjectDisposedException)
-            {
-                
-            }
-        }
+        
         public void Error(string text, params object[] args)
         {
             using (_rich.Styled(Solarized.Red))
@@ -116,7 +102,7 @@ namespace FarleyFile.Desktop
                 var data = textBox1.Text;
                 e.SuppressKeyPress = true;
 
-                Log("> " + data);
+                _viewport.Log("> " + data);
                 try
                 {
                     Handle(data);
@@ -167,7 +153,7 @@ namespace FarleyFile.Desktop
             }
             if (data == "clr")
             {
-                _rich.Clear();
+                _viewport.Clear();
                 return;
             }
             if (data.StartsWith("new "))
@@ -200,7 +186,7 @@ namespace FarleyFile.Desktop
             if (data == "ls")
             {
                 var view = _storage.GetSingletonOrNew<StoryListView>();
-                _renderer.RenderStoryList(view);
+                _viewport.RenderStoryList(view);
                 return;
             }
             if (data.StartsWith("cd "))
@@ -222,7 +208,7 @@ namespace FarleyFile.Desktop
                 var optional = _storage.GetEntity<NoteView>(id);
                 if (!optional.HasValue)
                 {
-                    Log("Note {0} does not exist", id);
+                    _viewport.Log("Note {0} does not exist", id);
                 }
                 else
                 {
@@ -251,7 +237,7 @@ namespace FarleyFile.Desktop
                 return;
             }
 
-            Log("Unknown command sequence: {0}", data);
+            _viewport.Log("Unknown command sequence: {0}", data);
         }
 
         static void GrabFile(string text, Action<string, string> whenDone)
@@ -286,12 +272,12 @@ namespace FarleyFile.Desktop
             {
                 //_rich.Clear();
                 var story = result.Value;
-                _renderer.RenderStory(story, storyId);
+                _viewport.RenderStory(story, storyId);
                 SelectStory(storyId, story.Name);
             }
             else
             {
-                Log("Story {0} not found", storyId);
+                _viewport.Log("Story {0} not found", storyId);
             }
 
         }
