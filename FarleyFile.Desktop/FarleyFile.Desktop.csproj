@@ -54,6 +54,7 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ExtendRich.cs" />
     <Compile Include="Solarized.cs" />
     <Compile Include="Sys.cs" />
     <Compile Include="AggregateDispatcher.cs" />

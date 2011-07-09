@@ -36,7 +36,7 @@ namespace FarleyFile.Desktop
             _sender = _host.Resolve<IMessageSender>();
             _storage = _host.Resolve<NuclearStorage>();
 
-            _renderer = new TextRenderers(_storage);
+            _renderer = new TextRenderers(_rich);
 
             label1.BackColor = Solarized.Base03;
             label1.ForeColor = Solarized.Base01;
@@ -200,7 +200,7 @@ namespace FarleyFile.Desktop
             if (data == "ls")
             {
                 var view = _storage.GetSingletonOrNew<StoryListView>();
-                _renderer.RenderStoryList(_rich, view);
+                _renderer.RenderStoryList(view);
                 return;
             }
             if (data.StartsWith("cd "))
@@ -286,7 +286,7 @@ namespace FarleyFile.Desktop
             {
                 //_rich.Clear();
                 var story = result.Value;
-                _renderer.RenderStory(_rich, story, storyId);
+                _renderer.RenderStory(story, storyId);
                 SelectStory(storyId, story.Name);
             }
             else
