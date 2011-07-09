@@ -47,7 +47,6 @@
     <Compile Include="ICommand.cs" />
     <Compile Include="IConsume.cs" />
     <Compile Include="IEntityBase.cs" />
-    <Compile Include="IEntityCommand.cs" />
     <Compile Include="IEvent.cs" />
     <Compile Include="Messages.cs">
       <DependentUpon>Messages.tt</DependentUpon>

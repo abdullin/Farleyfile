@@ -76,17 +76,13 @@ namespace FarleyFile
                     p.DispatchAsCommandBatch();
                     p.WhereFilter(md => md.WhereMessagesAre<ICommand>());
                 });
-                m.AddFileProcess(cache, "aggregates", p =>
+                m.AddFileProcess(cache, "aggregates", p => p.DispatcherIs((context, infos, arg3) =>
                     {
-                        p.DispatcherIs((context, infos, arg3) =>
-                            {
-                                var readers = context.Resolve<ITapeStorageFactory>();
-                                var streamer = context.Resolve<IEnvelopeStreamer>();
-                                var reg = context.Resolve<QueueWriterRegistry>();
-                                return new AggregateDispatcher(readers, streamer, "files:router", reg);
-                            });
-                        p.WhereFilter(md => md.WhereMessagesAre<IEntityCommand>());
-                    });
+                        var readers = context.Resolve<ITapeStorageFactory>();
+                        var streamer = context.Resolve<IEnvelopeStreamer>();
+                        var reg = context.Resolve<QueueWriterRegistry>();
+                        return new AggregateDispatcher(readers, streamer, "files:router", reg);
+                    }));
             });
             return builder;
         }
