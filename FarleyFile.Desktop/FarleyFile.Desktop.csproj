@@ -56,6 +56,7 @@
   <ItemGroup>
     <Compile Include="ExtendRich.cs" />
     <Compile Include="InteractionProcessor.cs" />
+    <Compile Include="InteractionResult.cs" />
     <Compile Include="Solarized.cs" />
     <Compile Include="Sys.cs" />
     <Compile Include="AggregateDispatcher.cs" />

@@ -1,4 +1,4 @@
-﻿namespace FarleyFile.Desktop
+﻿namespace FarleyFile
 {
     partial class Form1
     {
@@ -58,7 +58,6 @@
             this.textBox1.Size = new System.Drawing.Size(740, 72);
             this.textBox1.TabIndex = 0;
             this.textBox1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBox1_KeyDown);
-            this.textBox1.KeyUp += new System.Windows.Forms.KeyEventHandler(this.textBox1_KeyUp);
             // 
             // splitter1
             // 

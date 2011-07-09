@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Concurrency;
 using System.Drawing;
 using System.Linq;
@@ -10,7 +9,7 @@ using Lokad.Cqrs.Build.Engine;
 using Lokad.Cqrs.Core.Dispatch.Events;
 using Lokad.Cqrs.Feature.AtomicStorage;
 
-namespace FarleyFile.Desktop
+namespace FarleyFile
 {
     public partial class Form1 : Form
     {
@@ -18,7 +17,6 @@ namespace FarleyFile.Desktop
         readonly IObservable<ISystemEvent> _observable;
         readonly LifelineViewport _viewport;
         readonly InteractionProcessor _processor;
-
         readonly IList<IDisposable> _disposers = new List<IDisposable>();
 
         public Form1(CqrsEngineHost host, IObservable<ISystemEvent> observable)
@@ -114,19 +112,6 @@ namespace FarleyFile.Desktop
                 }
                 _rich.ScrollToCaret();
             }
-        }
-
-
-        
-
-        
-
-        private void textBox1_KeyUp(object sender, KeyEventArgs e)
-        {
-            //if ((e.KeyCode == Keys.Enter) && (e.Control))
-            //{
-            //    textBox1.Clear();
-            //}
         }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)

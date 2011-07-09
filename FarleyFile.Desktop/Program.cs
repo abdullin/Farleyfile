@@ -5,7 +5,7 @@ using System.Threading;
 using System.Windows.Forms;
 using Lokad.Cqrs;
 
-namespace FarleyFile.Desktop
+namespace FarleyFile
 {
     static class Program
     {

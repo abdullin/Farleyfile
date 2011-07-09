@@ -1,6 +1,6 @@
 using System.Drawing;
 
-namespace FarleyFile.Desktop
+namespace FarleyFile
 {
     /// <summary>
     /// Courtesy of http://ethanschoonover.com/solarized#usage-development
