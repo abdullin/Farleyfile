@@ -113,7 +113,7 @@ namespace FarleyFile
                 {
                     storyId = int.Parse(txt);
                 }
-                LoadStory(storyId);
+                TryLoadStory(storyId);
                 return InteractionResult.Handled;
             }
             if (data.StartsWith("vim "))
@@ -144,13 +144,13 @@ namespace FarleyFile
             }
             if (data == "")
             {
-                LoadStory(CurrentStoryId);
+                TryLoadStory(CurrentStoryId);
                 return InteractionResult.Handled;
             }
             if (data == " ")
             {
                 _viewport.Clear();
-                LoadStory(CurrentStoryId);
+                TryLoadStory(CurrentStoryId);
                 return InteractionResult.Handled;
             }
 
@@ -183,7 +183,7 @@ namespace FarleyFile
             }
         }
 
-        public void LoadStory(long storyId)
+        public void TryLoadStory(long storyId)
         {
             var result = _storage.GetEntity<StoryView>(storyId);
             if (result.HasValue)
@@ -198,7 +198,6 @@ namespace FarleyFile
             {
                 _viewport.Log("Story {0} not found", storyId);
             }
-
         }
     }
 }
