@@ -60,11 +60,6 @@ namespace FarleyFile.Aggregates
             Apply(new NoteRemoved(c.Secondary));
         }
 
-        public void When(StartContactStory c)
-        {
-            var id = _state.GetNextId();
-            Apply(new ContactStoryStarted(id, c.Name));
-        }
 
         public void When(EditNote c)
         {
@@ -74,16 +69,6 @@ namespace FarleyFile.Aggregates
                 throw Error("Note {0} does not exist", c.NoteId);
             }
             Apply(new NoteEdited(c.NoteId, c.Text, c.OldText, item.FeaturedIn));
-        }
-
-        public void When(StartDayStory c)
-        {
-            if (c.Date.TimeOfDay != TimeSpan.Zero)
-                throw Error("Day story should be specified as date");
-            if (_state.HasDayStory(c.Date))
-                throw Error("Story already exists for day {0:yyyy-MM-dd}. Use it.", c.Date);
-            var id = _state.GetNextId();
-            Apply(new DayStoryStarted(id, c.Date));
         }
 
         public void When(AddTask c)

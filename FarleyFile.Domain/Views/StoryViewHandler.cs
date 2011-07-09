@@ -9,8 +9,6 @@ namespace FarleyFile
         IConsume<TaskAssignedToStory>,
         IConsume<NoteAssignedToStory>,
         IConsume<TaskCompleted>,
-        IConsume<ContactStoryStarted>,
-        IConsume<DayStoryStarted>,
         IConsume<NoteRemovedFromStory>,
         IConsume<TaskRemovedFromStory>,
         IConsume<NoteEdited>
@@ -49,26 +47,7 @@ namespace FarleyFile
                     StoryId = e.StoryId
                 });
         }
-
-        public void Consume(ContactStoryStarted e)
-        {
-            _writer.Add(e.ContactId, new StoryView
-                {
-                    Name = e.Name,
-                    StoryId = e.ContactId
-
-                });
-        }
-
-        public void Consume(DayStoryStarted e)
-        {
-            _writer.Add(e.DayId, new StoryView
-                {
-                    Name = e.Date.ToString("yyyy-MM-dd"),
-                    StoryId = e.DayId
-                });
-        }
-
+        
         public void Consume(NoteRemovedFromStory e)
         {
             _writer.UpdateOrThrow(e.StoryId, sv => sv.RemoveNote(e.NoteId));

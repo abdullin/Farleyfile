@@ -133,6 +133,7 @@ namespace FarleyFile
                 }
                 return InteractionResult.Handled;
             }
+
             if (data.StartsWith("merge "))
             {
                 var txt = data.Split(new[] { ' ', ',' }, StringSplitOptions.RemoveEmptyEntries);

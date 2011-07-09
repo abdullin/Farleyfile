@@ -44,54 +44,6 @@ namespace FarleyFile
         }
     }
     
-    [DataContract] public sealed class StartDayStory : ICommand
-    {
-        [DataMember(Order = 1)] public DateTime Date { get; internal set; }
-        
-        internal StartDayStory () {}
-        public StartDayStory (DateTime date)
-        {
-            Date = date;
-        }
-    }
-    
-    [DataContract] public sealed class DayStoryStarted : IEvent
-    {
-        [DataMember(Order = 1)] public long DayId { get; internal set; }
-        [DataMember(Order = 2)] public DateTime Date { get; internal set; }
-        
-        internal DayStoryStarted () {}
-        public DayStoryStarted (long dayId, DateTime date)
-        {
-            DayId = dayId;
-            Date = date;
-        }
-    }
-    
-    [DataContract] public sealed class StartContactStory : ICommand
-    {
-        [DataMember(Order = 1)] public string Name { get; internal set; }
-        
-        internal StartContactStory () {}
-        public StartContactStory (string name)
-        {
-            Name = name;
-        }
-    }
-    
-    [DataContract] public sealed class ContactStoryStarted : IEvent
-    {
-        [DataMember(Order = 1)] public long ContactId { get; internal set; }
-        [DataMember(Order = 2)] public string Name { get; internal set; }
-        
-        internal ContactStoryStarted () {}
-        public ContactStoryStarted (long contactId, string name)
-        {
-            ContactId = contactId;
-            Name = name;
-        }
-    }
-    
     [DataContract] public sealed class AddNote : ICommand
     {
         [DataMember(Order = 1)] public string Title { get; internal set; }

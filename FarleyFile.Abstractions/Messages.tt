@@ -15,8 +15,6 @@ using ! = IEvent;
 let noteId = long NoteId; 
 let storyId = long StoryId;
 let taskId = long TaskId;
-let contactId = long ContactId;
-let dayId = long DayId;
 let date = DateTime Date;
 
 PerspectiveCreated! (long draftId)
@@ -24,14 +22,6 @@ PerspectiveCreated! (long draftId)
 // generic story
 StartSimpleStory? (string name)
 SimpleStoryStarted! (storyId, string name)
-
-// story about a day
-StartDayStory?(DateTime date)
-DayStoryStarted!(dayId, DateTime date)
-
-// story about a person
-StartContactStory?(string name)
-ContactStoryStarted!(contactId, string name)
 
 
 AddNote? (string title, string text, storyId)
