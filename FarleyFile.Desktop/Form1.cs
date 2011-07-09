@@ -2,14 +2,9 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Concurrency;
-using System.Diagnostics;
 using System.Drawing;
-using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using FarleyFile.Views;
 using Lokad.Cqrs;
 using Lokad.Cqrs.Build.Engine;
 using Lokad.Cqrs.Core.Dispatch.Events;
@@ -21,11 +16,10 @@ namespace FarleyFile.Desktop
     {
         readonly CqrsEngineHost _host;
         readonly IObservable<ISystemEvent> _observable;
-        IMessageSender _sender;
-        NuclearStorage _storage;
-        LifelineViewport _viewport;
+        readonly LifelineViewport _viewport;
+        readonly InteractionProcessor _processor;
 
-        IList<IDisposable> _disposers = new List<IDisposable>();
+        readonly IList<IDisposable> _disposers = new List<IDisposable>();
 
         public Form1(CqrsEngineHost host, IObservable<ISystemEvent> observable)
         {
@@ -33,10 +27,11 @@ namespace FarleyFile.Desktop
             _observable = observable;
             InitializeComponent();
 
-            _sender = _host.Resolve<IMessageSender>();
-            _storage = _host.Resolve<NuclearStorage>();
+            var sender = _host.Resolve<IMessageSender>();
+            var storage = _host.Resolve<NuclearStorage>();
 
             _viewport = new LifelineViewport(_rich, label1);
+            _processor = new InteractionProcessor(sender, _viewport, storage);
 
             label1.BackColor = Solarized.Base03;
             label1.ForeColor = Solarized.Base01;
@@ -46,13 +41,6 @@ namespace FarleyFile.Desktop
             _rich.ForeColor = Solarized.Base00;
             textBox1.BackColor = Solarized.Base03;
             textBox1.ForeColor = Solarized.Base0;
-        }
-
-        long CurrentStoryId { get; set; }
-
-        public void SendToProject(params ICommand[] commands)
-        {
-            _sender.SendBatch(commands, eb => eb.AddString("to-entity", "default"));
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -78,9 +66,8 @@ namespace FarleyFile.Desktop
                         }
                     });
             _disposers.Add(sub);
-            _viewport.SelectStory(1, "Draft");
-            CurrentStoryId = 1;
-            LoadStory(1);
+
+            _processor.LoadStory(1);
         }
 
         
@@ -102,187 +89,37 @@ namespace FarleyFile.Desktop
             {
                 var data = textBox1.Text;
                 e.SuppressKeyPress = true;
-
-                _viewport.Log("> " + data);
+                
                 try
                 {
-                    Handle(data);
+                    var interactionResult = _processor.Handle(data);
+                    switch(interactionResult)
+                    {
+                        case InteractionResult.Handled:
+                            textBox1.Clear();
+                            break;
+                        case InteractionResult.Unknown:
+                            // do not clear
+                            break;
+                        case InteractionResult.Terminate:
+                            Close();
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException();
+                    }
                 }
                 catch (Exception ex)
                 {
                     Error(ex.Message);
                 }
                 _rich.ScrollToCaret();
-                textBox1.Clear();
             }
         }
 
-        void Handle(string data)
-        {
-            if (data.StartsWith("an"))
-            {
-                var txt = data.Substring(2).TrimStart();
-                var title = DateTime.Now.ToString("yyyy-MM-hh HH:mm");
 
-                if (!string.IsNullOrEmpty(txt))
-                {
-                    SendToProject(new AddNote(title, txt, CurrentStoryId));
-                }
-                else
-                {
-                    var storyId = CurrentStoryId;
-                    GrabFile("", (s, s1) => SendToProject(new AddNote(title, s, storyId)));
-                }
-                return;
-            }
-            if (data.StartsWith("at "))
-            {
-                var txt = data.Substring(3).TrimStart();
-                SendToProject(new AddTask(txt, CurrentStoryId));
-                return;
-            }
-            if (data == "q")
-            {
-                Close();
-            }
-            if (data.StartsWith("ct "))
-            {
-                var txt = data.Substring(3).TrimStart();
-                var id = int.Parse(txt);
-                SendToProject(new CompleteTask(id));
-                return;
-            }
-            if (data == "clr")
-            {
-                _viewport.Clear();
-                return;
-            }
-            if (data.StartsWith("new "))
-            {
-                var txt = data.Substring(4).TrimStart();
-                SendToProject(new StartSimpleStory(txt));
-                return;
-            }
-            if (data.StartsWith("cp "))
-            {
-                var txt = data.Split(new[] {' '}, StringSplitOptions.RemoveEmptyEntries);
-                var item = (txt[1].Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries));
-                var story = int.Parse(txt[2]);
-                SendToProject(item.Select(i => new AddToStory(int.Parse(i), story)).ToArray());
-                return;
-            }
-            if (data.StartsWith("rm "))
-            {
-                var txt = data.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+        
 
-                var item = (txt[1].Split(new[]{','}, StringSplitOptions.RemoveEmptyEntries));
-                var story = CurrentStoryId;
-                if (txt.Length > 2)
-                {
-                    story = int.Parse(txt[2]);
-                }
-                SendToProject(item.Select(i => new RemoveFromStory(int.Parse(i), story)).ToArray());
-                return;
-            }
-            if (data == "ls")
-            {
-                var view = _storage.GetSingletonOrNew<StoryListView>();
-                _viewport.RenderStoryList(view);
-                return;
-            }
-            if (data.StartsWith("cd "))
-            {
-                var txt = data.Substring(3).TrimStart();
-                int storyId = 1;
-                if (!string.IsNullOrEmpty(txt))
-                {
-                    storyId = int.Parse(txt);
-                }
-                LoadStory(storyId);
-                return;
-            }
-            if (data.StartsWith("vim "))
-            {
-                var txt = data.Substring(3).TrimStart();
-                int id = int.Parse(txt);
-
-                var optional = _storage.GetEntity<NoteView>(id);
-                if (!optional.HasValue)
-                {
-                    _viewport.Log("Note {0} does not exist", id);
-                }
-                else
-                {
-                    var note = optional.Value;
-                    GrabFile(note.Text, (s, s1) => SendToProject(new EditNote(id,s,s1)));
-                }
-                return;
-            }
-            if (data.StartsWith("merge "))
-            {
-                var txt = data.Split(new[] { ' ',',' }, StringSplitOptions.RemoveEmptyEntries);
-                long first = long.Parse(txt[1]);
-
-                var commands = txt.Skip(2).Select(c => new MergeNotes(first, long.Parse(c))).ToArray();
-                SendToProject(commands);
-            }
-            if (data == "")
-            {
-                LoadStory(CurrentStoryId);
-                return;
-            }
-            if (data == " ")
-            {
-                _viewport.Clear();
-                LoadStory(CurrentStoryId);
-                return;
-            }
-
-            _viewport.Log("Unknown command sequence: {0}", data);
-        }
-
-        static void GrabFile(string text, Action<string, string> whenDone)
-        {
-            var temp = Path.Combine(Path.GetTempPath(), Guid.NewGuid() + ".md");
-            File.WriteAllText(temp, text, Encoding.UTF8);
-            var process = Process.Start("gvim.exe", temp);
-            var changed = File.GetLastWriteTimeUtc(temp);
-            if (null != process)
-            {
-                Task.Factory.StartNew(() => GrabInner(text, whenDone, process, temp, changed));
-            }
-        }
-
-        static void GrabInner(string text, Action<string, string> whenDone, Process process, string temp, DateTime changed)
-        {
-            process.WaitForExit();
-            if (File.Exists(temp))
-            {
-                if (changed < File.GetLastWriteTimeUtc(temp))
-                {
-                    var newText = File.ReadAllText(temp, Encoding.UTF8);
-                    whenDone(newText, text);
-                }
-            }
-        }
-
-        void LoadStory(long storyId)
-        {
-            var result = _storage.GetEntity<StoryView>(storyId);
-            if (result.HasValue)
-            {
-                //_rich.Clear();
-                var story = result.Value;
-                _viewport.RenderStory(story, storyId);
-                _viewport.SelectStory(story.StoryId, story.Name);
-                CurrentStoryId = storyId;
-            }
-            else
-            {
-                _viewport.Log("Story {0} not found", storyId);
-            }
-
-        }
+        
 
         private void textBox1_KeyUp(object sender, KeyEventArgs e)
         {
@@ -299,10 +136,5 @@ namespace FarleyFile.Desktop
                 disposable.Dispose();
             }
         }
-    }
-
-    public sealed class InteractionProcessor
-    {
-        LifelineViewport _viewport;
     }
 }
