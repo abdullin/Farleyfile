@@ -7,6 +7,7 @@ namespace FarleyFile.Views
     public sealed class StoryView : IEntityBase
     {
         public string Name { get; set; }
+        public long StoryId { get; set; }
 
         public IList<StoryViewNote> Notes { get; set; }
         public IList<StoryViewTask> Tasks { get; set; } 

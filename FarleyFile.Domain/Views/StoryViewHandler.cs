@@ -43,17 +43,30 @@ namespace FarleyFile
 
         public void Consume(SimpleStoryStarted e)
         {
-            _writer.Add(e.StoryId, new StoryView { Name = e.Name });
+            _writer.Add(e.StoryId, new StoryView
+                {
+                    Name = e.Name,
+                    StoryId = e.StoryId
+                });
         }
 
         public void Consume(ContactStoryStarted e)
         {
-            _writer.Add(e.ContactId, new StoryView {Name = e.Name});
+            _writer.Add(e.ContactId, new StoryView
+                {
+                    Name = e.Name,
+                    StoryId = e.ContactId
+
+                });
         }
 
         public void Consume(DayStoryStarted e)
         {
-            _writer.Add(e.DayId, new StoryView { Name = e.Date.ToString("yyyy-MM-dd") });
+            _writer.Add(e.DayId, new StoryView
+                {
+                    Name = e.Date.ToString("yyyy-MM-dd"),
+                    StoryId = e.DayId
+                });
         }
 
         public void Consume(NoteRemovedFromStory e)

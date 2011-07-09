@@ -36,7 +36,7 @@ namespace FarleyFile.Desktop
             _sender = _host.Resolve<IMessageSender>();
             _storage = _host.Resolve<NuclearStorage>();
 
-            _viewport = new LifelineViewport(_rich);
+            _viewport = new LifelineViewport(_rich, label1);
 
             label1.BackColor = Solarized.Base03;
             label1.ForeColor = Solarized.Base01;
@@ -78,7 +78,8 @@ namespace FarleyFile.Desktop
                         }
                     });
             _disposers.Add(sub);
-            SelectStory(1, "Draft");
+            _viewport.SelectStory(1, "Draft");
+            CurrentStoryId = 1;
             LoadStory(1);
         }
 
@@ -232,7 +233,7 @@ namespace FarleyFile.Desktop
             }
             if (data == " ")
             {
-                _rich.Clear();
+                _viewport.Clear();
                 LoadStory(CurrentStoryId);
                 return;
             }
@@ -273,7 +274,8 @@ namespace FarleyFile.Desktop
                 //_rich.Clear();
                 var story = result.Value;
                 _viewport.RenderStory(story, storyId);
-                SelectStory(storyId, story.Name);
+                _viewport.SelectStory(story.StoryId, story.Name);
+                CurrentStoryId = storyId;
             }
             else
             {
@@ -281,13 +283,6 @@ namespace FarleyFile.Desktop
             }
 
         }
-
-        public void SelectStory(long storyId, string storyName)
-        {
-            label1.Text = string.Format("Story: {0} ({1})", storyName, storyId);
-            CurrentStoryId = storyId;
-        }
-
 
         private void textBox1_KeyUp(object sender, KeyEventArgs e)
         {
@@ -304,5 +299,10 @@ namespace FarleyFile.Desktop
                 disposable.Dispose();
             }
         }
+    }
+
+    public sealed class InteractionProcessor
+    {
+        LifelineViewport _viewport;
     }
 }
