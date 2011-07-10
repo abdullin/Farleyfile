@@ -56,7 +56,7 @@
   <ItemGroup>
     <Compile Include="Interactions\AbstractInteraction.cs" />
     <Compile Include="Interactions\InteractionContext.cs" />
-    <Compile Include="Interactions\ClearScreen.cs" />
+    <Compile Include="Interactions\Specific\ClearScreen.cs" />
     <Compile Include="ExtendRich.cs" />
     <Compile Include="Interactions\InteractionProcessor.cs" />
     <Compile Include="Interactions\InteractionResult.cs" />

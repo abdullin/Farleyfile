@@ -60,7 +60,7 @@ namespace FarleyFile.Interactions
             _viewport.Log("> " + data);
 
 
-            var context = new InteractionContext(_viewport, _sender);
+            var context = new InteractionContext(_viewport, _sender, new InteractionRequest(data, CurrentStoryId), _storage);
 
             foreach (var interaction in _interactions)
             {
@@ -86,30 +86,7 @@ namespace FarleyFile.Interactions
                 }
                 return InteractionResult.Handled;
             }
-            if (data.StartsWith("at "))
-            {
-                var txt = data.Substring(3).TrimStart();
-                SendToProject(new AddTask(txt, CurrentStoryId));
-                return InteractionResult.Handled;
-            }
-            if (data == "q")
-            {
-                return InteractionResult.Terminate;
-            }
-            if (data.StartsWith("ct "))
-            {
-                var txt = data.Substring(3).TrimStart();
-                var id = int.Parse(txt);
-                SendToProject(new CompleteTask(id));
-                return InteractionResult.Handled;
-            }
             
-            if (data.StartsWith("new "))
-            {
-                var txt = data.Substring(4).TrimStart();
-                SendToProject(new StartSimpleStory(txt));
-                return InteractionResult.Handled;
-            }
             if (data.StartsWith("cp "))
             {
                 var txt = data.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
@@ -131,12 +108,7 @@ namespace FarleyFile.Interactions
                 SendToProject(item.Select(i => new RemoveFromStory(int.Parse(i), story)).ToArray());
                 return InteractionResult.Handled;
             }
-            if (data == "ls")
-            {
-                var view = _storage.GetSingletonOrNew<StoryListView>();
-                _viewport.RenderStoryList(view);
-                return InteractionResult.Handled;
-            }
+            
             if (data.StartsWith("cd "))
             {
                 var txt = data.Substring(3).TrimStart();
