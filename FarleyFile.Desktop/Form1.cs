@@ -4,6 +4,7 @@ using System.Concurrency;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
+using FarleyFile.Interactions;
 using Lokad.Cqrs;
 using Lokad.Cqrs.Build.Engine;
 using Lokad.Cqrs.Core.Dispatch.Events;

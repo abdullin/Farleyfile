@@ -1,4 +1,4 @@
-namespace FarleyFile
+namespace FarleyFile.Interactions
 {
     public enum InteractionResult
     {
