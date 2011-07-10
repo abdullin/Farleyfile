@@ -58,14 +58,17 @@ namespace FarleyFile.Interactions
         public InteractionResult Handle(string data)
         {
             _viewport.Log("> " + data);
-
-
-            var context = new InteractionContext(_viewport, _sender, new InteractionRequest(data, CurrentStoryId), _storage);
+            
 
             foreach (var interaction in _interactions)
             {
-                if (interaction.WillProcess(data))
+                string @alias;
+                string text;
+                if (interaction.WillProcess(data, out @alias, out text))
                 {
+                    var request = new InteractionRequest(text, CurrentStoryId, @alias);
+                    var context = new InteractionContext(_viewport, _sender, request, _storage);
+
                     return interaction.Handle(context);
                 }
             }

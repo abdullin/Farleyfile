@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using FarleyFile.Interactions;
 
@@ -5,18 +6,29 @@ namespace FarleyFile
 {
     public abstract class AbstractInteraction 
     {
-        protected readonly Regex Matcher;
-        public abstract string Pattern { get; }
+        public abstract string[] Alias { get; }
 
-        protected AbstractInteraction()
+        public bool WillProcess(string data, out string alias, out string match)
         {
-            Matcher = new Regex(Pattern);
-        }
-
-        public bool WillProcess(string data)
-        {
-            var match = Matcher.Match(data);
-            return match.Success;
+            alias = null;
+            match = null;
+            foreach (var a in Alias)
+            {
+                if (data == a)
+                {
+                    alias = a;
+                    match = "";
+                    return true;
+                }
+                if (data.StartsWith(a + ' '))
+                {
+                    alias = a;
+                    match = data.Substring(a.Length + 1);
+                    return true;
+                }
+                    
+            }
+            return false;
         }
 
         public abstract InteractionResult Handle(InteractionContext context);

@@ -1,28 +1,28 @@
+using System.Collections;
+using System.Collections.Generic;
 using FarleyFile.Views;
 
 namespace FarleyFile.Interactions.Specific
 {
     public sealed class ClearScreen : AbstractInteraction
     {
-        public override string Pattern
+        public override string[] Alias
         {
-            get { return "^clr$"; }
+            get { return new[]{"clr"}; }
         }
 
         public override InteractionResult Handle(InteractionContext context)
         {
-            
             context.Viewport.Clear();
-            context.Viewport.Log("Yahoo!");
             return InteractionResult.Handled;
         }
     }
 
     public sealed class Quit : AbstractInteraction
     {
-        public override string Pattern
+        public override string[] Alias
         {
-            get { return "^q$"; }
+            get { return new[] { "q" }; }
         }
 
         public override InteractionResult Handle(InteractionContext context)
@@ -33,9 +33,9 @@ namespace FarleyFile.Interactions.Specific
 
     public sealed class ListStories : AbstractInteraction
     {
-        public override string Pattern
+        public override string[] Alias
         {
-            get { return "^ls$"; }
+            get { return new[] { "ls" }; }
         }
 
         public override InteractionResult Handle(InteractionContext context)
@@ -50,17 +50,14 @@ namespace FarleyFile.Interactions.Specific
 
     public sealed class DoAddTask : AbstractInteraction
     {
-        public override string Pattern
+        public override string[] Alias
         {
-            get { return "^at (?<title>.+)$"; }
+            get { return new[] { "at", "add-task" }; }
         }
 
         public override InteractionResult Handle(InteractionContext context)
         {
-            var match = Matcher.Match(context.Request.Data);
-            var value = match.Groups["title"].Value;
-
-            context.SendToProject(new AddTask(value, context.Request.StoryId));
+            context.SendToProject(new AddTask(context.Request.Data, context.Request.StoryId));
 
             return InteractionResult.Handled;
         }
@@ -68,18 +65,15 @@ namespace FarleyFile.Interactions.Specific
 
     public sealed class DoCompleteTask : AbstractInteraction
     {
-        public override string Pattern
+        public override string[] Alias
         {
-            get { return "^ct (?<id>.+)$"; }
+            get { return new[] { "ct" }; }
         }
 
         public override InteractionResult Handle(InteractionContext context)
         {
-
-            var task = Matcher.Match(context.Request.Data).Groups["id"].Value;
-            var id = int.Parse(task);
-            context.SendToProject(new CompleteTask(id));
-                
+            var i = int.Parse(context.Request.Data);
+            context.SendToProject(new CompleteTask(i));
             return InteractionResult.Handled;
             
         }
@@ -87,16 +81,14 @@ namespace FarleyFile.Interactions.Specific
 
     public sealed class NewStory : AbstractInteraction
     {
-        public override string Pattern
+        public override string[] Alias
         {
-            get { return "^new (?<title>.+)$"; }
+            get { return new[] { "new" }; }
         }
 
         public override InteractionResult Handle(InteractionContext context)
         {
-            var match = Matcher.Match(context.Request.Data);
-            var value = match.Groups["title"].Value;
-            context.SendToProject(new StartSimpleStory(value));
+            context.SendToProject(new StartSimpleStory(context.Request.Data));
             return InteractionResult.Handled;
         }
     }

@@ -27,12 +27,15 @@ namespace FarleyFile.Interactions
 
     public sealed class InteractionRequest
     {
+        public readonly string Alias;
         public readonly string Data;
         public readonly long StoryId;
-        public InteractionRequest(string data, long storyId)
+
+        public InteractionRequest(string data, long storyId, string @alias)
         {
             Data = data;
             StoryId = storyId;
+            Alias = alias;
         }
     }
 }
