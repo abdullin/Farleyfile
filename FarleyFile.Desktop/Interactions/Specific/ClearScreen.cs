@@ -57,7 +57,7 @@ namespace FarleyFile.Interactions.Specific
 
         public override InteractionResult Handle(InteractionContext context)
         {
-            context.SendToProject(new AddTask(context.Request.Data, context.Request.StoryId));
+            context.SendToProject(new AddTask(context.Request.Data, context.Request.CurrentStoryId));
 
             return InteractionResult.Handled;
         }
@@ -89,6 +89,36 @@ namespace FarleyFile.Interactions.Specific
         public override InteractionResult Handle(InteractionContext context)
         {
             context.SendToProject(new StartSimpleStory(context.Request.Data));
+            return InteractionResult.Handled;
+        }
+    }
+
+    public sealed class ReloadStory : AbstractInteraction
+    {
+        public override string[] Alias
+        {
+            get { return new[] {""}; }
+        }
+
+        public override InteractionResult Handle(InteractionContext context)
+        {
+            if (context.Request.Raw == " ")
+            {
+                context.Viewport.Clear();
+            }
+
+            var id = context.Request.CurrentStoryId;
+            var result = context.Storage.GetEntity<StoryView>(id);
+            if (!result.HasValue)
+            {
+                context.Response.Viewport.Log("Story {0} not found", id);
+            }
+            else
+            {
+                var story = result.Value;
+                context.Response.Viewport.RenderStory(story, id);
+                context.Response.SetCurrentStory(id, story.Name);
+            }
             return InteractionResult.Handled;
         }
     }

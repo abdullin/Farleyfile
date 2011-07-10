@@ -66,8 +66,13 @@ namespace FarleyFile.Interactions
                 string text;
                 if (interaction.WillProcess(data, out @alias, out text))
                 {
-                    var request = new InteractionRequest(text, CurrentStoryId, @alias);
-                    var context = new InteractionContext(_viewport, _sender, request, _storage);
+                    var request = new InteractionRequest(text, CurrentStoryId, @alias, data);
+                    var response = new InteractionResponse(_viewport, (l, s) =>
+                        {
+                            _viewport.SelectStory(l, s);
+                            CurrentStoryId = l;
+                        });
+                    var context = new InteractionContext(_viewport, _sender, request, _storage, response);
 
                     return interaction.Handle(context);
                 }
@@ -148,17 +153,6 @@ namespace FarleyFile.Interactions
 
                 var commands = txt.Skip(2).Select(c => new MergeNotes(first, long.Parse(c))).ToArray();
                 SendToProject(commands);
-                return InteractionResult.Handled;
-            }
-            if (data == "")
-            {
-                TryLoadStory(CurrentStoryId);
-                return InteractionResult.Handled;
-            }
-            if (data == " ")
-            {
-                _viewport.Clear();
-                TryLoadStory(CurrentStoryId);
                 return InteractionResult.Handled;
             }
 
