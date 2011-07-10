@@ -54,6 +54,7 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Interactions\ClearScreen.cs" />
     <Compile Include="ExtendRich.cs" />
     <Compile Include="InteractionProcessor.cs" />
     <Compile Include="InteractionResult.cs" />

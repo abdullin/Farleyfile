@@ -18,7 +18,7 @@ namespace FarleyFile
         readonly LifelineViewport _viewport;
         readonly InteractionProcessor _processor;
         readonly IList<IDisposable> _disposers = new List<IDisposable>();
-
+        
         public Form1(CqrsEngineHost host, IObservable<ISystemEvent> observable)
         {
             _host = host;
@@ -30,7 +30,7 @@ namespace FarleyFile
 
             _viewport = new LifelineViewport(_rich, label1);
             _processor = new InteractionProcessor(sender, _viewport, storage);
-
+            
             label1.BackColor = Solarized.Base03;
             label1.ForeColor = Solarized.Base01;
 
@@ -39,6 +39,8 @@ namespace FarleyFile
             _rich.ForeColor = Solarized.Base00;
             textBox1.BackColor = Solarized.Base03;
             textBox1.ForeColor = Solarized.Base0;
+
+            
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -64,7 +66,7 @@ namespace FarleyFile
                         }
                     });
             _disposers.Add(sub);
-
+            _processor.LoadFromAssembly();
             _processor.TryLoadStory(1);
         }
 

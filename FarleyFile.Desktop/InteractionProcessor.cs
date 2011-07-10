@@ -1,8 +1,10 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using FarleyFile.Views;
 using Lokad.Cqrs;
@@ -10,9 +12,70 @@ using Lokad.Cqrs.Feature.AtomicStorage;
 
 namespace FarleyFile
 {
+    public sealed class InteractionContext
+    {
+        public readonly LifelineViewport Viewport;
+        readonly IMessageSender _sender;
+
+        public void SendToProject(params ICommand[] commands)
+        {
+            _sender.SendBatch(commands, eb => eb.AddString("to-entity", "default"));
+        }
+
+        public InteractionContext(LifelineViewport viewport, IMessageSender sender)
+        {
+            Viewport = viewport;
+            _sender = sender;
+        }
+    }
+
+    public abstract class AbstractInteraction 
+    {
+        protected readonly Regex Matcher;
+        public abstract string Pattern { get; }
+
+        protected AbstractInteraction()
+        {
+            Matcher = new Regex(Pattern);
+        }
+
+        public bool WillProcess(string data)
+        {
+            var match = Matcher.Match(data);
+            return match.Success;
+        }
+
+        public abstract InteractionResult Handle(InteractionContext context);
+    }
+
+
     public sealed class InteractionProcessor
     {
         readonly IMessageSender _sender;
+
+        readonly IList<AbstractInteraction> _interactions = new List<AbstractInteraction>();
+
+        public void LoadFromAssembly()
+        {
+            var bases = typeof (AbstractInteraction)
+                .Assembly
+                .GetExportedTypes()
+                .Where(t => !t.IsAbstract)
+                .Where(t => typeof (AbstractInteraction).IsAssignableFrom(t));
+
+            foreach (var @base in bases)
+            {
+                var info = @base.GetConstructor(Type.EmptyTypes);
+                if (null == info)
+                {
+                    var message = string.Format("empty ctor not found for {0}", @base);
+                    throw new InvalidOperationException(message);
+                }
+                _interactions.Add((AbstractInteraction) info.Invoke(null));
+            }
+        }
+
+        
 
         void SendToProject(params ICommand[] commands)
         {
@@ -20,9 +83,8 @@ namespace FarleyFile
         }
 
         readonly LifelineViewport _viewport;
-        long CurrentStoryId { get; set; }
-
         readonly NuclearStorage _storage;
+        long CurrentStoryId { get; set; }
 
         public InteractionProcessor(IMessageSender sender, LifelineViewport viewport, NuclearStorage storage)
         {
@@ -34,6 +96,18 @@ namespace FarleyFile
         public InteractionResult Handle(string data)
         {
             _viewport.Log("> " + data);
+
+
+            var context = new InteractionContext(_viewport, _sender);
+
+            foreach (var interaction in _interactions)
+            {
+                if (interaction.WillProcess(data))
+                {
+                    return interaction.Handle(context);
+                }
+            }
+
             if (data.StartsWith("an"))
             {
                 var txt = data.Substring(2).TrimStart();
@@ -67,11 +141,7 @@ namespace FarleyFile
                 SendToProject(new CompleteTask(id));
                 return InteractionResult.Handled;
             }
-            if (data == "clr")
-            {
-                _viewport.Clear();
-                return InteractionResult.Handled;
-            }
+            
             if (data.StartsWith("new "))
             {
                 var txt = data.Substring(4).TrimStart();
