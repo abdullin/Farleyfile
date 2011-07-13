@@ -78,31 +78,9 @@ namespace FarleyFile.Interactions
                 }
             }
 
-            if (data.StartsWith("an"))
-            {
-                var txt = data.Substring(2).TrimStart();
-                var title = DateTime.Now.ToString("yyyy-MM-hh HH:mm");
-
-                if (!string.IsNullOrEmpty(txt))
-                {
-                    SendToProject(new AddNote(title, txt, CurrentStoryId));
-                }
-                else
-                {
-                    var storyId = CurrentStoryId;
-                    GrabFile("", (s, s1) => SendToProject(new AddNote(title, s, storyId)));
-                }
-                return InteractionResult.Handled;
-            }
             
-            if (data.StartsWith("cp "))
-            {
-                var txt = data.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                var item = (txt[1].Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries));
-                var story = int.Parse(txt[2]);
-                SendToProject(item.Select(i => new AddToStory(int.Parse(i), story)).ToArray());
-                return InteractionResult.Handled;
-            }
+            
+            
             if (data.StartsWith("rm "))
             {
                 var txt = data.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
@@ -128,23 +106,7 @@ namespace FarleyFile.Interactions
                 TryLoadStory(storyId);
                 return InteractionResult.Handled;
             }
-            if (data.StartsWith("vim "))
-            {
-                var txt = data.Substring(3).TrimStart();
-                int id = int.Parse(txt);
-
-                var optional = _storage.GetEntity<NoteView>(id);
-                if (!optional.HasValue)
-                {
-                    _viewport.Log("Note {0} does not exist", id);
-                }
-                else
-                {
-                    var note = optional.Value;
-                    GrabFile(note.Text, (s, s1) => SendToProject(new EditNote(id, s, s1)));
-                }
-                return InteractionResult.Handled;
-            }
+            
 
             if (data.StartsWith("merge "))
             {
@@ -160,30 +122,6 @@ namespace FarleyFile.Interactions
             return InteractionResult.Unknown;
         }
 
-        static void GrabFile(string text, Action<string, string> whenDone)
-        {
-            var temp = Path.Combine(Path.GetTempPath(), Guid.NewGuid() + ".md");
-            File.WriteAllText(temp, text, Encoding.UTF8);
-            var process = Process.Start("gvim.exe", temp);
-            var changed = File.GetLastWriteTimeUtc(temp);
-            if (null != process)
-            {
-                Task.Factory.StartNew(() => GrabInner(text, whenDone, process, temp, changed));
-            }
-        }
-
-        static void GrabInner(string text, Action<string, string> whenDone, Process process, string temp, DateTime changed)
-        {
-            process.WaitForExit();
-            if (File.Exists(temp))
-            {
-                if (changed < File.GetLastWriteTimeUtc(temp))
-                {
-                    var newText = File.ReadAllText(temp, Encoding.UTF8);
-                    whenDone(newText, text);
-                }
-            }
-        }
 
         public void TryLoadStory(long storyId)
         {

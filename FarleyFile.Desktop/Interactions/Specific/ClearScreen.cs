@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using FarleyFile.Views;
@@ -14,6 +15,56 @@ namespace FarleyFile.Interactions.Specific
         public override InteractionResult Handle(InteractionContext context)
         {
             context.Response.Viewport.Clear();
+            return InteractionResult.Handled;
+        }
+    }
+
+    public sealed class DoAddNote : AbstractInteraction
+    {
+        protected override string[] Alias
+        {
+            get { return new[] {"an"}; }
+        }
+
+        public override InteractionResult Handle(InteractionContext context)
+        {
+            var title = DateTime.Now.ToString("yyyy-MM-hh HH:mm");
+
+            var txt = context.Request.Data;
+            var storyId = context.Request.CurrentStoryId;
+            if (!string.IsNullOrEmpty(txt))
+            {
+                context.Response.SendToProject(new AddNote(title, txt, storyId));
+            }
+            else
+            {
+                context.Response.GrabFile("", (s, s1) => context.Response.SendToProject(new AddNote(title, s, storyId)));
+            }
+            return InteractionResult.Handled;
+        }
+    }
+
+    public sealed class DoEditNote : AbstractInteraction
+    {
+        protected override string[] Alias
+        {
+            get { return new[] { "vim"}; }
+        }
+
+        public override InteractionResult Handle(InteractionContext context)
+        {
+            int id = int.Parse(context.Request.Data);
+
+            var optional = context.Storage.GetEntity<NoteView>(id);
+            if (!optional.HasValue)
+            {
+                context.Response.Viewport.Log("Note {0} does not exist", id);
+            }
+            else
+            {
+                var note = optional.Value;
+                context.Response.GrabFile(note.Text, (s, s1) => context.Response.SendToProject(new EditNote(id, s, s1)));
+            }
             return InteractionResult.Handled;
         }
     }
