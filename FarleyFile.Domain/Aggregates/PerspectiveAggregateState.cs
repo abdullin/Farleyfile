@@ -132,7 +132,7 @@ namespace FarleyFile.Aggregates
 
         public void Apply(IEvent e)
         {
-            RedirectToWhen.InvokeEventOptional(this, e);
+            RedirectToWhen.InvokeOptional(this, e);
         }
 
         public PerspectiveAggregateState()

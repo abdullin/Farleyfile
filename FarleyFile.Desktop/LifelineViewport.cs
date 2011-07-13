@@ -26,7 +26,7 @@ namespace FarleyFile
             _rich.Clear();
         }
 
-        public void RenderStoryList(StoryListView list)
+        public void When(StoryListView list)
         {
             using (_rich.Styled(Solarized.Yellow))
             {
@@ -55,7 +55,12 @@ namespace FarleyFile
             }
         }
 
-        public void RenderStory(StoryView view)
+        public void RenderView<T>(T view)
+        {
+            RedirectToWhen.InvokeOptional(this, view, (i,v) => _rich.AppendText(ServiceStack.Text.TypeSerializer.SerializeAndFormat(view)));
+        }
+
+        public void When(StoryView view)
         {
             var txt = string.Format("Story: {0} ({1})", view.Name, view.StoryId);
             using (_rich.Styled(Solarized.Yellow))

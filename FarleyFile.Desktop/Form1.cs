@@ -68,7 +68,7 @@ namespace FarleyFile
                     });
             _disposers.Add(sub);
             _processor.LoadFromAssembly();
-            _processor.TryLoadStory(1);
+            _processor.Handle("ls");
         }
 
         

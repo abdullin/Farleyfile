@@ -56,36 +56,14 @@ namespace FarleyFile.Interactions
                 if (interaction.WillProcess(data, out @alias, out text))
                 {
                     var request = new InteractionRequest(text, CurrentStoryId, @alias, data);
-                    var response = new InteractionResponse(_viewport, (l, s) =>
-                        {
-                            _viewport.SelectStory(l, s);
-                            CurrentStoryId = l;
-                        }, _sender);
+                    var response = new InteractionResponse(_viewport, l => { CurrentStoryId = l; }, _sender);
                     var context = new InteractionContext(request, _storage, response);
-
                     return interaction.Handle(context);
                 }
             }
 
             _viewport.Log("Unknown command sequence: {0}", data);
             return InteractionResult.Unknown;
-        }
-
-
-        public void TryLoadStory(long storyId)
-        {
-            var result = _storage.GetEntity<StoryView>(storyId);
-            if (result.HasValue)
-            {
-                var story = result.Value;
-                _viewport.RenderStory(story);
-                _viewport.SelectStory(story.StoryId, story.Name);
-                CurrentStoryId = storyId;
-            }
-            else
-            {
-                _viewport.Log("Story {0} not found", storyId);
-            }
         }
     }
 }

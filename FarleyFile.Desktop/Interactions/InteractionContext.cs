@@ -4,6 +4,7 @@ using System.IO;
 using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
+using FarleyFile.Views;
 using Lokad.Cqrs;
 using Lokad.Cqrs.Feature.AtomicStorage;
 
@@ -26,26 +27,41 @@ namespace FarleyFile.Interactions
 
     public sealed class InteractionResponse
     {
-        public readonly LifelineViewport Viewport;
-        readonly Action<long, string> _action;
+        readonly LifelineViewport _viewport;
+        readonly Action<long> _action;
         readonly IMessageSender _sender;
-        readonly Label _label;
+
+        public void FocusStory(long id, string name)
+        {
+            _action(id);
+            _viewport.SelectStory(id, name);
+        }
+
+        public void RenderView<T>(T view)
+        {
+            _viewport.RenderView(view);
+        }
+
+        public void ClearView()
+        {
+            _viewport.Clear();
+        }
+
+        public void Log(string message, params object[] args)
+        {
+            _viewport.Log(message, args);
+        }
 
         public void SendToProject(params ICommand[] commands)
         {
             _sender.SendBatch(commands, eb => eb.AddString("to-entity", "default"));
         }
 
-        public InteractionResponse(LifelineViewport viewport, Action<long, string> action, IMessageSender sender)
+        public InteractionResponse(LifelineViewport viewport, Action<long> action, IMessageSender sender)
         {
-            Viewport = viewport;
+            _viewport = viewport;
             _action = action;
             _sender = sender;
-        }
-
-        public void SetCurrentStory(long storyId, string storyName)
-        {
-            _action(storyId, storyName);
         }
 
         public void GrabFile(string text, Action<string, string> whenDone)

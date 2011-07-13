@@ -15,12 +15,17 @@ namespace FarleyFile
                 .Where(m => m.GetParameters().Length == 1)
                 .ToDictionary(m => m.GetParameters().First().ParameterType, m => m);
         }
-        public static void InvokeEventOptional<T>(T instance, IEvent command)
+        
+        public static void InvokeOptional<T>(T instance, object command, Action<object,object> fallBack = null)
         {
             MethodInfo info;
             var type = command.GetType();
             if (!Cache<T>.Dict.TryGetValue(type, out info))
             {
+                if (fallBack != null)
+                {
+                    fallBack(instance, command);
+                }
                 // we don't care if state does not consume events
                 // they are persisted anyway
                 return;

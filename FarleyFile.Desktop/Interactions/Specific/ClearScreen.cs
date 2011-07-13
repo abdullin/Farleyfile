@@ -15,7 +15,7 @@ namespace FarleyFile.Interactions.Specific
 
         public override InteractionResult Handle(InteractionContext context)
         {
-            context.Response.Viewport.Clear();
+            context.Response.ClearView();
             return InteractionResult.Handled;
         }
     }
@@ -61,13 +61,12 @@ namespace FarleyFile.Interactions.Specific
             if (result.HasValue)
             {
                 var story = result.Value;
-                context.Response.Viewport.RenderStory(story);
-                context.Response.Viewport.SelectStory(story.StoryId, story.Name);
-                context.Response.SetCurrentStory(storyId, story.Name);
+                context.Response.RenderView(story);
+                context.Response.FocusStory(story.StoryId, story.Name);
             }
             else
             {
-                context.Response.Viewport.Log("Story {0} not found", storyId);
+                context.Response.Log("Story {0} not found", storyId);
             }
 
             return InteractionResult.Handled;
@@ -113,7 +112,7 @@ namespace FarleyFile.Interactions.Specific
             var optional = context.Storage.GetEntity<NoteView>(id);
             if (!optional.HasValue)
             {
-                context.Response.Viewport.Log("Note {0} does not exist", id);
+                context.Response.Log("Note {0} does not exist", id);
             }
             else
             {
@@ -148,7 +147,7 @@ namespace FarleyFile.Interactions.Specific
         {
             var view = context.Storage.GetSingletonOrNew<StoryListView>();
 
-            context.Response.Viewport.RenderStoryList(view);
+            context.Response.RenderView(view);
             return InteractionResult.Handled;
 
         }
@@ -210,20 +209,20 @@ namespace FarleyFile.Interactions.Specific
         {
             if (context.Request.Raw == " ")
             {
-                context.Response.Viewport.Clear();
+                context.Response.ClearView();
             }
 
             var id = context.Request.CurrentStoryId;
             var result = context.Storage.GetEntity<StoryView>(id);
             if (!result.HasValue)
             {
-                context.Response.Viewport.Log("Story {0} not found", id);
+                context.Response.Log("Story {0} not found", id);
             }
             else
             {
                 var story = result.Value;
-                context.Response.Viewport.RenderStory(story, id);
-                context.Response.SetCurrentStory(id, story.Name);
+                context.Response.RenderView(story);
+                context.Response.FocusStory(id, story.Name);
             }
             return InteractionResult.Handled;
         }
