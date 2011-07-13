@@ -7,21 +7,16 @@ namespace FarleyFile.Interactions
     public sealed class InteractionContext
     {
         public readonly LifelineViewport Viewport;
-        readonly IMessageSender _sender;
 
         public readonly InteractionRequest Request;
         public readonly InteractionResponse Response;
         public readonly NuclearStorage Storage;
 
-        public void SendToProject(params ICommand[] commands)
-        {
-            _sender.SendBatch(commands, eb => eb.AddString("to-entity", "default"));
-        }
+        
 
-        public InteractionContext(LifelineViewport viewport, IMessageSender sender, InteractionRequest request, NuclearStorage storage, InteractionResponse response)
+        public InteractionContext(LifelineViewport viewport, InteractionRequest request, NuclearStorage storage, InteractionResponse response)
         {
             Viewport = viewport;
-            _sender = sender;
             Request = request;
             Storage = storage;
             Response = response;
@@ -31,11 +26,19 @@ namespace FarleyFile.Interactions
     public sealed class InteractionResponse
     {
         public readonly LifelineViewport Viewport;
-        Action<long, string> _action;
-        public InteractionResponse(LifelineViewport viewport, Action<long, string> action)
+        readonly Action<long, string> _action;
+        readonly IMessageSender _sender;
+
+        public void SendToProject(params ICommand[] commands)
+        {
+            _sender.SendBatch(commands, eb => eb.AddString("to-entity", "default"));
+        }
+
+        public InteractionResponse(LifelineViewport viewport, Action<long, string> action, IMessageSender sender)
         {
             Viewport = viewport;
             _action = action;
+            _sender = sender;
         }
 
         public void SetCurrentStory(long storyId, string storyName)

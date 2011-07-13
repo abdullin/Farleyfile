@@ -6,7 +6,7 @@ namespace FarleyFile
 {
     public abstract class AbstractInteraction 
     {
-        public abstract string[] Alias { get; }
+        protected abstract string[] Alias { get; }
 
         public bool WillProcess(string data, out string alias, out string match)
         {
@@ -26,7 +26,6 @@ namespace FarleyFile
                     match = data.Substring(a.Length + 1);
                     return true;
                 }
-                    
             }
             return false;
         }

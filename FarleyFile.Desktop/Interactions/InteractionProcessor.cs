@@ -71,8 +71,8 @@ namespace FarleyFile.Interactions
                         {
                             _viewport.SelectStory(l, s);
                             CurrentStoryId = l;
-                        });
-                    var context = new InteractionContext(_viewport, _sender, request, _storage, response);
+                        }, _sender);
+                    var context = new InteractionContext(_viewport, request, _storage, response);
 
                     return interaction.Handle(context);
                 }
