@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using FarleyFile.Views;
 
 namespace FarleyFile.Interactions.Specific
@@ -15,6 +16,28 @@ namespace FarleyFile.Interactions.Specific
         public override InteractionResult Handle(InteractionContext context)
         {
             context.Response.Viewport.Clear();
+            return InteractionResult.Handled;
+        }
+    }
+
+    public sealed class DoRemoveFromStory : AbstractInteraction
+    {
+        protected override string[] Alias
+        {
+            get { return new[] {"rm"}; }
+        }
+
+        public override InteractionResult Handle(InteractionContext context)
+        {
+            var txt = context.Request.Data.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+
+            var item = (txt[1].Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries));
+            var story = context.Request.CurrentStoryId;
+            if (txt.Length > 2)
+            {
+                story = int.Parse(txt[2]);
+            }
+            context.Response.SendToProject(item.Select(i => new RemoveFromStory(int.Parse(i), story)).ToArray());
             return InteractionResult.Handled;
         }
     }

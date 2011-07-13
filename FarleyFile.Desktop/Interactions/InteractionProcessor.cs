@@ -78,24 +78,6 @@ namespace FarleyFile.Interactions
                 }
             }
 
-            
-            
-            
-            if (data.StartsWith("rm "))
-            {
-                var txt = data.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-
-                var item = (txt[1].Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries));
-                var story = CurrentStoryId;
-                if (txt.Length > 2)
-                {
-                    story = int.Parse(txt[2]);
-                }
-                SendToProject(item.Select(i => new RemoveFromStory(int.Parse(i), story)).ToArray());
-                return InteractionResult.Handled;
-            }
-
-
             _viewport.Log("Unknown command sequence: {0}", data);
             return InteractionResult.Unknown;
         }
