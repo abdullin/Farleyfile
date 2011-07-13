@@ -78,7 +78,7 @@ namespace FarleyFile.Interactions
             if (result.HasValue)
             {
                 var story = result.Value;
-                _viewport.RenderStory(story, storyId);
+                _viewport.RenderStory(story);
                 _viewport.SelectStory(story.StoryId, story.Name);
                 CurrentStoryId = storyId;
             }

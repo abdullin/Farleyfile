@@ -55,9 +55,9 @@ namespace FarleyFile
             }
         }
 
-        public void RenderStory(StoryView view, long id)
+        public void RenderStory(StoryView view)
         {
-            var txt = string.Format("Story: {0} ({1})", view.Name, id);
+            var txt = string.Format("Story: {0} ({1})", view.Name, view.StoryId);
             using (_rich.Styled(Solarized.Yellow))
             {
                 _rich.AppendLine(txt);

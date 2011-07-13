@@ -61,7 +61,7 @@ namespace FarleyFile.Interactions.Specific
             if (result.HasValue)
             {
                 var story = result.Value;
-                context.Response.Viewport.RenderStory(story, storyId);
+                context.Response.Viewport.RenderStory(story);
                 context.Response.Viewport.SelectStory(story.StoryId, story.Name);
                 context.Response.SetCurrentStory(storyId, story.Name);
             }

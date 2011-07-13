@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
 using Lokad.Cqrs;
@@ -28,7 +29,7 @@ namespace FarleyFile.Interactions
         public readonly LifelineViewport Viewport;
         readonly Action<long, string> _action;
         readonly IMessageSender _sender;
-        
+        readonly Label _label;
 
         public void SendToProject(params ICommand[] commands)
         {
