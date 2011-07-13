@@ -13,7 +13,7 @@ namespace FarleyFile.Interactions.Specific
 
         public override InteractionResult Handle(InteractionContext context)
         {
-            context.Viewport.Clear();
+            context.Response.Viewport.Clear();
             return InteractionResult.Handled;
         }
     }
@@ -42,7 +42,7 @@ namespace FarleyFile.Interactions.Specific
         {
             var view = context.Storage.GetSingletonOrNew<StoryListView>();
 
-            context.Viewport.RenderStoryList(view);
+            context.Response.Viewport.RenderStoryList(view);
             return InteractionResult.Handled;
 
         }
@@ -104,7 +104,7 @@ namespace FarleyFile.Interactions.Specific
         {
             if (context.Request.Raw == " ")
             {
-                context.Viewport.Clear();
+                context.Response.Viewport.Clear();
             }
 
             var id = context.Request.CurrentStoryId;

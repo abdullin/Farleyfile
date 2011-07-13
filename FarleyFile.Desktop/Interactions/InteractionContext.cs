@@ -6,17 +6,13 @@ namespace FarleyFile.Interactions
 {
     public sealed class InteractionContext
     {
-        public readonly LifelineViewport Viewport;
 
         public readonly InteractionRequest Request;
         public readonly InteractionResponse Response;
         public readonly NuclearStorage Storage;
 
-        
-
-        public InteractionContext(LifelineViewport viewport, InteractionRequest request, NuclearStorage storage, InteractionResponse response)
+        public InteractionContext(InteractionRequest request, NuclearStorage storage, InteractionResponse response)
         {
-            Viewport = viewport;
             Request = request;
             Storage = storage;
             Response = response;
@@ -28,6 +24,7 @@ namespace FarleyFile.Interactions
         public readonly LifelineViewport Viewport;
         readonly Action<long, string> _action;
         readonly IMessageSender _sender;
+        
 
         public void SendToProject(params ICommand[] commands)
         {

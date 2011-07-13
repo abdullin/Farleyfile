@@ -72,7 +72,7 @@ namespace FarleyFile.Interactions
                             _viewport.SelectStory(l, s);
                             CurrentStoryId = l;
                         }, _sender);
-                    var context = new InteractionContext(_viewport, request, _storage, response);
+                    var context = new InteractionContext(request, _storage, response);
 
                     return interaction.Handle(context);
                 }
