@@ -94,29 +94,7 @@ namespace FarleyFile.Interactions
                 SendToProject(item.Select(i => new RemoveFromStory(int.Parse(i), story)).ToArray());
                 return InteractionResult.Handled;
             }
-            
-            if (data.StartsWith("cd "))
-            {
-                var txt = data.Substring(3).TrimStart();
-                int storyId = 1;
-                if (!string.IsNullOrEmpty(txt))
-                {
-                    storyId = int.Parse(txt);
-                }
-                TryLoadStory(storyId);
-                return InteractionResult.Handled;
-            }
-            
 
-            if (data.StartsWith("merge "))
-            {
-                var txt = data.Split(new[] { ' ', ',' }, StringSplitOptions.RemoveEmptyEntries);
-                long first = long.Parse(txt[1]);
-
-                var commands = txt.Skip(2).Select(c => new MergeNotes(first, long.Parse(c))).ToArray();
-                SendToProject(commands);
-                return InteractionResult.Handled;
-            }
 
             _viewport.Log("Unknown command sequence: {0}", data);
             return InteractionResult.Unknown;

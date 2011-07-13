@@ -19,6 +19,38 @@ namespace FarleyFile.Interactions.Specific
         }
     }
 
+    public sealed class FocusOnStory : AbstractInteraction
+    {
+        protected override string[] Alias
+        {
+            get { return new[] { "cd"}; }
+        }
+
+        public override InteractionResult Handle(InteractionContext context)
+        {
+            int storyId = 1;
+            if (!string.IsNullOrEmpty(context.Request.Data))
+            {
+                storyId = int.Parse(context.Request.Data);
+            }
+
+            var result = context.Storage.GetEntity<StoryView>(storyId);
+            if (result.HasValue)
+            {
+                var story = result.Value;
+                context.Response.Viewport.RenderStory(story, storyId);
+                context.Response.Viewport.SelectStory(story.StoryId, story.Name);
+                context.Response.SetCurrentStory(storyId, story.Name);
+            }
+            else
+            {
+                context.Response.Viewport.Log("Story {0} not found", storyId);
+            }
+
+            return InteractionResult.Handled;
+        }
+    }
+
     public sealed class DoAddNote : AbstractInteraction
     {
         protected override string[] Alias
