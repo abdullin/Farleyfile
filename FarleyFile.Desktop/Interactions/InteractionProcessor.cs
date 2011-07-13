@@ -1,10 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using FarleyFile.Views;
 using Lokad.Cqrs;
 using Lokad.Cqrs.Feature.AtomicStorage;
@@ -35,13 +31,6 @@ namespace FarleyFile.Interactions
                 }
                 _interactions.Add((AbstractInteraction) info.Invoke(null));
             }
-        }
-
-        
-
-        void SendToProject(params ICommand[] commands)
-        {
-            _sender.SendBatch(commands, eb => eb.AddString("to-entity", "default"));
         }
 
         readonly LifelineViewport _viewport;
@@ -88,7 +77,6 @@ namespace FarleyFile.Interactions
             var result = _storage.GetEntity<StoryView>(storyId);
             if (result.HasValue)
             {
-                //_rich.Clear();
                 var story = result.Value;
                 _viewport.RenderStory(story, storyId);
                 _viewport.SelectStory(story.StoryId, story.Name);
