@@ -1,10 +1,6 @@
-using System.Collections.Generic;
-using System.Text.RegularExpressions;
-using FarleyFile.Interactions;
-
-namespace FarleyFile
+namespace FarleyFile.Interactions
 {
-    public abstract class AbstractInteraction 
+    public abstract class AbstractInteraction
     {
         protected abstract string[] Alias { get; }
 
