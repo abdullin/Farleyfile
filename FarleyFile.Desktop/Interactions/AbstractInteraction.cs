@@ -29,10 +29,12 @@ namespace FarleyFile.Interactions
         public abstract InteractionResult Handle(InteractionContext context);
 
         // helpers
-        protected  InteractionResult Error(string error)
+        protected  InteractionResult Error(string error, params object[] args)
         {
-            return new InteractionResult(error, InteractionResultStatus.Error);
+            var format = string.Format(error, args);
+            return new InteractionResult(format, InteractionResultStatus.Error);
         }
+
         protected InteractionResult Handled()
         {
             return new InteractionResult(null, InteractionResultStatus.Handled);

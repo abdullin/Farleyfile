@@ -51,13 +51,14 @@ namespace FarleyFile.Interactions.Specific
 
         public override InteractionResult Handle(InteractionContext context)
         {
-            int storyId = 1;
-            if (!string.IsNullOrEmpty(context.Request.Data))
+            long id;
+            var source = context.Request.Data;
+            if (!context.Request.TryGetId(source, out id))
             {
-                storyId = int.Parse(context.Request.Data);
+                return Error("Could not find story ID '{0}'", source);
             }
-
-            var result = context.Storage.GetEntity<StoryView>(storyId);
+            
+            var result = context.Storage.GetEntity<StoryView>(id);
             if (result.HasValue)
             {
                 var story = result.Value;
@@ -66,7 +67,7 @@ namespace FarleyFile.Interactions.Specific
             }
             else
             {
-                context.Response.Log("Story {0} not found", storyId);
+                return Error("Story id not found '{0}'", id);
             }
 
             return Handled();
@@ -107,7 +108,11 @@ namespace FarleyFile.Interactions.Specific
 
         public override InteractionResult Handle(InteractionContext context)
         {
-            int id = int.Parse(context.Request.Data);
+            long id;
+            if (!context.Request.TryGetId(context.Request.Data, out id))
+            {
+                return Error("Unknown note id");
+            }
 
             var optional = context.Storage.GetEntity<NoteView>(id);
             if (!optional.HasValue)

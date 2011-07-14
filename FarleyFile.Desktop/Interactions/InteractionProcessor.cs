@@ -55,7 +55,7 @@ namespace FarleyFile.Interactions
                     string text;
                     if (interaction.WillProcess(data, out @alias, out text))
                     {
-                        var request = new InteractionRequest(text, CurrentStoryId, data);
+                        var request = new InteractionRequest(text, CurrentStoryId, data, _viewport.LookupRef);
                         var response = new InteractionResponse(_viewport, l => { CurrentStoryId = l; }, _sender);
                         var context = new InteractionContext(request, _storage, response);
 
