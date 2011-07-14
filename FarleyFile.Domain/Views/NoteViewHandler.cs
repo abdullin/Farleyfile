@@ -1,3 +1,4 @@
+using System;
 using Lokad.Cqrs.Feature.AtomicStorage;
 
 namespace FarleyFile
@@ -7,8 +8,8 @@ namespace FarleyFile
         IConsume<NoteEdited>,
         IConsume<NoteRemoved>
     {
-        readonly IAtomicEntityWriter<long, NoteView> _writer;
-        public NoteViewHandler(IAtomicEntityWriter<long, NoteView> writer)
+        readonly IAtomicEntityWriter<Guid, NoteView> _writer;
+        public NoteViewHandler(IAtomicEntityWriter<Guid, NoteView> writer)
         {
             _writer = writer;
         }

@@ -34,7 +34,7 @@ namespace FarleyFile.Interactions
 
         readonly LifelineViewport _viewport;
         readonly NuclearStorage _storage;
-        long CurrentStoryId { get; set; }
+        Guid CurrentStoryId { get; set; }
 
         public InteractionProcessor(IMessageSender sender, LifelineViewport viewport, NuclearStorage storage)
         {

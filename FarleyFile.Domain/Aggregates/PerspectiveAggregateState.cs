@@ -6,11 +6,10 @@ namespace FarleyFile.Aggregates
 {
     public sealed class PerspectiveAggregateState : IAggregateState
     {
-        long _recordId;
         public bool Created { get; private set; }
 
-        readonly Dictionary<long, AbstractStory> _stories = new Dictionary<long, AbstractStory>();
-        readonly Dictionary<long, AbstractItem> _items = new Dictionary<long, AbstractItem>();
+        readonly Dictionary<Guid, AbstractStory> _stories = new Dictionary<Guid, AbstractStory>();
+        readonly Dictionary<Guid, AbstractItem> _items = new Dictionary<Guid, AbstractItem>();
 
 
         public void When(SimpleStoryStarted e)
@@ -90,17 +89,17 @@ namespace FarleyFile.Aggregates
             task.FeaturedIn.Remove(e.StoryId);
         }
 
-        public bool TryGetStory(long storyId, out AbstractStory story)
+        public bool TryGetStory(Guid storyId, out AbstractStory story)
         {
             return _stories.TryGetValue(storyId, out story);
         }
 
-        public bool StoryExists(long storyId)
+        public bool StoryExists(Guid storyId)
         {
             return _stories.ContainsKey(storyId);
         }
 
-        public bool TryGet<TItem>(long itemId, out TItem item)
+        public bool TryGet<TItem>(Guid itemId, out TItem item)
             where TItem : AbstractItem
         {
             AbstractItem value;
@@ -117,17 +116,17 @@ namespace FarleyFile.Aggregates
             return false;
         }
 
-        public long GetNextId()
+        public Guid GetNextId()
         {
-            return _recordId + 1;
+            return Guid.NewGuid();
         }
 
-        void StepRecordId(long recordId)
+        void StepRecordId(Guid recordId)
         {
-            if ((recordId) != (_recordId+1))
-                throw new InvalidOperationException();
+            //if ((recordId) != (_recordId+1))
+            //    throw new InvalidOperationException();
 
-            _recordId = recordId;
+            //_recordId = recordId;
         }
 
         public void Apply(IEvent e)
@@ -161,13 +160,13 @@ namespace FarleyFile.Aggregates
 
     public abstract class AbstractItem
     {
-        public HashSet<long> FeaturedIn = new HashSet<long>();
+        public HashSet<Guid> FeaturedIn = new HashSet<Guid>();
         
     }
 
     public abstract class AbstractStory
     {
-        public HashSet<long> AsItGoes = new HashSet<long>();
+        public HashSet<Guid> AsItGoes = new HashSet<Guid>();
 
         
     }

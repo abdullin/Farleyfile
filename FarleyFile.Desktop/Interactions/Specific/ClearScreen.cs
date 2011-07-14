@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using FarleyFile.Views;
 
@@ -41,7 +39,7 @@ namespace FarleyFile.Interactions.Specific
                     return Error("Failed to locate '{0}'", txt[2]);
                 }
             }
-            var records = new long[item.Length];
+            var records = new Guid[item.Length];
             for (int i = 0; i < records.Length; i++)
             {
                 if (!context.Request.TryGetId(item[i], out records[i]))
@@ -61,7 +59,7 @@ namespace FarleyFile.Interactions.Specific
 
         public override InteractionResult Handle(InteractionContext context)
         {
-            long id;
+            Guid id;
             var source = context.Request.Data;
             if (!context.Request.TryGetId(source, out id))
             {
@@ -115,7 +113,7 @@ namespace FarleyFile.Interactions.Specific
 
         public override InteractionResult Handle(InteractionContext context)
         {
-            long id;
+            Guid id;
             if (!context.Request.TryGetId(context.Request.Data, out id))
             {
                 return Error("Unknown note id");
@@ -183,7 +181,7 @@ namespace FarleyFile.Interactions.Specific
 
         public override InteractionResult Handle(InteractionContext context)
         {
-            long id;
+            Guid id;
             if (!context.Request.TryGetId(context.Request.Data, out id))
             {
                 return Error("Couldn't locate task '{0}'", id);

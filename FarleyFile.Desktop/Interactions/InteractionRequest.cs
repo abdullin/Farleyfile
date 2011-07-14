@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace FarleyFile.Interactions
@@ -5,17 +6,23 @@ namespace FarleyFile.Interactions
     public sealed class InteractionRequest
     {
         public readonly string Raw;
-        readonly IDictionary<string, long> _lookup;
+        readonly IDictionary<string, Guid> _lookup;
         public readonly string Data;
-        public readonly long CurrentStoryId;
+        public readonly Guid CurrentStoryId;
 
 
-        public bool TryGetId(string source, out long id)
+        public bool TryGetId(string source, out Guid id)
         {
-            return _lookup.TryGetValue(source, out id);
+            if (_lookup.TryGetValue(source, out id))
+            {
+                if (id == Guid.Empty)
+                    return false;
+                return true;
+            }
+            return false;
         }
 
-        public InteractionRequest(string data, long currentStoryId, string raw, IDictionary<string, long> lookup)
+        public InteractionRequest(string data, Guid currentStoryId, string raw, IDictionary<string, Guid> lookup)
         {
             Data = data;
             CurrentStoryId = currentStoryId;

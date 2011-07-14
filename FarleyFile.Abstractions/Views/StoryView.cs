@@ -7,7 +7,7 @@ namespace FarleyFile.Views
     public sealed class StoryView : IEntityBase
     {
         public string Name { get; set; }
-        public long StoryId { get; set; }
+        public Guid StoryId { get; set; }
 
         public IList<StoryViewNote> Notes { get; set; }
         public IList<StoryViewTask> Tasks { get; set; } 
@@ -18,7 +18,7 @@ namespace FarleyFile.Views
             Tasks = new List<StoryViewTask>();
         }
 
-        public void RemoveNote(long noteId)
+        public void RemoveNote(Guid noteId)
         {
             var notes = Notes.Where(n => n.NoteId == noteId).ToList();
             foreach (var note in notes)
@@ -27,7 +27,7 @@ namespace FarleyFile.Views
             }
         }
 
-        public void RemoveTask(long taskId)
+        public void RemoveTask(Guid taskId)
         {
             var tasks = Tasks.Where(n => n.TaskId == taskId).ToList();
             foreach (var task in tasks)
@@ -36,7 +36,7 @@ namespace FarleyFile.Views
             }
         }
 
-        public void AddNote(long noteId, string title, string text)
+        public void AddNote(Guid noteId, string title, string text)
         {
             Notes.Add(new StoryViewNote()
                 {
@@ -45,7 +45,7 @@ namespace FarleyFile.Views
                     Title = title
                 });
         }
-        public void AddTask(long taskId, string text, bool completed)
+        public void AddTask(Guid taskId, string text, bool completed)
         {
             Tasks.Add(new StoryViewTask()
                 {
@@ -55,7 +55,7 @@ namespace FarleyFile.Views
                 });
         }
 
-        public void UpdateTask(long taskId, Action<StoryViewTask> update)
+        public void UpdateTask(Guid taskId, Action<StoryViewTask> update)
         {
             foreach (var task in Tasks.Where(t => t.TaskId == taskId))
             {
@@ -63,7 +63,7 @@ namespace FarleyFile.Views
             }
         }
 
-        public void UpdateNote(long noteId, Action<StoryViewNote> update)
+        public void UpdateNote(Guid noteId, Action<StoryViewNote> update)
         {
             foreach (var note in Notes.Where(t => t.NoteId == noteId))
             {
@@ -84,7 +84,7 @@ namespace FarleyFile.Views
 
     public sealed class StoryListItem
     {
-        public long StoryId { get; set; }
+        public Guid StoryId { get; set; }
         public string Name { get; set; }
         public string Type { get; set; }
     }

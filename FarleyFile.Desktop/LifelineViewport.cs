@@ -13,20 +13,11 @@ namespace FarleyFile
         readonly Label _statusLabel;
 
         long _lookupReference;
-        readonly Dictionary<long, string> _lookupId = new Dictionary<long, string>();
-        public readonly Dictionary<string,long> LookupRef = new Dictionary<string, long>(StringComparer.InvariantCultureIgnoreCase);
+        readonly Dictionary<Guid, string> _lookupId = new Dictionary<Guid, string>();
+        public readonly Dictionary<string,Guid> LookupRef = new Dictionary<string, Guid>(StringComparer.InvariantCultureIgnoreCase);
         
-        Optional<long> Lookup(string reference)
-        {
-            long result;
-            if (LookupRef.TryGetValue(reference, out result))
-            {
-                return result;
-            }
-            return Optional<long>.Empty;
-        }
 
-        string AddReference(long identity, params object[] names)
+        string AddReference(Guid identity, params object[] names)
         {
             string readable;
             if (!_lookupId.TryGetValue(identity, out readable))
@@ -44,7 +35,7 @@ namespace FarleyFile
 
             foreach (var name in filtered)
             {
-                long reference;
+                Guid reference;
                 if (!LookupRef.TryGetValue(name, out reference))
                 {
                     LookupRef.Add(name, identity);
@@ -54,7 +45,7 @@ namespace FarleyFile
                     // collision
                     if (reference != identity)
                     {
-                        LookupRef[name] = 0;
+                        LookupRef[name] = Guid.Empty;
                         continue;
                     }
                     // no collision
@@ -70,7 +61,7 @@ namespace FarleyFile
             _statusLabel = statusLabel;
         }
 
-        public void SelectStory(long storyId, string storyName)
+        public void SelectStory(Guid storyId, string storyName)
         {
             _statusLabel.Text = string.Format("Story: {0} ({1})", storyName, storyId);
         }
