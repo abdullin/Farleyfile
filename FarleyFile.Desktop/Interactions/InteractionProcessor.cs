@@ -75,7 +75,7 @@ namespace FarleyFile.Interactions
             }
 
             _viewport.Error("Unknown command sequence: {0}", data);
-            return InteractionResultStatus.Unknown;
+            return InteractionResultStatus.Error;
         }
     }
 }

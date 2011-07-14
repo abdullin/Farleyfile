@@ -65,28 +65,51 @@ namespace FarleyFile
             _disposers.Add(sub);
             _processor.LoadFromAssembly();
             _processor.Handle("ls");
+            _rich.ScrollToCaret();
         }
+
+
+        readonly LinkedList<string> _inputBuffer = new LinkedList<string>();
+        LinkedListNode<string> _currentBuffer;
 
         void textBox1_KeyDown(object sender, KeyEventArgs e)
         {
+            // common console short-cuts.
+            if (e.KeyCode == Keys.Escape)
+            {
+                _input.Clear();
+                return;
+            }
+            if (e.KeyCode == Keys.Up)
+            {
+                var prev = _currentBuffer == null ? _inputBuffer.Last : _currentBuffer.Previous;
+                _input.Text = prev== null ? "" : prev.Value;
+                _input.SelectionStart = _input.Text.Length;
+                _currentBuffer = prev;
+                return;
+            }
+            if (e.KeyCode == Keys.Down)
+            {
+                var next = _currentBuffer == null ? _inputBuffer.First : _currentBuffer.Next;
+                _input.Text = next == null ? "" : next.Value;
+                _input.SelectionStart = _input.Text.Length;
+                _currentBuffer = next;
+                return;
+            }
             if ((e.KeyCode == Keys.Enter) && (!e.Shift))
             {
                 var data = _input.Text;
                 e.SuppressKeyPress = true;
 
-                var interactionResult = _processor.Handle(data);
-                switch (interactionResult)
+                var result = _processor.Handle(data);
+                if (result == InteractionResultStatus.Terminate)
                 {
-                    case InteractionResultStatus.Handled:
-                        _input.Clear();
-                        break;
-                    case InteractionResultStatus.Unknown:
-                        // do not clear, let user fix and retype
-                        break;
-                    case InteractionResultStatus.Terminate:
-                        Close();
-                        break;
+                    Close();
+                    return;
                 }
+                _inputBuffer.AddLast(data);
+                _currentBuffer = null;
+                _input.Clear();
                 _rich.ScrollToCaret();
             }
         }
