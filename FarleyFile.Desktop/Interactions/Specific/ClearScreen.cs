@@ -16,7 +16,7 @@ namespace FarleyFile.Interactions.Specific
         public override InteractionResult Handle(InteractionContext context)
         {
             context.Response.ClearView();
-            return InteractionResult.Handled;
+            return Handled();
         }
     }
 
@@ -38,7 +38,7 @@ namespace FarleyFile.Interactions.Specific
                 story = int.Parse(txt[2]);
             }
             context.Response.SendToProject(item.Select(i => new RemoveFromStory(int.Parse(i), story)).ToArray());
-            return InteractionResult.Handled;
+            return Handled();
         }
     }
 
@@ -69,7 +69,7 @@ namespace FarleyFile.Interactions.Specific
                 context.Response.Log("Story {0} not found", storyId);
             }
 
-            return InteractionResult.Handled;
+            return Handled();
         }
     }
 
@@ -94,7 +94,7 @@ namespace FarleyFile.Interactions.Specific
             {
                 context.Response.GrabFile("", (s, s1) => context.Response.SendToProject(new AddNote(title, s, storyId)));
             }
-            return InteractionResult.Handled;
+            return Handled();
         }
     }
 
@@ -119,7 +119,7 @@ namespace FarleyFile.Interactions.Specific
                 var note = optional.Value;
                 context.Response.GrabFile(note.Text, (s, s1) => context.Response.SendToProject(new EditNote(id, s, s1)));
             }
-            return InteractionResult.Handled;
+            return Handled();
         }
     }
 
@@ -132,7 +132,7 @@ namespace FarleyFile.Interactions.Specific
 
         public override InteractionResult Handle(InteractionContext context)
         {
-            return InteractionResult.Terminate;
+            return new InteractionResult(null, InteractionResultStatus.Terminate);
         }
     }
 
@@ -148,7 +148,7 @@ namespace FarleyFile.Interactions.Specific
             var view = context.Storage.GetSingletonOrNew<StoryListView>();
 
             context.Response.RenderView(view);
-            return InteractionResult.Handled;
+            return Handled();
 
         }
     }
@@ -164,7 +164,7 @@ namespace FarleyFile.Interactions.Specific
         {
             context.Response.SendToProject(new AddTask(context.Request.Data, context.Request.CurrentStoryId));
 
-            return InteractionResult.Handled;
+            return Handled();
         }
     }
 
@@ -179,7 +179,7 @@ namespace FarleyFile.Interactions.Specific
         {
             var i = int.Parse(context.Request.Data);
             context.Response.SendToProject(new CompleteTask(i));
-            return InteractionResult.Handled;
+            return Handled();
             
         }
     }
@@ -194,7 +194,7 @@ namespace FarleyFile.Interactions.Specific
         public override InteractionResult Handle(InteractionContext context)
         {
             context.Response.SendToProject(new StartSimpleStory(context.Request.Data));
-            return InteractionResult.Handled;
+            return Handled();
         }
     }
 
@@ -224,7 +224,7 @@ namespace FarleyFile.Interactions.Specific
                 context.Response.RenderView(story);
                 context.Response.FocusStory(id, story.Name);
             }
-            return InteractionResult.Handled;
+            return Handled();
         }
     }
 }

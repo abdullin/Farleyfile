@@ -27,5 +27,15 @@ namespace FarleyFile.Interactions
         }
 
         public abstract InteractionResult Handle(InteractionContext context);
+
+        // helpers
+        protected  InteractionResult Error(string error)
+        {
+            return new InteractionResult(error, InteractionResultStatus.Error);
+        }
+        protected InteractionResult Handled()
+        {
+            return new InteractionResult(null, InteractionResultStatus.Handled);
+        }
     }
 }

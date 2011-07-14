@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Concurrency;
-using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using FarleyFile.Interactions;
@@ -19,7 +18,7 @@ namespace FarleyFile
         readonly LifelineViewport _viewport;
         readonly InteractionProcessor _processor;
         readonly IList<IDisposable> _disposers = new List<IDisposable>();
-        
+
         public Form1(CqrsEngineHost host, IObservable<ISystemEvent> observable)
         {
             _host = host;
@@ -29,22 +28,19 @@ namespace FarleyFile
             var sender = _host.Resolve<IMessageSender>();
             var storage = _host.Resolve<NuclearStorage>();
 
-            _viewport = new LifelineViewport(_rich, label1);
+            _viewport = new LifelineViewport(_rich, _status);
             _processor = new InteractionProcessor(sender, _viewport, storage);
-            
-            label1.BackColor = Solarized.Base03;
-            label1.ForeColor = Solarized.Base01;
 
-            panel2.BackColor = Color.FromArgb(253, 246, 227); 
+            _panel.BackColor = Solarized.Base3;
             _rich.BackColor = Solarized.Base3;
             _rich.ForeColor = Solarized.Base00;
-            textBox1.BackColor = Solarized.Base03;
-            textBox1.ForeColor = Solarized.Base0;
-
-            
+            _input.BackColor = Solarized.Base03;
+            _input.ForeColor = Solarized.Base0;
+            _status.BackColor = Solarized.Base03;
+            _status.ForeColor = Solarized.Base01;
         }
 
-        private void Form1_Load(object sender, EventArgs e)
+        void Form1_Load(object sender, EventArgs e)
         {
             var sub = _observable
                 .Where(i =>
@@ -71,53 +67,31 @@ namespace FarleyFile
             _processor.Handle("ls");
         }
 
-        
-
-        
-        public void Error(string text, params object[] args)
-        {
-            using (_rich.Styled(Solarized.Red))
-            {
-                _rich.AppendLine(text, args); 
-                _rich.ScrollToCaret();
-            }
-        }
-
-        
-        private void textBox1_KeyDown(object sender, KeyEventArgs e)
+        void textBox1_KeyDown(object sender, KeyEventArgs e)
         {
             if ((e.KeyCode == Keys.Enter) && (!e.Shift))
             {
-                var data = textBox1.Text;
+                var data = _input.Text;
                 e.SuppressKeyPress = true;
-                
-                try
+
+                var interactionResult = _processor.Handle(data);
+                switch (interactionResult)
                 {
-                    var interactionResult = _processor.Handle(data);
-                    switch(interactionResult)
-                    {
-                        case InteractionResult.Handled:
-                            textBox1.Clear();
-                            break;
-                        case InteractionResult.Unknown:
-                            // do not clear
-                            break;
-                        case InteractionResult.Terminate:
-                            Close();
-                            break;
-                        default:
-                            throw new ArgumentOutOfRangeException();
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Error(ex.Message);
+                    case InteractionResultStatus.Handled:
+                        _input.Clear();
+                        break;
+                    case InteractionResultStatus.Unknown:
+                        // do not clear, let user fix and retype
+                        break;
+                    case InteractionResultStatus.Terminate:
+                        Close();
+                        break;
                 }
                 _rich.ScrollToCaret();
             }
         }
 
-        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
             foreach (var disposable in _disposers)
             {

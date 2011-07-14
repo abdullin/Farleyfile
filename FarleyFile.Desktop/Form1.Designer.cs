@@ -29,18 +29,18 @@
         private void InitializeComponent()
         {
             this.panel1 = new System.Windows.Forms.Panel();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this._input = new System.Windows.Forms.TextBox();
             this.splitter1 = new System.Windows.Forms.Splitter();
-            this.panel2 = new System.Windows.Forms.Panel();
+            this._panel = new System.Windows.Forms.Panel();
             this._rich = new System.Windows.Forms.RichTextBox();
-            this.label1 = new System.Windows.Forms.Label();
+            this._status = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
-            this.panel2.SuspendLayout();
+            this._panel.SuspendLayout();
             this.SuspendLayout();
             // 
             // panel1
             // 
-            this.panel1.Controls.Add(this.textBox1);
+            this.panel1.Controls.Add(this._input);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.panel1.Location = new System.Drawing.Point(0, 464);
             this.panel1.Name = "panel1";
@@ -49,15 +49,15 @@
             // 
             // textBox1
             // 
-            this.textBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.textBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBox1.Font = new System.Drawing.Font("Consolas", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox1.Location = new System.Drawing.Point(0, 0);
-            this.textBox1.Multiline = true;
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(740, 72);
-            this.textBox1.TabIndex = 0;
-            this.textBox1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBox1_KeyDown);
+            this._input.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this._input.Dock = System.Windows.Forms.DockStyle.Fill;
+            this._input.Font = new System.Drawing.Font("Consolas", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this._input.Location = new System.Drawing.Point(0, 0);
+            this._input.Multiline = true;
+            this._input.Name = "_input";
+            this._input.Size = new System.Drawing.Size(740, 72);
+            this._input.TabIndex = 0;
+            this._input.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBox1_KeyDown);
             // 
             // splitter1
             // 
@@ -70,13 +70,13 @@
             // 
             // panel2
             // 
-            this.panel2.Controls.Add(this._rich);
-            this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel2.Location = new System.Drawing.Point(0, 0);
-            this.panel2.Name = "panel2";
-            this.panel2.Padding = new System.Windows.Forms.Padding(5);
-            this.panel2.Size = new System.Drawing.Size(740, 461);
-            this.panel2.TabIndex = 2;
+            this._panel.Controls.Add(this._rich);
+            this._panel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this._panel.Location = new System.Drawing.Point(0, 0);
+            this._panel.Name = "_panel";
+            this._panel.Padding = new System.Windows.Forms.Padding(5);
+            this._panel.Size = new System.Drawing.Size(740, 461);
+            this._panel.TabIndex = 2;
             // 
             // _rich
             // 
@@ -92,32 +92,32 @@
             // 
             // label1
             // 
-            this.label1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.label1.Font = new System.Drawing.Font("Consolas", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(0, 536);
-            this.label1.Name = "label1";
-            this.label1.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
-            this.label1.Size = new System.Drawing.Size(740, 23);
-            this.label1.TabIndex = 1;
-            this.label1.Text = "Farley File";
-            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this._status.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this._status.Font = new System.Drawing.Font("Consolas", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this._status.Location = new System.Drawing.Point(0, 536);
+            this._status.Name = "_status";
+            this._status.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+            this._status.Size = new System.Drawing.Size(740, 23);
+            this._status.TabIndex = 1;
+            this._status.Text = "Farley File";
+            this._status.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(740, 559);
-            this.Controls.Add(this.panel2);
+            this.Controls.Add(this._panel);
             this.Controls.Add(this.splitter1);
             this.Controls.Add(this.panel1);
-            this.Controls.Add(this.label1);
+            this.Controls.Add(this._status);
             this.Name = "Form1";
             this.Text = "FarleyFile";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.Load += new System.EventHandler(this.Form1_Load);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
-            this.panel2.ResumeLayout(false);
+            this._panel.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -125,11 +125,11 @@
         #endregion
 
         private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox _input;
         private System.Windows.Forms.Splitter splitter1;
-        private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.Panel _panel;
         private System.Windows.Forms.RichTextBox _rich;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label _status;
     }
 }
 

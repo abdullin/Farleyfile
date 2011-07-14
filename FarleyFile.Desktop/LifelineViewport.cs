@@ -26,6 +26,43 @@ namespace FarleyFile
             _rich.Clear();
         }
 
+        public void Log(string text, params object[] args)
+        {
+            try
+            {
+                using (_rich.Styled(Solarized.Base1))
+                {
+                    _rich.AppendText(string.Format(text, args));
+                    _rich.AppendText(Environment.NewLine);
+                }
+            }
+            catch (ObjectDisposedException)
+            {
+
+            }
+        }
+
+        public void Error(string text, params object[] args)
+        {
+            try
+            {
+                using (_rich.Styled(Solarized.Red))
+                {
+                    _rich.AppendText(string.Format(text, args));
+                    _rich.AppendText(Environment.NewLine);
+                }
+            }
+            catch (ObjectDisposedException)
+            {
+                
+            }
+        }
+
+        public void RenderView<T>(T view)
+        {
+            RedirectToWhen.InvokeOptional(this, view, (i,v) => _rich.AppendText(ServiceStack.Text.TypeSerializer.SerializeAndFormat(view)));
+        }
+
         public void When(StoryListView list)
         {
             using (_rich.Styled(Solarized.Yellow))
@@ -37,27 +74,6 @@ namespace FarleyFile
             {
                 _rich.AppendLine("[{1}] {2} ({0})", item.StoryId, item.Type, item.Name);
             }
-        }
-
-        public void Log(string text, params object[] args)
-        {
-            try
-            {
-                using (_rich.Styled(Solarized.Base1))
-                {
-                    _rich.AppendLine(text, args);
-                    _rich.ScrollToCaret();
-                }
-            }
-            catch (ObjectDisposedException)
-            {
-
-            }
-        }
-
-        public void RenderView<T>(T view)
-        {
-            RedirectToWhen.InvokeOptional(this, view, (i,v) => _rich.AppendText(ServiceStack.Text.TypeSerializer.SerializeAndFormat(view)));
         }
 
         public void When(StoryView view)

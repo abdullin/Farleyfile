@@ -58,10 +58,11 @@
     <Compile Include="Interactions\InteractionContext.cs" />
     <Compile Include="Interactions\InteractionRequest.cs" />
     <Compile Include="Interactions\InteractionResponse.cs" />
+    <Compile Include="Interactions\InteractionResult.cs" />
     <Compile Include="Interactions\Specific\ClearScreen.cs" />
     <Compile Include="ExtendRich.cs" />
     <Compile Include="Interactions\InteractionProcessor.cs" />
-    <Compile Include="Interactions\InteractionResult.cs" />
+    <Compile Include="Interactions\InteractionResultStatus.cs" />
     <Compile Include="Solarized.cs" />
     <Compile Include="Sys.cs" />
     <Compile Include="AggregateDispatcher.cs" />
