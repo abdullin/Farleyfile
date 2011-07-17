@@ -87,6 +87,7 @@ namespace FarleyFile
                 {
                     _rich.AppendText(string.Format(text, args));
                     _rich.AppendText(Environment.NewLine);
+                    _rich.ScrollToCaret();
                 }
             }
             catch (ObjectDisposedException)
@@ -103,6 +104,7 @@ namespace FarleyFile
                 {
                     _rich.AppendText(string.Format(text, args));
                     _rich.AppendText(Environment.NewLine);
+                    _rich.ScrollToCaret();
                 }
             }
             catch (ObjectDisposedException)

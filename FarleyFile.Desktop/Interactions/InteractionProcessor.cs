@@ -41,6 +41,7 @@ namespace FarleyFile.Interactions
             _sender = sender;
             _viewport = viewport;
             _storage = storage;
+            CurrentStoryId = new StoryId(Guid.Empty);
         }
 
         public InteractionResultStatus Handle(string data)

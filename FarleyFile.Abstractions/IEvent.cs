@@ -12,9 +12,9 @@ namespace FarleyFile
     public class Identity
     {
         [DataMember(Order = 1)]
-        public Guid Id { get; private set; }
+        public Guid Id { get; protected set; }
         [DataMember(Order = 2)]
-        public int Tag { get; private set; }
+        public int Tag { get; protected set; }
 
         public Identity(Guid id, int tag)
         {
@@ -51,6 +51,11 @@ namespace FarleyFile
         {
             return id.Id;
         }
+
+        public override string ToString()
+        {
+            return string.Format("{0}({1})-{2}", GetType().Name.Replace("Id", ""), Tag, Id);
+        }
     }
 
 
@@ -58,15 +63,17 @@ namespace FarleyFile
     public sealed class NoteId : Identity
     {
         public const int Tag = 1;
-        public NoteId(Guid id) : base(id, Tag) {}
-
-        
+        public NoteId(Guid id) : base(id, Tag)
+        {
+            
+        }
     }
     [DataContract]
     public sealed class StoryId : Identity
     {
         public const int Tag = 2;
         public StoryId(Guid id) : base(id, Tag) {}
+        
     }
     [DataContract]
     public sealed class ActivityId : Identity
