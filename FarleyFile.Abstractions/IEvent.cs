@@ -1,5 +1,7 @@
 using System;
+using System.Reflection;
 using System.Runtime.Serialization;
+using System.Linq;
 
 namespace FarleyFile
 {
@@ -25,8 +27,6 @@ namespace FarleyFile
         public bool IsEmpty { get { return Id == Guid.Empty; } }
 
         public static readonly Identity Empty = new Identity(Guid.Empty, 0);
-
-
 
         public override bool Equals(object obj)
         {
@@ -104,5 +104,4 @@ namespace FarleyFile
         public const int Tag = 4;
         public TaskId(Guid id) : base(id, Tag) {}
     }
-
 }

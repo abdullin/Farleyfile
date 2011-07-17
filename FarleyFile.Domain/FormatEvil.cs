@@ -19,7 +19,6 @@ namespace FarleyFile
                 return time.ToLocalTime().ToString("MMMM dd, yyyy", CultureInfo.InvariantCulture);
             }
 
-
             if (offset > TimeSpan.Zero)
             {
                 return PositiveTimeSpan(offset) + " ago";

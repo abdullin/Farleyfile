@@ -16,19 +16,22 @@ namespace FarleyFile
         public readonly Dictionary<string,Identity> LookupRef = new Dictionary<string, Identity>(StringComparer.InvariantCultureIgnoreCase);
         
 
-        string AddReference(Identity identity, params object[] names)
+        string AddReference(Identity i, params object[] names)
         {
-            if (identity.IsEmpty)
+            if (i.IsEmpty)
                 throw new InvalidOperationException("Can't add an empty reference");
+
+            i = IdentityEvil.Upcast(i);
+
             string readable;
-            if (!_lookupId.TryGetValue(identity, out readable))
+            if (!_lookupId.TryGetValue(i, out readable))
             {
                 _lookupReference += 1;
                 readable = _lookupReference.ToString();
-                _lookupId.Add(identity, readable);
+                _lookupId.Add(i, readable);
 
                 // overwrite reverse lookup
-                LookupRef[readable] = identity;
+                LookupRef[readable] = i;
             }
 
             var filtered = names
@@ -42,15 +45,15 @@ namespace FarleyFile
                 Identity reference;
                 if (!LookupRef.TryGetValue(name, out reference))
                 {
-                    LookupRef.Add(name, identity);
+                    LookupRef.Add(name, i);
                 }
                 else
                 {
                     // collision
-                    if (reference != identity)
+                    if (!reference.Equals(i))
                     {
                         LookupRef[name] = Identity.Empty;
-                        //Log("Collision: '{0}' -> '{1}' by '{2}'", reference, identity, name);
+                        Log("Collision: '{0}' -> '{1}' by '{2}'", reference, i, name);
                         continue;
                     }
                     // no collision
@@ -172,7 +175,7 @@ namespace FarleyFile
                     using (_rich.Styled(Solarized.Base1))
                     {
                         var refid = AddReference(activity.ActivityId);
-                        _rich.AppendLine("{0:yyyy-MM-dd HH:mm} .{1}", FormatEvil.OffsetUtc(activity.Created), refid);
+                        _rich.AppendLine("  {0:yyyy-MM-dd HH:mm} .{1}", FormatEvil.OffsetUtc(activity.Created), refid);
                     }
                 }
                 _rich.AppendLine();

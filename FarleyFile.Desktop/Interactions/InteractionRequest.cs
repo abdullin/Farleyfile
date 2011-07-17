@@ -24,6 +24,7 @@ namespace FarleyFile.Interactions
 
                 if (id != null)
                 return true;
+                throw new InvalidOperationException("Invalid identity cast");
             }
             return false;
         }

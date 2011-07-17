@@ -46,6 +46,7 @@
     <Compile Include="IBaseMessage.cs" />
     <Compile Include="ICommand.cs" />
     <Compile Include="IConsume.cs" />
+    <Compile Include="IdentityEvil.cs" />
     <Compile Include="IEntityBase.cs" />
     <Compile Include="IEvent.cs" />
     <Compile Include="Messages.cs">
