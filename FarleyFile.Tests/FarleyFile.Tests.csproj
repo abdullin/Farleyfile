@@ -8,7 +8,7 @@
     <ProjectGuid>{A6C19A58-6F2F-4EF0-991A-F4F57D855578}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>FarleyFile.Tests</RootNamespace>
+    <RootNamespace>FarleyFile</RootNamespace>
     <AssemblyName>FarleyFile.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -39,17 +39,23 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Data" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="IdentityTests.cs" />
+    <Compile Include="Interactions\Specific\DoAddActivityTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\FarleyFile.Abstractions\FarleyFile.Abstractions.csproj">
       <Project>{B36BB802-B112-417D-9EA4-433A31FFE50B}</Project>
       <Name>FarleyFile.Abstractions</Name>
     </ProjectReference>
+    <ProjectReference Include="..\FarleyFile.Desktop\FarleyFile.Desktop.csproj">
+      <Project>{74C2D1E4-BE5F-440A-AFF0-1DF14B2BBD68}</Project>
+      <Name>FarleyFile.Desktop</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

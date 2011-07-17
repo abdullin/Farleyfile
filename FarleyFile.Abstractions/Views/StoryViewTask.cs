@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace FarleyFile.Views
 {
@@ -14,5 +15,19 @@ namespace FarleyFile.Views
         public ActivityId ActivityId { get; set; }
         public string Text { get; set; }
         public DateTime CreatedUtc { get; set; }
+
+        public List<StoryViewActivityReference> References { get; set; }
+
+        public StoryViewActivity()
+        {
+            References = new List<StoryViewActivityReference>();
+        }
+    }
+
+    public sealed class StoryViewActivityReference
+    {
+        public Identity Item { get; set; }
+        public string Title { get; set; }
+        public string Source { get; set; }
     }
 }

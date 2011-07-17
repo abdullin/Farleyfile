@@ -9,7 +9,7 @@ namespace FarleyFile
     }
 
     [DataContract]
-    public class Identity
+    public class Identity : IComparable
     {
         [DataMember(Order = 1)]
         public Guid Id { get; protected set; }
@@ -25,6 +25,8 @@ namespace FarleyFile
         public bool IsEmpty { get { return Id == Guid.Empty; } }
 
         public static readonly Identity Empty = new Identity(Guid.Empty, 0);
+
+
 
         public override bool Equals(object obj)
         {
@@ -46,6 +48,20 @@ namespace FarleyFile
                 return (Id.GetHashCode()*397) ^ Tag;
             }
         }
+
+        public int CompareTo(object obj)
+        {
+            var id = obj as Identity;
+
+            if (id == null)
+            {
+                throw new ArgumentException("These types are not comparable");
+            }
+            if (Tag != id.Tag)
+                return Tag.CompareTo(id.Tag);
+            return Id.CompareTo(id.Id);
+        }
+
 
         public static implicit operator Guid(Identity id)
         {

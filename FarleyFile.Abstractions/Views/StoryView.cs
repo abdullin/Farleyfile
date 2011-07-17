@@ -49,12 +49,23 @@ namespace FarleyFile.Views
 
         public void AddActivity(ActivityAdded e)
         {
-            Activities.Add(new StoryViewActivity()
+            var activity = new StoryViewActivity()
                 {
                     ActivityId = e.ActivityId,
                     Text = e.Text,
                     CreatedUtc = e.CreatedUtc
-                });
+                };
+
+            foreach (var reference in e.References)
+            {
+                activity.References.Add(new StoryViewActivityReference
+                    {
+                        Item = reference.Id,
+                        Source = reference.OriginalRef,
+                        Title = reference.Text
+                    });
+            }
+            Activities.Add(activity);
         }
 
         public void AddTask(TaskId taskId, string text, bool completed)

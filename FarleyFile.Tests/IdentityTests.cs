@@ -22,6 +22,5 @@ namespace FarleyFile.Tests
             var deserialized = JsonSerializer.DeserializeFromString<StoryId>(s);
             Assert.AreEqual(id, deserialized);
         }
-         
     }
 }

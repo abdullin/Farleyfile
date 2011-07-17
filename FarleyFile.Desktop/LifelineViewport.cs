@@ -161,7 +161,14 @@ namespace FarleyFile
             {
                 foreach (var activity in view.Activities)
                 {
-                    _rich.AppendLine(activity.Text);
+                    var text = activity.Text;
+                    foreach (var r in activity.References)
+                    {
+                        var rid = AddReference(r.Item);
+                        var newRef = string.Format("[{0}]({1})", r.Title, rid);
+                        text = text.Replace(r.Source, newRef);
+                    }
+                    _rich.AppendLine(text);
                     using (_rich.Styled(Solarized.Base1))
                     {
                         var refid = AddReference(activity.ActivityId);
