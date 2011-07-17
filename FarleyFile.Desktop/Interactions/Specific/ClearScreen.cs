@@ -114,12 +114,35 @@ namespace FarleyFile.Interactions.Specific
             var storyId = context.Request.CurrentStoryId;
             if (!string.IsNullOrEmpty(txt))
             {
-                context.Response.SendToProject(new AddNote(title, txt, storyId));
+                title = txt;
+                
             }
-            else
+            context.Response.GrabFile("", (s, s1) => context.Response.SendToProject(new AddNote(title, s, storyId)));
+            
+            return Handled();
+        }
+    }
+
+    public sealed class Rename : AbstractInteraction
+    {
+        protected override string[] Alias
+        {
+            get { return new string[] {"ren"}; }
+        }
+
+        public override InteractionResult Handle(InteractionContext context)
+        {
+            var splice = context.Request.Data.Split(new[] {' '}, 2);
+            Guid guid;
+            if (!context.Request.TryGetId(splice[0], out guid))
             {
-                context.Response.GrabFile("", (s, s1) => context.Response.SendToProject(new AddNote(title, s, storyId)));
+                return Error("Failed to look up ID for '{0}'", splice[0]);
             }
+            if (splice.Length<2)
+            {
+                return Error("Did you miss a new name?");
+            }
+            context.Response.SendToProject(new RenameItem(guid, splice[1]));
             return Handled();
         }
     }

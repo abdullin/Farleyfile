@@ -6,7 +6,8 @@ namespace FarleyFile
     public sealed class NoteViewHandler : 
         IConsume<NoteAdded>,
         IConsume<NoteEdited>,
-        IConsume<NoteRemoved>
+        IConsume<NoteRemoved>,
+        IConsume<NoteRenamed>
     {
         readonly IAtomicEntityWriter<Guid, NoteView> _writer;
         public NoteViewHandler(IAtomicEntityWriter<Guid, NoteView> writer)
@@ -31,6 +32,11 @@ namespace FarleyFile
         public void Consume(NoteRemoved e)
         {
             _writer.TryDelete(e.NoteId);
+        }
+
+        public void Consume(NoteRenamed e)
+        {
+            _writer.UpdateOrThrow(e.NoteId, nv => nv.Title = e.NewName);
         }
     }
 }

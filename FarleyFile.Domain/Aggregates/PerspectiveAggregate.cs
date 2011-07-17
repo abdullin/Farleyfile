@@ -32,6 +32,29 @@ namespace FarleyFile.Aggregates
             Apply(new SimpleStoryStarted(id, c.Name));
         }
 
+        public void When(RenameItem c)
+        {
+            NoteItem item;
+            if (_state.TryGet(c.Id, out item))
+            {
+                if (item.Title != c.Name)
+                {
+                    Apply(new NoteRenamed(c.Id, item.Title, c.Name, item.FeaturedIn));
+                }
+                return;
+            }
+            TaskItem task;
+            if (_state.TryGet(c.Id, out task))
+            {
+                if (task.Name != c.Name)
+                {
+                    Apply(new TaskRenamed(c.Id, task.Name, c.Name, task.FeaturedIn));
+                }
+                return;
+            }
+            throw Error("Renaming item {0} is not supported", c.Id);
+
+        }
 
 
         public void When(AddActivity c)

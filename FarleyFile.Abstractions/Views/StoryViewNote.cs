@@ -6,6 +6,5 @@ namespace FarleyFile.Views
     {
         public Guid NoteId { get; set; }
         public string Title { get; set; }
-        public string Text { get; set; }
     }
 }

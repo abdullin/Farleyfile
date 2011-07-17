@@ -134,6 +134,53 @@ namespace FarleyFile
         }
     }
     
+    [DataContract] public sealed class RenameItem : ICommand
+    {
+        [DataMember(Order = 1)] public Guid Id { get; internal set; }
+        [DataMember(Order = 2)] public string Name { get; internal set; }
+        
+        internal RenameItem () {}
+        public RenameItem (Guid id, string name)
+        {
+            Id = id;
+            Name = name;
+        }
+    }
+    
+    [DataContract] public sealed class NoteRenamed : IEvent
+    {
+        [DataMember(Order = 1)] public Guid NoteId { get; internal set; }
+        [DataMember(Order = 2)] public string OldName { get; internal set; }
+        [DataMember(Order = 3)] public string NewName { get; internal set; }
+        [DataMember(Order = 4)] public ICollection<Guid> StoryIds { get; internal set; }
+        
+        internal NoteRenamed () {}
+        public NoteRenamed (Guid noteId, string oldName, string newName, ICollection<Guid> storyIds)
+        {
+            NoteId = noteId;
+            OldName = oldName;
+            NewName = newName;
+            StoryIds = storyIds;
+        }
+    }
+    
+    [DataContract] public sealed class TaskRenamed : IEvent
+    {
+        [DataMember(Order = 1)] public Guid TaskId { get; internal set; }
+        [DataMember(Order = 2)] public string OldText { get; internal set; }
+        [DataMember(Order = 3)] public string NewText { get; internal set; }
+        [DataMember(Order = 4)] public ICollection<Guid> StoryIds { get; internal set; }
+        
+        internal TaskRenamed () {}
+        public TaskRenamed (Guid taskId, string oldText, string newText, ICollection<Guid> storyIds)
+        {
+            TaskId = taskId;
+            OldText = oldText;
+            NewText = newText;
+            StoryIds = storyIds;
+        }
+    }
+    
     [DataContract] public sealed class EditNote : ICommand
     {
         [DataMember(Order = 1)] public Guid NoteId { get; internal set; }

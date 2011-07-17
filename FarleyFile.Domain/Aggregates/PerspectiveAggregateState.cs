@@ -94,6 +94,17 @@ namespace FarleyFile.Aggregates
             task.FeaturedIn.Remove(e.StoryId);
         }
 
+        public void When(NoteRenamed e)
+        {
+            var item = (NoteItem)_items[e.NoteId];
+            item.Rename(e.NewName);
+        }
+        public void When(TaskRenamed e)
+        {
+            var item = (TaskItem) _items[e.TaskId];
+            item.Rename(e.NewText);
+        }
+
         public bool TryGetStory(Guid storyId, out AbstractStory story)
         {
             return _stories.TryGetValue(storyId, out story);
@@ -159,6 +170,11 @@ namespace FarleyFile.Aggregates
         {
             Text = newText;
         }
+
+        public void Rename(string newTitle)
+        {
+            Title = newTitle;
+        }
     }
 
 
@@ -193,8 +209,13 @@ namespace FarleyFile.Aggregates
 
     public sealed class TaskItem : AbstractItem
     {
-        public string Name { get; set; }
+        public string Name { get; private set; }
         public bool Completed { get; set; }
+
+        public void Rename(string name)
+        {
+            Name = name;
+        }
 
         public TaskItem(string name) 
         {

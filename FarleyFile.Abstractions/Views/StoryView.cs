@@ -43,7 +43,6 @@ namespace FarleyFile.Views
             Notes.Add(new StoryViewNote()
                 {
                     NoteId = noteId,
-                    Text = text,
                     Title = title
                 });
         }
