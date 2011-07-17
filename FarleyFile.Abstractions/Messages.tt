@@ -16,12 +16,15 @@ let noteId = Guid NoteId;
 let storyId = Guid StoryId;
 let taskId = Guid TaskId;
 let date = DateTime Date;
-
+let activity = Guid ActivityId;
 PerspectiveCreated! (storyId)
 
 // generic story
 StartSimpleStory? (string name)
 SimpleStoryStarted! (storyId, string name)
+
+AddActivity? (storyId, string text)
+ActivityAdded! (storyId, string text, DateTime createdUtc, activity)
 
 
 AddNote? (string title, string text, storyId)

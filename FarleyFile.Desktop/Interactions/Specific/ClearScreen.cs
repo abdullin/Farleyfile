@@ -18,6 +18,26 @@ namespace FarleyFile.Interactions.Specific
         }
     }
 
+    public sealed class RecordActivity : AbstractInteraction
+    {
+        protected override string[] Alias
+        {
+            get { return new[] {"aa"}; }
+        }
+
+        public override InteractionResult Handle(InteractionContext context)
+        {
+            var txt = context.Request.Data;
+            var storyId = context.Request.CurrentStoryId;
+            if (string.IsNullOrEmpty(txt))
+            {
+                return Error("Tweet err.. activity can't be longer than 140 chars. Use notes to record data");
+            }
+            context.Response.SendToProject(new AddActivity(storyId, txt));
+            return Handled();
+        }
+    }
+
     public sealed class DoRemoveFromStory : AbstractInteraction
     {
         protected override string[] Alias

@@ -32,6 +32,19 @@ namespace FarleyFile.Aggregates
             Apply(new SimpleStoryStarted(id, c.Name));
         }
 
+
+
+        public void When(AddActivity c)
+        {
+            if (!_state.StoryExists(c.StoryId))
+            {
+                throw Error("Story not found {0}", c.StoryId);
+            }
+            var id = _state.GetNextId();
+            var date = DateTime.UtcNow;
+            Apply(new ActivityAdded(c.StoryId, c.Text, date, id)) ;
+        }
+
         public void When(MergeNotes c)
         {
             NoteItem first;

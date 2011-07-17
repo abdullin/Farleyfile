@@ -133,6 +133,18 @@ namespace FarleyFile
                 _rich.AppendLine(txt);
             }
             _rich.AppendLine(new string('=', txt.Length));
+
+            foreach (var activity in view.Activities)
+            {
+                _rich.AppendLine(activity.Text);
+                using (_rich.Styled(Solarized.Base1))
+                {
+                    var refid = AddReference(activity.ActivityId);
+                    _rich.AppendLine("{0:yyyy-MM-dd HH:mm} @{1}", activity.CreatedUtc, refid);
+                }
+            }
+
+
             if (view.Tasks.Count > 0)
             {
                 foreach (var task in view.Tasks.OrderBy(c => c.Completed))

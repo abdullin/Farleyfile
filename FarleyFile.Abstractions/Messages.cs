@@ -44,6 +44,36 @@ namespace FarleyFile
         }
     }
     
+    [DataContract] public sealed class AddActivity : ICommand
+    {
+        [DataMember(Order = 1)] public Guid StoryId { get; internal set; }
+        [DataMember(Order = 2)] public string Text { get; internal set; }
+        
+        internal AddActivity () {}
+        public AddActivity (Guid storyId, string text)
+        {
+            StoryId = storyId;
+            Text = text;
+        }
+    }
+    
+    [DataContract] public sealed class ActivityAdded : IEvent
+    {
+        [DataMember(Order = 1)] public Guid StoryId { get; internal set; }
+        [DataMember(Order = 2)] public string Text { get; internal set; }
+        [DataMember(Order = 3)] public DateTime CreatedUtc { get; internal set; }
+        [DataMember(Order = 4)] public Guid ActivityId { get; internal set; }
+        
+        internal ActivityAdded () {}
+        public ActivityAdded (Guid storyId, string text, DateTime createdUtc, Guid activityId)
+        {
+            StoryId = storyId;
+            Text = text;
+            CreatedUtc = createdUtc;
+            ActivityId = activityId;
+        }
+    }
+    
     [DataContract] public sealed class AddNote : ICommand
     {
         [DataMember(Order = 1)] public string Title { get; internal set; }

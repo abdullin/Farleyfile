@@ -21,7 +21,7 @@ namespace FarleyFile
             }
         }
 
-        public static IDisposable Styled(this RichTextBox box, Color color, bool bold = false, int indent = 0)
+        public static IDisposable Styled(this RichTextBox box, Color color, bool bold = false, int indent = 0, float scale = 1)
         {
             var selectionColor = box.SelectionColor;
             var font = box.SelectionFont;
@@ -35,11 +35,12 @@ namespace FarleyFile
             {
                 box.SelectionFont = new Font(box.Font, box.Font.Style | FontStyle.Bold);
             }
+            
             if (indent != 0)
             {
                 box.SelectionIndent = indent;
             }
-
+            
 
             return new DisposableAction(() =>
                 {

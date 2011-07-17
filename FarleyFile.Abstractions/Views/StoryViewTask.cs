@@ -8,4 +8,11 @@ namespace FarleyFile.Views
         public string Text { get; set; }
         public bool Completed { get; set; }
     }
+
+    public sealed class StoryViewActivity
+    {
+        public Guid ActivityId { get; set; }
+        public string Text { get; set; }
+        public DateTime CreatedUtc { get; set; }
+    }
 }

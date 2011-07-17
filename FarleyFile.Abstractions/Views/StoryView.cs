@@ -10,12 +10,14 @@ namespace FarleyFile.Views
         public Guid StoryId { get; set; }
 
         public IList<StoryViewNote> Notes { get; set; }
-        public IList<StoryViewTask> Tasks { get; set; } 
+        public IList<StoryViewTask> Tasks { get; set; }
+        public IList<StoryViewActivity> Activities { get; set; } 
 
         public StoryView()
         {
             Notes = new List<StoryViewNote>();
             Tasks = new List<StoryViewTask>();
+            Activities = new List<StoryViewActivity>();
         }
 
         public void RemoveNote(Guid noteId)
@@ -45,6 +47,17 @@ namespace FarleyFile.Views
                     Title = title
                 });
         }
+
+        public void AddActivity(ActivityAdded e)
+        {
+            Activities.Add(new StoryViewActivity()
+                {
+                    ActivityId = e.ActivityId,
+                    Text = e.Text,
+                    CreatedUtc = e.CreatedUtc
+                });
+        }
+
         public void AddTask(Guid taskId, string text, bool completed)
         {
             Tasks.Add(new StoryViewTask()

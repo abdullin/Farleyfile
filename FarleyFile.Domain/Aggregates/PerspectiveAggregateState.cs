@@ -10,7 +10,12 @@ namespace FarleyFile.Aggregates
 
         readonly Dictionary<Guid, AbstractStory> _stories = new Dictionary<Guid, AbstractStory>();
         readonly Dictionary<Guid, AbstractItem> _items = new Dictionary<Guid, AbstractItem>();
+        readonly SortedDictionary<Guid,Activity> _activities = new SortedDictionary<Guid, Activity>(); 
 
+        public void When(ActivityAdded e)
+        {
+            _activities.Add(e.ActivityId, new Activity());
+        }
 
         public void When(SimpleStoryStarted e)
         {
@@ -161,6 +166,10 @@ namespace FarleyFile.Aggregates
     public abstract class AbstractItem
     {
         public HashSet<Guid> FeaturedIn = new HashSet<Guid>();
+    }
+
+    public sealed class Activity
+    {
         
     }
 
