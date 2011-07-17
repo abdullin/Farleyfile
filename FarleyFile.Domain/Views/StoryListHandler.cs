@@ -3,7 +3,8 @@ using Lokad.Cqrs.Feature.AtomicStorage;
 namespace FarleyFile.Views
 {
     public sealed class StoryListHandler : 
-        IConsume<SimpleStoryStarted>
+        IConsume<SimpleStoryStarted>,
+        IConsume<SimpleStoryRenamed>
     {
         readonly IAtomicSingletonWriter<StoryListView> _writer;
 
@@ -14,12 +15,18 @@ namespace FarleyFile.Views
 
         public void Consume(SimpleStoryStarted e)
         {
-            _writer.UpdateEnforcingNew(v => v.Items.Add(new StoryListItem
+            var item = new StoryListItem
                 {
                     Name = e.Name,
                     StoryId = e.StoryId,
                     Type = "Simple"
-                }));
+                };
+            _writer.UpdateEnforcingNew(v => v.Items.Add(e.StoryId, item));
+        }
+
+        public void Consume(SimpleStoryRenamed e)
+        {
+            _writer.UpdateOrThrow(v => v.Items[e.StoryId].Name = e.NewName);
         }
     }
 }

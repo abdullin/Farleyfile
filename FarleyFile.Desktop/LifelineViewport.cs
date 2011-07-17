@@ -125,7 +125,7 @@ namespace FarleyFile
                 _rich.AppendLine("Stories");
             }
             _rich.AppendLine("=======");
-            foreach (var item in list.Items)
+            foreach (var item in list.Items.Values.OrderBy(s => s.Name))
             {
                 var reference = AddReference(item.StoryId, item.Name);
                 _rich.AppendLine("[{1}] {2} .{0}", reference, item.Type, item.Name);

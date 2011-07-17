@@ -86,11 +86,11 @@ namespace FarleyFile.Views
 
     public sealed class StoryListView
     {
-        public IList<StoryListItem> Items { get; private set; }
+        public IDictionary<Guid,StoryListItem> Items { get; private set; }
 
         public StoryListView()
         {
-            Items = new List<StoryListItem>();
+            Items = new Dictionary<Guid, StoryListItem>();
         }
     }
 

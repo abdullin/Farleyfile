@@ -17,7 +17,6 @@ namespace FarleyFile.Aggregates
             {
                 var storyId = _state.GetNextId();
                 Apply(new PerspectiveCreated(storyId));
-                Apply(new SimpleStoryStarted(storyId, "Draft"));
             }
         }
 
@@ -51,6 +50,14 @@ namespace FarleyFile.Aggregates
                     Apply(new TaskRenamed(c.Id, task.Name, c.Name, task.FeaturedIn));
                 }
                 return;
+            }
+            SimpleStory story;
+            if (_state.TryGetStory(c.Id, out story))
+            {
+                if (story.Name != c.Name)
+                {
+                    Apply(new SimpleStoryRenamed(c.Id, story.Name, c.Name));
+                }
             }
             throw Error("Renaming item {0} is not supported", c.Id);
 

@@ -181,6 +181,21 @@ namespace FarleyFile
         }
     }
     
+    [DataContract] public sealed class SimpleStoryRenamed : IEvent
+    {
+        [DataMember(Order = 1)] public Guid StoryId { get; internal set; }
+        [DataMember(Order = 2)] public string OldName { get; internal set; }
+        [DataMember(Order = 3)] public string NewName { get; internal set; }
+        
+        internal SimpleStoryRenamed () {}
+        public SimpleStoryRenamed (Guid storyId, string oldName, string newName)
+        {
+            StoryId = storyId;
+            OldName = oldName;
+            NewName = newName;
+        }
+    }
+    
     [DataContract] public sealed class EditNote : ICommand
     {
         [DataMember(Order = 1)] public Guid NoteId { get; internal set; }

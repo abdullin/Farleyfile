@@ -104,10 +104,26 @@ namespace FarleyFile.Aggregates
             var item = (TaskItem) _items[e.TaskId];
             item.Rename(e.NewText);
         }
-
-        public bool TryGetStory(Guid storyId, out AbstractStory story)
+        public void When(SimpleStoryRenamed e)
         {
-            return _stories.TryGetValue(storyId, out story);
+            var story = (SimpleStory) _stories[e.StoryId];
+            story.Rename(e.NewName);
+        }
+
+        public bool TryGetStory<TStory>(Guid storyId, out TStory story)
+            where TStory : AbstractStory
+        {
+            AbstractStory value;
+            if (_stories.TryGetValue(storyId, out value))
+            {
+                story = value as TStory;
+                if (story != null)
+                {
+                    return true;
+                }
+            }
+            story = null;
+            return false;
         }
 
         public bool StoryExists(Guid storyId)
@@ -198,7 +214,11 @@ namespace FarleyFile.Aggregates
 
     public sealed class SimpleStory : AbstractStory
     {
-        public readonly string Name;
+        public string Name { get; private set; }
+        public void Rename(string newName)
+        {
+            Name = newName;
+        }
 
         public SimpleStory(string name) 
         {

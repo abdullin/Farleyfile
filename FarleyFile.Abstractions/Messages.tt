@@ -35,6 +35,7 @@ NoteRemovedFromStory! (noteId, storyId)
 RenameItem? (Guid id, string name)
 NoteRenamed! (noteId, string oldName, string newName, ICollection<Guid> storyIds)
 TaskRenamed! (taskId, string oldText, string newText, ICollection<Guid> storyIds)
+SimpleStoryRenamed! (storyId, string oldName, string newName)
 
 EditNote? (noteId, string text, string oldText)
 NoteEdited! (noteId, string newText, string oldText, ICollection<Guid> storyIds)

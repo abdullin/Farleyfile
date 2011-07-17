@@ -13,7 +13,8 @@ namespace FarleyFile
         IConsume<TaskRemovedFromStory>,
         IConsume<ActivityAdded>,
         IConsume<NoteRenamed>,
-        IConsume<TaskRenamed>
+        IConsume<TaskRenamed>,
+        IConsume<SimpleStoryRenamed>
 
     {
         readonly IAtomicEntityWriter<Guid,StoryView> _writer;
@@ -80,6 +81,11 @@ namespace FarleyFile
             {
                 _writer.UpdateOrThrow(storyId, sv => sv.UpdateTask(e.TaskId, n => n.Text = e.NewText));
             }
+        }
+
+        public void Consume(SimpleStoryRenamed e)
+        {
+            _writer.UpdateOrThrow(e.StoryId, v => v.Name = e.NewName);
         }
     }
 }
