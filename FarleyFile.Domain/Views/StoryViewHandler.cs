@@ -17,8 +17,8 @@ namespace FarleyFile
         IConsume<SimpleStoryRenamed>
 
     {
-        readonly IAtomicEntityWriter<Guid,StoryView> _writer;
-        public StoryViewHandler(IAtomicEntityWriter<Guid,StoryView> writer)
+        readonly IAtomicEntityWriter<Identity,StoryView> _writer;
+        public StoryViewHandler(IAtomicEntityWriter<Identity,StoryView> writer)
         {
             _writer = writer;
         }

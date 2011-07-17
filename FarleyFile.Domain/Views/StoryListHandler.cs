@@ -21,12 +21,12 @@ namespace FarleyFile.Views
                     StoryId = e.StoryId,
                     Type = "Simple"
                 };
-            _writer.UpdateEnforcingNew(v => v.Items.Add(e.StoryId, item));
+            _writer.UpdateEnforcingNew(v => v.Items.Add(e.StoryId.Id, item));
         }
 
         public void Consume(SimpleStoryRenamed e)
         {
-            _writer.UpdateOrThrow(v => v.Items[e.StoryId].Name = e.NewName);
+            _writer.UpdateOrThrow(v => v.Items[e.StoryId.Id].Name = e.NewName);
         }
     }
 }

@@ -9,8 +9,8 @@ namespace FarleyFile
         IConsume<NoteRemoved>,
         IConsume<NoteRenamed>
     {
-        readonly IAtomicEntityWriter<Guid, NoteView> _writer;
-        public NoteViewHandler(IAtomicEntityWriter<Guid, NoteView> writer)
+        readonly IAtomicEntityWriter<Identity, NoteView> _writer;
+        public NoteViewHandler(IAtomicEntityWriter<Identity, NoteView> writer)
         {
             _writer = writer;
         }

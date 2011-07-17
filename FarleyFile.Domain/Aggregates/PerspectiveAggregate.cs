@@ -15,8 +15,7 @@ namespace FarleyFile.Aggregates
 
             if (!_state.Created)
             {
-                var storyId = _state.GetNextId();
-                Apply(new PerspectiveCreated(storyId));
+                Apply(new PerspectiveCreated());
             }
         }
 
@@ -27,18 +26,19 @@ namespace FarleyFile.Aggregates
 
         public void When(StartSimpleStory c)
         {
-            var id = _state.GetNextId();
+            var id = _state.GetNext(s => new StoryId(s));
             Apply(new SimpleStoryStarted(id, c.Name));
         }
 
         public void When(RenameItem c)
         {
-            NoteItem item;
-            if (_state.TryGet(c.Id, out item))
+            NoteItem note;
+            if (_state.TryGet(c.Id, out note))
             {
-                if (item.Title != c.Name)
+                if (note.Title != c.Name)
                 {
-                    Apply(new NoteRenamed(c.Id, item.Title, c.Name, item.FeaturedIn));
+                    
+                    Apply(new NoteRenamed(note.Id, note.Title, c.Name, note.FeaturedIn));
                 }
                 return;
             }
@@ -47,16 +47,16 @@ namespace FarleyFile.Aggregates
             {
                 if (task.Name != c.Name)
                 {
-                    Apply(new TaskRenamed(c.Id, task.Name, c.Name, task.FeaturedIn));
+                    Apply(new TaskRenamed(task.Id, task.Name, c.Name, task.FeaturedIn));
                 }
                 return;
             }
             SimpleStory story;
-            if (_state.TryGetStory(c.Id, out story))
+            if (_state.TryGetStory(new StoryId(c.Id), out story))
             {
                 if (story.Name != c.Name)
                 {
-                    Apply(new SimpleStoryRenamed(c.Id, story.Name, c.Name));
+                    Apply(new SimpleStoryRenamed(new StoryId(c.Id), story.Name, c.Name));
                 }
             }
             throw Error("Renaming item {0} is not supported", c.Id);
@@ -70,7 +70,7 @@ namespace FarleyFile.Aggregates
             {
                 throw Error("Story not found {0}", c.StoryId);
             }
-            var id = _state.GetNextId();
+            var id = _state.GetNext(g => new ActivityId(g));
             var date = DateTime.UtcNow;
             Apply(new ActivityAdded(c.StoryId, c.Text, date, id, c.References)) ;
         }
@@ -116,7 +116,7 @@ namespace FarleyFile.Aggregates
 
         public void When(AddTask c)
         {
-            var nextRecord = _state.GetNextId();
+            var nextRecord = _state.GetNext(g => new TaskId(g));
             if (!_state.StoryExists(c.StoryId))
             {
                 throw Error("Story {0} was not found", c.StoryId);
@@ -127,7 +127,7 @@ namespace FarleyFile.Aggregates
 
         public void When(AddNote c)
         {
-            var nextRecord = _state.GetNextId();
+            var nextRecord = _state.GetNext(g => new NoteId(g));
             if (!_state.StoryExists(c.StoryId))
             {
                 throw Error("Story {0} was not found", c.StoryId);
@@ -155,7 +155,7 @@ namespace FarleyFile.Aggregates
             var note = item as NoteItem;
             if (note != null)
             {
-                Apply(new NoteAssignedToStory(c.ItemId, c.StoryId, note.Title, note.Text));
+                Apply(new NoteAssignedToStory(note.Id, c.StoryId, note.Title, note.Text));
                 return;
             }
 
@@ -163,7 +163,7 @@ namespace FarleyFile.Aggregates
 
             if (task != null)
             {
-                Apply(new TaskAssignedToStory(c.ItemId, c.StoryId, task.Name, task.Completed));
+                Apply(new TaskAssignedToStory(task.Id, c.StoryId, task.Name, task.Completed));
                 return;
             }
             throw Error("We can't move item {0} of type {1} around.", c.ItemId, item.GetType());
@@ -172,9 +172,9 @@ namespace FarleyFile.Aggregates
         public void When(RemoveFromStory c)
         {
             AbstractItem item;
-            if (!_state.TryGet(c.ItemId, out item))
+            if (!_state.TryGet(c.Id, out item))
             {
-                throw Error("Item {0} was not found", c.ItemId);
+                throw Error("Item {0} was not found", c.Id);
             }
             AbstractStory story;
             if (!_state.TryGetStory(c.StoryId, out story))
@@ -188,7 +188,7 @@ namespace FarleyFile.Aggregates
             var note = item as NoteItem;
             if (note != null)
             {
-                Apply(new NoteRemovedFromStory(c.ItemId, c.StoryId));
+                Apply(new NoteRemovedFromStory(note.Id, c.StoryId));
                 return;
             }
 
@@ -196,10 +196,10 @@ namespace FarleyFile.Aggregates
 
             if (task != null)
             {
-                Apply(new TaskRemovedFromStory(c.ItemId, c.StoryId));
+                Apply(new TaskRemovedFromStory(task.Id, c.StoryId));
                 return;
             }
-            throw Error("We can't move item {0} of type {1} around.", c.ItemId, item.GetType());
+            throw Error("We can't move item {0} of type {1} around.", c.Id, item.GetType());
         }
 
         public void When(CompleteTask c)

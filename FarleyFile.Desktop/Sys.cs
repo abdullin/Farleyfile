@@ -99,6 +99,16 @@ namespace FarleyFile
                     cb.FolderForEntity(t => "view-" + t.Name.ToLowerInvariant());
                     cb.FolderForSingleton("view-single");
                     cb.NameForSingleton(type => type.Name + ".txt");
+                    cb.NameForEntity((type, o) =>
+                        {
+                            var id = o as Identity;
+
+                            if (id != null)
+                            {
+                                return id.Tag.ToString("000") + "-" + id.Id.ToString().ToLowerInvariant() + ".txt";
+                            }
+                            return o.ToString() + ".txt";
+                        });
                 });
         }
     }

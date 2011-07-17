@@ -8,9 +8,9 @@ namespace FarleyFile.Aggregates
     {
         public bool Created { get; private set; }
 
-        readonly Dictionary<Guid, AbstractStory> _stories = new Dictionary<Guid, AbstractStory>();
-        readonly Dictionary<Guid, AbstractItem> _items = new Dictionary<Guid, AbstractItem>();
-        readonly SortedDictionary<Guid,Activity> _activities = new SortedDictionary<Guid, Activity>(); 
+        readonly Dictionary<Identity, AbstractStory> _stories = new Dictionary<Identity, AbstractStory>();
+        readonly Dictionary<Identity, AbstractItem> _items = new Dictionary<Identity, AbstractItem>();
+        readonly SortedDictionary<Identity,Activity> _activities = new SortedDictionary<Identity, Activity>(); 
 
         public void When(ActivityAdded e)
         {
@@ -20,20 +20,20 @@ namespace FarleyFile.Aggregates
         public void When(SimpleStoryStarted e)
         {
             StepRecordId(e.StoryId);
-            _stories.Add(e.StoryId, new SimpleStory(e.Name));
+            _stories.Add(e.StoryId, new SimpleStory(e.Name, e.StoryId));
         }
 
         public void When(NoteAdded e)
         {
             StepRecordId(e.NoteId);
-            var item = new NoteItem(e.Title, e.Text);
+            var item = new NoteItem(e.Title, e.Text, e.NoteId);
             _items.Add(e.NoteId, item);
         }
 
         public void When(TaskAdded e)
         {
             StepRecordId(e.TaskId);
-            var item = new TaskItem(e.Text);
+            var item = new TaskItem(e.Text, e.TaskId);
             _items.Add(e.TaskId, item);
         }
 
@@ -110,7 +110,7 @@ namespace FarleyFile.Aggregates
             story.Rename(e.NewName);
         }
 
-        public bool TryGetStory<TStory>(Guid storyId, out TStory story)
+        public bool TryGetStory<TStory>(StoryId storyId, out TStory story)
             where TStory : AbstractStory
         {
             AbstractStory value;
@@ -126,12 +126,12 @@ namespace FarleyFile.Aggregates
             return false;
         }
 
-        public bool StoryExists(Guid storyId)
+        public bool StoryExists(StoryId storyId)
         {
             return _stories.ContainsKey(storyId);
         }
 
-        public bool TryGet<TItem>(Guid itemId, out TItem item)
+        public bool TryGet<TItem>(Identity itemId, out TItem item)
             where TItem : AbstractItem
         {
             AbstractItem value;
@@ -148,12 +148,13 @@ namespace FarleyFile.Aggregates
             return false;
         }
 
-        public Guid GetNextId()
+        public TIdentity GetNext<TIdentity>(Func<Guid,TIdentity> generate)
         {
-            return Guid.NewGuid();
+            var newGuid = Guid.NewGuid();
+            return generate(newGuid);
         }
 
-        void StepRecordId(Guid recordId)
+        void StepRecordId(Identity recordId)
         {
             //if ((recordId) != (_recordId+1))
             //    throw new InvalidOperationException();
@@ -174,13 +175,15 @@ namespace FarleyFile.Aggregates
 
     public sealed class NoteItem : AbstractItem
     {
+        public NoteId Id { get; private set; }
         public string Text { get; private set; }
         public string Title { get; private set; }
 
-        public NoteItem(string title, string text)
+        public NoteItem(string title, string text, NoteId id)
         {
             Title = title;
             Text = text;
+            Id = id;
         }
         public void Edit(string newText)
         {
@@ -197,7 +200,7 @@ namespace FarleyFile.Aggregates
 
     public abstract class AbstractItem
     {
-        public HashSet<Guid> FeaturedIn = new HashSet<Guid>();
+        public HashSet<StoryId> FeaturedIn = new HashSet<StoryId>();
     }
 
     public sealed class Activity
@@ -207,22 +210,24 @@ namespace FarleyFile.Aggregates
 
     public abstract class AbstractStory
     {
-        public HashSet<Guid> AsItGoes = new HashSet<Guid>();
+        public HashSet<Identity> AsItGoes = new HashSet<Identity>();
 
         
     }
 
     public sealed class SimpleStory : AbstractStory
     {
+        public StoryId Id { get; private set; }
         public string Name { get; private set; }
         public void Rename(string newName)
         {
             Name = newName;
         }
 
-        public SimpleStory(string name) 
+        public SimpleStory(string name, StoryId id) 
         {
             Name = name;
+            Id = id;
         }
     }
 
@@ -230,6 +235,7 @@ namespace FarleyFile.Aggregates
     public sealed class TaskItem : AbstractItem
     {
         public string Name { get; private set; }
+        public TaskId Id { get; private set; }
         public bool Completed { get; set; }
 
         public void Rename(string name)
@@ -237,9 +243,10 @@ namespace FarleyFile.Aggregates
             Name = name;
         }
 
-        public TaskItem(string name) 
+        public TaskItem(string name, TaskId id) 
         {
             Name = name;
+            Id = id;
         }
     } 
 

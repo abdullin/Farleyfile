@@ -7,7 +7,7 @@ namespace FarleyFile.Views
     public sealed class StoryView : IEntityBase
     {
         public string Name { get; set; }
-        public Guid StoryId { get; set; }
+        public StoryId StoryId { get; set; }
 
         public IList<StoryViewNote> Notes { get; set; }
         public IList<StoryViewTask> Tasks { get; set; }
@@ -20,7 +20,7 @@ namespace FarleyFile.Views
             Activities = new List<StoryViewActivity>();
         }
 
-        public void RemoveNote(Guid noteId)
+        public void RemoveNote(NoteId noteId)
         {
             var notes = Notes.Where(n => n.NoteId == noteId).ToList();
             foreach (var note in notes)
@@ -29,7 +29,7 @@ namespace FarleyFile.Views
             }
         }
 
-        public void RemoveTask(Guid taskId)
+        public void RemoveTask(TaskId taskId)
         {
             var tasks = Tasks.Where(n => n.TaskId == taskId).ToList();
             foreach (var task in tasks)
@@ -38,7 +38,7 @@ namespace FarleyFile.Views
             }
         }
 
-        public void AddNote(Guid noteId, string title, string text)
+        public void AddNote(NoteId noteId, string title, string text)
         {
             Notes.Add(new StoryViewNote()
                 {
@@ -57,7 +57,7 @@ namespace FarleyFile.Views
                 });
         }
 
-        public void AddTask(Guid taskId, string text, bool completed)
+        public void AddTask(TaskId taskId, string text, bool completed)
         {
             Tasks.Add(new StoryViewTask()
                 {
@@ -67,7 +67,7 @@ namespace FarleyFile.Views
                 });
         }
 
-        public void UpdateTask(Guid taskId, Action<StoryViewTask> update)
+        public void UpdateTask(TaskId taskId, Action<StoryViewTask> update)
         {
             foreach (var task in Tasks.Where(t => t.TaskId == taskId))
             {
@@ -75,7 +75,7 @@ namespace FarleyFile.Views
             }
         }
 
-        public void UpdateNote(Guid noteId, Action<StoryViewNote> update)
+        public void UpdateNote(NoteId noteId, Action<StoryViewNote> update)
         {
             foreach (var note in Notes.Where(t => t.NoteId == noteId))
             {
@@ -96,7 +96,7 @@ namespace FarleyFile.Views
 
     public sealed class StoryListItem
     {
-        public Guid StoryId { get; set; }
+        public StoryId StoryId { get; set; }
         public string Name { get; set; }
         public string Type { get; set; }
     }

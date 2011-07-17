@@ -45,7 +45,7 @@ namespace FarleyFile.Interactions.Specific
             {
                 var id = match.Groups["id"].Value;
                 var name = match.Groups["name"].Value;
-                Guid guid;
+                Identity guid;
                 if (!context.Request.TryGetId(id, out guid))
                 {
                     return Error("Can't find id for '{0}'", id);
@@ -82,11 +82,11 @@ namespace FarleyFile.Interactions.Specific
                     return Error("Failed to locate '{0}'", txt[2]);
                 }
             }
-            var records = new Guid[item.Length];
+            var records = new Identity[item.Length];
             for (int i = 0; i < records.Length; i++)
             {
                 if (!context.Request.TryGetId(item[i], out records[i]))
-                    return Error("Failed to locate '{0}'", item[1]);
+                    return Error("Failed to locate id '{0}'", item[1]);
             }
             context.Response.SendToProject(records.Select(i => new RemoveFromStory(i, story)).ToArray());
             return Handled();
@@ -102,7 +102,7 @@ namespace FarleyFile.Interactions.Specific
 
         public override InteractionResult Handle(InteractionContext context)
         {
-            Guid id;
+            StoryId id;
             var source = context.Request.Data;
             if (!context.Request.TryGetId(source, out id))
             {
@@ -156,7 +156,7 @@ namespace FarleyFile.Interactions.Specific
         public override InteractionResult Handle(InteractionContext context)
         {
             var splice = context.Request.Data.Split(new[] {' '}, 2);
-            Guid guid;
+            Identity guid;
             if (!context.Request.TryGetId(splice[0], out guid))
             {
                 return Error("Failed to look up ID for '{0}'", splice[0]);
@@ -179,7 +179,7 @@ namespace FarleyFile.Interactions.Specific
 
         public override InteractionResult Handle(InteractionContext context)
         {
-            Guid id;
+            NoteId id;
             if (!context.Request.TryGetId(context.Request.Data, out id))
             {
                 return Error("Unknown note id");
@@ -247,7 +247,7 @@ namespace FarleyFile.Interactions.Specific
 
         public override InteractionResult Handle(InteractionContext context)
         {
-            Guid id;
+            TaskId id;
             if (!context.Request.TryGetId(context.Request.Data, out id))
             {
                 return Error("Couldn't locate task '{0}'", id);

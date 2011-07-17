@@ -10,10 +10,10 @@ namespace FarleyFile.Interactions
     public sealed class InteractionResponse
     {
         readonly LifelineViewport _viewport;
-        readonly Action<Guid> _action;
+        readonly Action<StoryId> _action;
         readonly IMessageSender _sender;
 
-        public void FocusStory(Guid id, string name)
+        public void FocusStory(StoryId id, string name)
         {
             _action(id);
             _viewport.SelectStory(id, name);
@@ -39,7 +39,7 @@ namespace FarleyFile.Interactions
             _sender.SendBatch(commands, eb => eb.AddString("to-entity", "default"));
         }
 
-        public InteractionResponse(LifelineViewport viewport, Action<Guid> action, IMessageSender sender)
+        public InteractionResponse(LifelineViewport viewport, Action<StoryId> action, IMessageSender sender)
         {
             _viewport = viewport;
             _action = action;

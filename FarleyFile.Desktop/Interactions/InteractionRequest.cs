@@ -6,23 +6,29 @@ namespace FarleyFile.Interactions
     public sealed class InteractionRequest
     {
         public readonly string Raw;
-        readonly IDictionary<string, Guid> _lookup;
+        readonly IDictionary<string, Identity> _lookup;
         public readonly string Data;
-        public readonly Guid CurrentStoryId;
+        public readonly StoryId CurrentStoryId;
 
 
-        public bool TryGetId(string source, out Guid id)
+        public bool TryGetId<TIdentity>(string source, out TIdentity id)
+            where TIdentity : Identity
         {
-            if (_lookup.TryGetValue(source, out id))
+            Identity stored;
+            id = null;
+            if (_lookup.TryGetValue(source, out stored))
             {
-                if (id == Guid.Empty)
+                if (stored.IsEmpty)
                     return false;
+                id =  stored as TIdentity;
+
+                if (id != null)
                 return true;
             }
             return false;
         }
 
-        public InteractionRequest(string data, Guid currentStoryId, string raw, IDictionary<string, Guid> lookup)
+        public InteractionRequest(string data, StoryId currentStoryId, string raw, IDictionary<string, Identity> lookup)
         {
             Data = data;
             CurrentStoryId = currentStoryId;
