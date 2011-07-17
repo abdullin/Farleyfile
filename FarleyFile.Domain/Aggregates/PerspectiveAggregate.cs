@@ -72,7 +72,7 @@ namespace FarleyFile.Aggregates
             }
             var id = _state.GetNextId();
             var date = DateTime.UtcNow;
-            Apply(new ActivityAdded(c.StoryId, c.Text, date, id)) ;
+            Apply(new ActivityAdded(c.StoryId, c.Text, date, id, c.References)) ;
         }
 
         public void When(MergeNotes c)

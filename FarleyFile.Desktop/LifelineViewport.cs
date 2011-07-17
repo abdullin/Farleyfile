@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Windows.Forms;
 using FarleyFile.Views;
-using Lokad.Cqrs;
 
 namespace FarleyFile
 {
@@ -18,7 +16,7 @@ namespace FarleyFile
         public readonly Dictionary<string,Guid> LookupRef = new Dictionary<string, Guid>(StringComparer.InvariantCultureIgnoreCase);
         
 
-        string AddReference(Guid identity, params object[] names)
+        string AddReference(string type, Guid identity, params object[] names)
         {
             if (identity == Guid.Empty)
                 throw new InvalidOperationException("Can't add an empty reference");
@@ -127,14 +125,14 @@ namespace FarleyFile
             _rich.AppendLine("=======");
             foreach (var item in list.Items.Values.OrderBy(s => s.Name))
             {
-                var reference = AddReference(item.StoryId, item.Name);
+                var reference = AddReference("story", item.StoryId, item.Name);
                 _rich.AppendLine("[{1}] {2} .{0}", reference, item.Type, item.Name);
             }
         }
 
         public void When(StoryView view)
         {
-            var txt = string.Format("Story: {0} .{1}", view.Name, AddReference(view.StoryId, view.Name));
+            var txt = string.Format("Story: {0} .{1}", view.Name, AddReference("story", view.StoryId, view.Name));
             using (_rich.Styled(Solarized.Yellow))
             {
                 _rich.AppendLine(txt);
@@ -151,7 +149,7 @@ namespace FarleyFile
 
                 foreach (var task in completed)
                 {
-                    _rich.AppendLine(string.Format("  {1} {2} .{0}", AddReference(task.TaskId), task.Completed ? "x" : "□",
+                    _rich.AppendLine(string.Format("  {1} {2} .{0}", AddReference("task", task.TaskId), task.Completed ? "x" : "□",
                             task.Text));
                 }
                 _rich.AppendLine();
@@ -164,7 +162,7 @@ namespace FarleyFile
                     _rich.AppendLine(activity.Text);
                     using (_rich.Styled(Solarized.Base1))
                     {
-                        var refid = AddReference(activity.ActivityId);
+                        var refid = AddReference("activity", activity.ActivityId);
                         _rich.AppendLine("{0:yyyy-MM-dd HH:mm} .{1}", activity.CreatedUtc, refid);
                     }
                 }
@@ -181,7 +179,7 @@ namespace FarleyFile
 
                 foreach (var note in view.Notes.OrderBy(s => s.Title))
                 {
-                    _rich.AppendLine("{0} .{1}", note.Title, AddReference(note.NoteId));
+                    _rich.AppendLine("{0} .{1}", note.Title, AddReference("note", note.NoteId));
                 }
             }
             if (view.Notes.Count == 0 && view.Tasks.Count == 0 && view.Activities.Count == 0)

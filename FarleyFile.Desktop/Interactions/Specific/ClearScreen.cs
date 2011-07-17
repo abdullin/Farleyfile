@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using FarleyFile.Views;
 
 namespace FarleyFile.Interactions.Specific
@@ -25,6 +27,8 @@ namespace FarleyFile.Interactions.Specific
             get { return new[] {"aa"}; }
         }
 
+        static readonly Regex _reference = new Regex(@"\[\]\(\d+\)",RegexOptions.Compiled);
+
         public override InteractionResult Handle(InteractionContext context)
         {
             var txt = context.Request.Data;
@@ -33,7 +37,26 @@ namespace FarleyFile.Interactions.Specific
             {
                 return Error("Tweet err.. activity can't be longer than 140 chars. Use notes to record data");
             }
-            context.Response.SendToProject(new AddActivity(storyId, txt));
+
+            var match = _reference.Match(txt);
+
+            var references = new List<ActivityReference>();
+            while (match.Success)
+            {
+                var id = match.Groups["id"].Value;
+                var name = match.Groups["name"].Value;
+                Guid guid;
+                if (!context.Request.TryGetId(id, out guid))
+                {
+                    return Error("Can't find id for '{0}'", id);
+                }
+                references.Add(new ActivityReference(guid, name, id));
+                match = match.NextMatch();
+            }
+
+            
+
+            context.Response.SendToProject(new AddActivity(storyId, txt, references));
             return Handled();
         }
     }

@@ -44,16 +44,33 @@ namespace FarleyFile
         }
     }
     
+    [DataContract] public sealed class ActivityReference
+    {
+        [DataMember(Order = 1)] public Guid RecordId { get; internal set; }
+        [DataMember(Order = 2)] public string Text { get; internal set; }
+        [DataMember(Order = 3)] public string OriginalRef { get; internal set; }
+        
+        internal ActivityReference () {}
+        public ActivityReference (Guid recordId, string text, string originalRef)
+        {
+            RecordId = recordId;
+            Text = text;
+            OriginalRef = originalRef;
+        }
+    }
+    
     [DataContract] public sealed class AddActivity : ICommand
     {
         [DataMember(Order = 1)] public Guid StoryId { get; internal set; }
         [DataMember(Order = 2)] public string Text { get; internal set; }
+        [DataMember(Order = 3)] public ICollection<ActivityReference> References { get; internal set; }
         
         internal AddActivity () {}
-        public AddActivity (Guid storyId, string text)
+        public AddActivity (Guid storyId, string text, ICollection<ActivityReference> references)
         {
             StoryId = storyId;
             Text = text;
+            References = references;
         }
     }
     
@@ -63,14 +80,16 @@ namespace FarleyFile
         [DataMember(Order = 2)] public string Text { get; internal set; }
         [DataMember(Order = 3)] public DateTime CreatedUtc { get; internal set; }
         [DataMember(Order = 4)] public Guid ActivityId { get; internal set; }
+        [DataMember(Order = 5)] public ICollection<ActivityReference> References { get; internal set; }
         
         internal ActivityAdded () {}
-        public ActivityAdded (Guid storyId, string text, DateTime createdUtc, Guid activityId)
+        public ActivityAdded (Guid storyId, string text, DateTime createdUtc, Guid activityId, ICollection<ActivityReference> references)
         {
             StoryId = storyId;
             Text = text;
             CreatedUtc = createdUtc;
             ActivityId = activityId;
+            References = references;
         }
     }
     

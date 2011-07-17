@@ -23,8 +23,11 @@ PerspectiveCreated! (storyId)
 StartSimpleStory? (string name)
 SimpleStoryStarted! (storyId, string name)
 
-AddActivity? (storyId, string text)
-ActivityAdded! (storyId, string text, DateTime createdUtc, activity)
+// Done something witReh [john](7) and [jill](78) and
+ActivityReference (Guid recordId, string text, string originalRef)
+
+AddActivity? (storyId, string text, ICollection<ActivityReference> references)
+ActivityAdded! (storyId, string text, DateTime createdUtc, activity, ICollection<ActivityReference> references)
 
 
 AddNote? (string title, string text, storyId)
