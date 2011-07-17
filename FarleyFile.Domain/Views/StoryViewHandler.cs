@@ -25,7 +25,10 @@ namespace FarleyFile
 
         public void Consume(TaskAssignedToStory e)
         {
-            _writer.UpdateOrThrow(e.StoryId, sv => sv.AddTask(e.TaskId, e.Text, e.Completed));
+            _writer.UpdateOrThrow(e.StoryId, sv =>
+                {
+                    sv.AddTask(e.TaskId, e.Text, e.Completed);
+                });
         }
 
         public void Consume(NoteAssignedToStory e)

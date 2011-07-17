@@ -14,7 +14,8 @@ namespace FarleyFile.Views
     {
         public ActivityId ActivityId { get; set; }
         public string Text { get; set; }
-        public DateTime CreatedUtc { get; set; }
+        public DateTimeOffset Created { get; set; }
+        public bool Explicit { get; set; }
 
         public List<StoryViewActivityReference> References { get; set; }
 

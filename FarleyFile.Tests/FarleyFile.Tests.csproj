@@ -43,6 +43,7 @@
   <ItemGroup>
     <Compile Include="IdentityTests.cs" />
     <Compile Include="Interactions\Specific\DoAddActivityTests.cs" />
+    <Compile Include="SerializationExpectations.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\FarleyFile.Abstractions\FarleyFile.Abstractions.csproj">

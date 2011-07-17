@@ -172,7 +172,7 @@ namespace FarleyFile
                     using (_rich.Styled(Solarized.Base1))
                     {
                         var refid = AddReference(activity.ActivityId);
-                        _rich.AppendLine("{0:yyyy-MM-dd HH:mm} .{1}", activity.CreatedUtc, refid);
+                        _rich.AppendLine("{0:yyyy-MM-dd HH:mm} .{1}", FormatEvil.OffsetUtc(activity.Created), refid);
                     }
                 }
                 _rich.AppendLine();

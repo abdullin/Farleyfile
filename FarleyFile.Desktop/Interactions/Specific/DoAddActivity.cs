@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
@@ -39,7 +40,7 @@ namespace FarleyFile.Interactions.Specific
 
             
 
-            context.Response.SendToProject(new AddActivity(storyId, txt, references));
+            context.Response.SendToProject(new AddActivity(storyId, txt, DateTimeOffset.Now, references));
             return Handled();
         }
     }

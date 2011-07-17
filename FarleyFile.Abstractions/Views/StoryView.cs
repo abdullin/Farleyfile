@@ -53,7 +53,8 @@ namespace FarleyFile.Views
                 {
                     ActivityId = e.ActivityId,
                     Text = e.Text,
-                    CreatedUtc = e.CreatedUtc
+                    Created = e.Time,
+                    Explicit = true
                 };
 
             foreach (var reference in e.References)

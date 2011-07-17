@@ -18,6 +18,7 @@ let taskId = TaskId TaskId;
 let date = DateTime Date;
 let activity = ActivityId ActivityId;
 let id = Identity Id;
+let time = DateTimeOffset Time;
 PerspectiveCreated! ()
 
 // generic story
@@ -27,8 +28,8 @@ SimpleStoryStarted! (storyId, string name)
 // Done something witReh [john](7) and [jill](78) and
 ActivityReference (id, string text, string originalRef)
 
-AddActivity? (storyId, string text, ICollection<ActivityReference> references)
-ActivityAdded! (storyId, string text, DateTime createdUtc, activity, ICollection<ActivityReference> references)
+AddActivity? (storyId, string text, time, ICollection<ActivityReference> references)
+ActivityAdded! (storyId, string text, time, activity, ICollection<ActivityReference> references)
 
 
 AddNote? (string title, string text, storyId)
