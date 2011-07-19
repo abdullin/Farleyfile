@@ -71,9 +71,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Properties\" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\FarleyFile.Abstractions\FarleyFile.Abstractions.csproj">
       <Project>{B36BB802-B112-417D-9EA4-433A31FFE50B}</Project>
       <Name>FarleyFile.Abstractions</Name>

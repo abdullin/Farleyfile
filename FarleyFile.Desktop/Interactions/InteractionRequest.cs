@@ -16,7 +16,8 @@ namespace FarleyFile.Interactions
         {
             Identity stored;
             id = null;
-            if (_lookup.TryGetValue(source, out stored))
+
+            if (_lookup.TryGetValue(source.TrimStart('.'), out stored))
             {
                 if (stored.IsEmpty)
                     return false;
