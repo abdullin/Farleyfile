@@ -33,29 +33,28 @@ ActivityAdded! (string text, time, activity, ICollection<ActivityReference> refe
 
 
 AddNote? (string title, string text, storyId)
-NoteAdded! (noteId, string title, string text)
-NoteAssignedToStory!  (noteId, storyId, string title, string text)
-NoteRemovedFromStory! (noteId, storyId)
+NoteAdded! (noteId, string title, string text, storyId)
 
-RenameItem? (id, string name)
-NoteRenamed! (noteId, string oldName, string newName, ICollection<StoryId> storyIds)
-TaskRenamed! (taskId, string oldText, string newText, ICollection<StoryId> storyIds)
-SimpleStoryRenamed! (storyId, string oldName, string newName)
 
 EditNote? (noteId, string text, string oldText)
-NoteEdited! (noteId, string newText, string oldText, ICollection<StoryId> storyIds)
-NoteRemoved! (noteId)
+NoteEdited! (noteId, string newText, string oldText, storyId)
 
-MergeNotes? (noteId, NoteId secondary)
+RenameItem? (id, string name)
+
+NoteRenamed! (noteId, string oldName, string newName, storyId)
+TaskRenamed! (taskId, string oldText, string newText, storyId)
+SimpleStoryRenamed! (storyId, string oldName, string newName)
+
 
 
 AddTask? (string text, storyId)
-TaskAdded! (taskId, string text)
-TaskAssignedToStory! (taskId, storyId, string text, bool completed)
-TaskRemovedFromStory! (taskId, storyId)
+TaskAdded! (taskId, string text, storyId)
 
-AddToStory? (Identity itemId, storyId)
-RemoveFromStory? (id, storyId)
+
+ArchiveItem? (id, storyId)
+
+NoteArchived!(noteId, storyId)
+TaskArchived!(taskId,storyId)
 
 
 // helpers
@@ -63,13 +62,7 @@ AddTaskToStory? (taskId, storyId)
 
 
 CompleteTask? (taskId)
-TaskCompleted! (taskId, ICollection<StoryId> storyIds)
-
-
-
-
-
-
+TaskCompleted! (taskId, storyId)
 
 
 

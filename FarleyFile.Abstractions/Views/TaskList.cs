@@ -13,7 +13,7 @@ namespace FarleyFile.Views
             List = new List<Item>();
         }
 
-        public void RemoveTask(TaskId taskId)
+        public void ArchiveTask(TaskId taskId)
         {
             var tasks = List.Where(n => n.TaskId == taskId).ToList();
             foreach (var task in tasks)

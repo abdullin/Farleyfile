@@ -12,7 +12,6 @@ namespace FarleyFile.Views
             List = new List<Item>();
         }
 
-
         public void AddActivity(ActivityAdded e)
         {
             var activity = new Item()

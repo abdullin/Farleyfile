@@ -38,7 +38,7 @@ namespace FarleyFile.Aggregates
                 if (note.Title != c.Name)
                 {
                     
-                    Apply(new NoteRenamed(note.Id, note.Title, c.Name, note.FeaturedIn));
+                    Apply(new NoteRenamed(note.Id, note.Title, c.Name, note.Story));
                 }
                 return;
             }
@@ -47,7 +47,7 @@ namespace FarleyFile.Aggregates
             {
                 if (task.Name != c.Name)
                 {
-                    Apply(new TaskRenamed(task.Id, task.Name, c.Name, task.FeaturedIn));
+                    Apply(new TaskRenamed(task.Id, task.Name, c.Name, task.Story));
                 }
                 return;
             }
@@ -71,34 +71,6 @@ namespace FarleyFile.Aggregates
             Apply(new ActivityAdded(c.Text, date, id, c.References)) ;
         }
 
-        public void When(MergeNotes c)
-        {
-            NoteItem first;
-            if (!_state.TryGet(c.NoteId, out first))
-            {
-                throw Error("Note not found {0}", c.NoteId);
-            }
-            NoteItem second;
-            if (!_state.TryGet(c.Secondary, out second))
-            {
-                throw Error("Note not found {0}", c.Secondary);
-            }
-
-            var oldText = first.Text;
-            var newText = oldText + Environment.NewLine + Environment.NewLine + second.Text;
-            Apply(new NoteEdited(c.NoteId, newText, oldText, first.FeaturedIn));
-
-            foreach (var l in second.FeaturedIn.ToList())
-            {
-                Apply(new NoteRemovedFromStory(c.Secondary, l));
-                if (!first.FeaturedIn.Contains(l))
-                {
-                    Apply(new NoteAssignedToStory(c.NoteId, l, first.Title, newText));
-                }
-            }
-            Apply(new NoteRemoved(c.Secondary));
-        }
-
 
         public void When(EditNote c)
         {
@@ -107,7 +79,7 @@ namespace FarleyFile.Aggregates
             {
                 throw Error("Note {0} does not exist", c.NoteId);
             }
-            Apply(new NoteEdited(c.NoteId, c.Text, c.OldText, item.FeaturedIn));
+            Apply(new NoteEdited(c.NoteId, c.Text, c.OldText, item.Story));
         }
 
         public void When(AddTask c)
@@ -117,8 +89,7 @@ namespace FarleyFile.Aggregates
             {
                 throw Error("Story {0} was not found", c.StoryId);
             }
-            Apply(new TaskAdded(nextRecord, c.Text));
-            Apply(new TaskAssignedToStory(nextRecord, c.StoryId, c.Text, false));
+            Apply(new TaskAdded(nextRecord, c.Text, c.StoryId));
         }
 
         public void When(AddNote c)
@@ -128,44 +99,10 @@ namespace FarleyFile.Aggregates
             {
                 throw Error("Story {0} was not found", c.StoryId);
             }
-            Apply(new NoteAdded(nextRecord, c.Title, c.Text));
-            Apply(new NoteAssignedToStory(nextRecord, c.StoryId, c.Title, c.Text));
+            Apply(new NoteAdded(nextRecord, c.Title, c.Text, c.StoryId));
         }
 
-        public void When(AddToStory c)
-        {
-            AbstractItem item;
-            if (!_state.TryGet(c.ItemId, out item))
-            {
-                throw Error("Item {0} was not found", c.ItemId);
-            }
-            AbstractStory story;
-            if (!_state.TryGetStory(c.StoryId, out story))
-            {
-                throw Error("Story {0} was not found", c.StoryId);
-            }
-            if (item.FeaturedIn.Contains(c.StoryId))
-            {
-                return;
-            }
-            var note = item as NoteItem;
-            if (note != null)
-            {
-                Apply(new NoteAssignedToStory(note.Id, c.StoryId, note.Title, note.Text));
-                return;
-            }
-
-            var task = item as TaskItem;
-
-            if (task != null)
-            {
-                Apply(new TaskAssignedToStory(task.Id, c.StoryId, task.Name, task.Completed));
-                return;
-            }
-            throw Error("We can't move item {0} of type {1} around.", c.ItemId, item.GetType());
-        }
-
-        public void When(RemoveFromStory c)
+        public void When(ArchiveItem c)
         {
             AbstractItem item;
             if (!_state.TryGet(c.Id, out item))
@@ -177,14 +114,10 @@ namespace FarleyFile.Aggregates
             {
                 throw Error("Story {0} was not found", c.StoryId);
             }
-            if (!item.FeaturedIn.Contains(c.StoryId))
-            {
-                return;
-            }
             var note = item as NoteItem;
             if (note != null)
             {
-                Apply(new NoteRemovedFromStory(note.Id, c.StoryId));
+                Apply(new NoteArchived(note.Id, c.StoryId));
                 return;
             }
 
@@ -192,7 +125,7 @@ namespace FarleyFile.Aggregates
 
             if (task != null)
             {
-                Apply(new TaskRemovedFromStory(task.Id, c.StoryId));
+                Apply(new TaskArchived(task.Id, c.StoryId));
                 return;
             }
             throw Error("We can't move item {0} of type {1} around.", c.Id, item.GetType());
@@ -208,8 +141,8 @@ namespace FarleyFile.Aggregates
 
             if (!item.Completed)
             {
-                var stories = item.FeaturedIn.ToArray();
-                Apply(new TaskCompleted(c.TaskId, stories));
+                
+                Apply(new TaskCompleted(c.TaskId, item.Story));
             }
         }
 

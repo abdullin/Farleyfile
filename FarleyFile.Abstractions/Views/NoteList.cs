@@ -13,7 +13,7 @@ namespace FarleyFile.Views
             Notes = new List<Item>();
         }
 
-        public void RemoveNote(NoteId noteId)
+        public void ArchiveNote(NoteId noteId)
         {
             var notes = Notes.Where(n => n.NoteId == noteId).ToList();
             foreach (var note in notes)

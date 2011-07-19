@@ -4,10 +4,10 @@ using Lokad.Cqrs.Feature.AtomicStorage;
 namespace FarleyFile
 {
     public sealed class TaskListHandler :
-        IConsume<TaskAssignedToStory>,
+        IConsume<TaskAdded>,
         IConsume<TaskCompleted>,
         IConsume<TaskRenamed>,
-        IConsume<TaskRemovedFromStory>
+        IConsume<TaskArchived>
     {
 
         readonly IAtomicEntityWriter<Identity, TaskList> _writer;
@@ -19,30 +19,23 @@ namespace FarleyFile
 
         public void Consume(TaskRenamed e)
         {
-            if (e.StoryIds == null) return;
-            foreach (var storyId in e.StoryIds)
-            {
-                _writer.UpdateOrThrow(storyId, sv => sv.UpdateTask(e.TaskId, n => n.Text = e.NewText));
-            }
+            _writer.UpdateOrThrow(e.StoryId, sv => sv.UpdateTask(e.TaskId, n => n.Text = e.NewText));
         }
 
-        public void Consume(TaskAssignedToStory e)
+        public void Consume(TaskAdded e)
         {
-            _writer.UpdateEnforcingNew(e.StoryId, sv => sv.AddTask(e.TaskId, e.Text, e.Completed));
+            _writer.UpdateEnforcingNew(e.StoryId, sv => sv.AddTask(e.TaskId, e.Text, false));
         }
 
 
         public void Consume(TaskCompleted e)
         {
-            foreach (var storyId in e.StoryIds)
-            {
-                _writer.UpdateOrThrow(storyId, sv => sv.UpdateTask(e.TaskId, t => t.Completed = true));
-            }
+            _writer.UpdateOrThrow(e.StoryId, sv => sv.UpdateTask(e.TaskId, t => t.Completed = true));
         }
 
-        public void Consume(TaskRemovedFromStory e)
+        public void Consume(TaskArchived e)
         {
-            _writer.UpdateOrThrow(e.StoryId, sv => sv.RemoveTask(e.TaskId));
+            _writer.UpdateOrThrow(e.StoryId, sv => sv.ArchiveTask(e.TaskId));
         }
     }
 }

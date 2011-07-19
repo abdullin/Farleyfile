@@ -26,32 +26,27 @@ namespace FarleyFile.Aggregates
         public void When(NoteAdded e)
         {
             StepRecordId(e.NoteId);
-            var item = new NoteItem(e.Title, e.Text, e.NoteId);
+            var item = new NoteItem(e.Title, e.Text, e.NoteId, e.StoryId);
             _items.Add(e.NoteId, item);
+            var story = _stories[e.StoryId];
+            story.AsItGoes.Add(e.NoteId);
         }
 
         public void When(TaskAdded e)
         {
             StepRecordId(e.TaskId);
-            var item = new TaskItem(e.Text, e.TaskId);
+            var item = new TaskItem(e.Text, e.TaskId, e.StoryId);
             _items.Add(e.TaskId, item);
+            var story = _stories[e.StoryId];
+            story.AsItGoes.Add(e.TaskId);
         }
 
-        public void When(NoteAssignedToStory e)
+        
+        public void When(NoteArchived e)
         {
-            var note = (NoteItem)_items[e.NoteId];
             var story = _stories[e.StoryId];
-
-            story.AsItGoes.Add(e.NoteId);
-            note.FeaturedIn.Add(e.StoryId);
-        }
-        public void When(NoteRemovedFromStory e)
-        {
-            var note = (NoteItem)_items[e.NoteId];
-            var story = _stories[e.StoryId];
-
             story.AsItGoes.Remove(e.NoteId);
-            note.FeaturedIn.Remove(e.StoryId);
+            _items.Remove(e.NoteId);
         }
 
         public void When(PerspectiveCreated e)
@@ -65,33 +60,12 @@ namespace FarleyFile.Aggregates
             note.Edit(e.NewText);
         }
 
-        public void When(NoteRemoved e)
-        {
-            var note = (NoteItem) _items[e.NoteId];
-            if (note.FeaturedIn.Any())
-            {
-                throw new InvalidOperationException("Sanity check failure");
-            }
-            _items.Remove(e.NoteId);
 
-        }
-
-        public void When(TaskAssignedToStory e)
+        public void When(TaskArchived e)
         {
-            var task = (TaskItem) _items[e.TaskId];
             var story = _stories[e.StoryId];
-
-            story.AsItGoes.Add(e.TaskId);
-            task.FeaturedIn.Add(e.StoryId);
-        }
-
-        public void When(TaskRemovedFromStory e)
-        {
-            var task = (TaskItem)_items[e.TaskId];
-            var story = _stories[e.StoryId];
-
             story.AsItGoes.Remove(e.TaskId);
-            task.FeaturedIn.Remove(e.StoryId);
+            _items.Remove(e.TaskId);
         }
 
         public void When(NoteRenamed e)
@@ -179,7 +153,7 @@ namespace FarleyFile.Aggregates
         public string Text { get; private set; }
         public string Title { get; private set; }
 
-        public NoteItem(string title, string text, NoteId id)
+        public NoteItem(string title, string text, NoteId id, StoryId story) : base(story)
         {
             Title = title;
             Text = text;
@@ -200,7 +174,12 @@ namespace FarleyFile.Aggregates
 
     public abstract class AbstractItem
     {
-        public HashSet<StoryId> FeaturedIn = new HashSet<StoryId>();
+        public readonly StoryId Story;
+
+        protected AbstractItem(StoryId story)
+        {
+            Story = story;
+        }
     }
 
     public sealed class Activity
@@ -243,10 +222,11 @@ namespace FarleyFile.Aggregates
             Name = name;
         }
 
-        public TaskItem(string name, TaskId id) 
+        public TaskItem(string name, TaskId id, StoryId storyId) : base (storyId)
         {
             Name = name;
             Id = id;
+
         }
     } 
 

@@ -3,8 +3,8 @@ using Lokad.Cqrs.Feature.AtomicStorage;
 namespace FarleyFile.Views
 {
     public sealed class NoteListHandler :
-        IConsume<NoteAssignedToStory>,
-        IConsume<NoteRemovedFromStory>,
+        IConsume<NoteAdded>,
+        IConsume<NoteArchived>,
         IConsume<NoteRenamed>
     {
 
@@ -14,24 +14,19 @@ namespace FarleyFile.Views
             _writer = writer;
         }
 
-        public void Consume(NoteAssignedToStory e)
+        public void Consume(NoteRenamed e)
+        {
+            _writer.UpdateOrThrow(e.StoryId, sv => sv.UpdateNote(e.NoteId, n => n.Title = e.NewName));
+        }
+
+        public void Consume(NoteAdded e)
         {
             _writer.UpdateEnforcingNew(e.StoryId, sv => sv.AddNote(e.NoteId, e.Title, e.Text));
         }
 
-        public void Consume(NoteRemovedFromStory e)
+        public void Consume(NoteArchived e)
         {
-            _writer.UpdateOrThrow(e.StoryId, sv => sv.RemoveNote(e.NoteId));
+            _writer.UpdateOrThrow(e.StoryId, sv => sv.ArchiveNote(e.NoteId));
         }
-
-        public void Consume(NoteRenamed e)
-        {
-            if (e.StoryIds == null) return;
-            foreach (var storyId in e.StoryIds)
-            {
-                _writer.UpdateOrThrow(storyId, sv => sv.UpdateNote(e.NoteId, n => n.Title = e.NewName));
-            }
-        }
-     
     }
 }

@@ -18,37 +18,37 @@ namespace FarleyFile.Interactions.Specific
         }
     }
 
-    public sealed class DoRemoveFromStory : AbstractInteraction
-    {
-        protected override string[] Alias
-        {
-            get { return new[] {"rm"}; }
-        }
+    //public sealed class DoRemoveFromStory : AbstractInteraction
+    //{
+    //    protected override string[] Alias
+    //    {
+    //        get { return new[] {"rm"}; }
+    //    }
 
-        public override InteractionResult Handle(InteractionContext context)
-        {
-            var txt = context.Request.Data.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-            var item = (txt[1].Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries));
-            var story = context.Request.CurrentStoryId;
+    //    public override InteractionResult Handle(InteractionContext context)
+    //    {
+    //        var txt = context.Request.Data.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+    //        var item = (txt[1].Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries));
+    //        var story = context.Request.CurrentStoryId;
 
 
-            if (txt.Length > 2)
-            {
-                if (!context.Request.TryGetId(txt[2], out story))
-                {
-                    return Error("Failed to locate '{0}'", txt[2]);
-                }
-            }
-            var records = new Identity[item.Length];
-            for (int i = 0; i < records.Length; i++)
-            {
-                if (!context.Request.TryGetId(item[i], out records[i]))
-                    return Error("Failed to locate id '{0}'", item[1]);
-            }
-            context.Response.SendToProject(records.Select(i => new RemoveFromStory(i, story)).ToArray());
-            return Handled();
-        }
-    }
+    //        if (txt.Length > 2)
+    //        {
+    //            if (!context.Request.TryGetId(txt[2], out story))
+    //            {
+    //                return Error("Failed to locate '{0}'", txt[2]);
+    //            }
+    //        }
+    //        var records = new Identity[item.Length];
+    //        for (int i = 0; i < records.Length; i++)
+    //        {
+    //            if (!context.Request.TryGetId(item[i], out records[i]))
+    //                return Error("Failed to locate id '{0}'", item[1]);
+    //        }
+    //        context.Response.SendToProject(records.Select(i => new RemoveFromStory(i, story)).ToArray());
+    //        return Handled();
+    //    }
+    //}
 
     public sealed class FocusOnStory : AbstractInteraction
     {
@@ -195,6 +195,8 @@ namespace FarleyFile.Interactions.Specific
 
         public override InteractionResult Handle(InteractionContext context)
         {
+            if (context.Request.CurrentStoryId.IsEmpty)
+                return Error("Please select a story first");
             context.Response.SendToProject(new AddTask(context.Request.Data, context.Request.CurrentStoryId));
             return Handled();
         }

@@ -104,105 +104,15 @@ namespace FarleyFile
         [DataMember(Order = 1)] public NoteId NoteId { get; internal set; }
         [DataMember(Order = 2)] public string Title { get; internal set; }
         [DataMember(Order = 3)] public string Text { get; internal set; }
+        [DataMember(Order = 4)] public StoryId StoryId { get; internal set; }
         
         internal NoteAdded () {}
-        public NoteAdded (NoteId noteId, string title, string text)
+        public NoteAdded (NoteId noteId, string title, string text, StoryId storyId)
         {
             NoteId = noteId;
             Title = title;
             Text = text;
-        }
-    }
-    
-    [DataContract] public sealed class NoteAssignedToStory : IEvent
-    {
-        [DataMember(Order = 1)] public NoteId NoteId { get; internal set; }
-        [DataMember(Order = 2)] public StoryId StoryId { get; internal set; }
-        [DataMember(Order = 3)] public string Title { get; internal set; }
-        [DataMember(Order = 4)] public string Text { get; internal set; }
-        
-        internal NoteAssignedToStory () {}
-        public NoteAssignedToStory (NoteId noteId, StoryId storyId, string title, string text)
-        {
-            NoteId = noteId;
             StoryId = storyId;
-            Title = title;
-            Text = text;
-        }
-    }
-    
-    [DataContract] public sealed class NoteRemovedFromStory : IEvent
-    {
-        [DataMember(Order = 1)] public NoteId NoteId { get; internal set; }
-        [DataMember(Order = 2)] public StoryId StoryId { get; internal set; }
-        
-        internal NoteRemovedFromStory () {}
-        public NoteRemovedFromStory (NoteId noteId, StoryId storyId)
-        {
-            NoteId = noteId;
-            StoryId = storyId;
-        }
-    }
-    
-    [DataContract] public sealed class RenameItem : ICommand
-    {
-        [DataMember(Order = 1)] public Identity Id { get; internal set; }
-        [DataMember(Order = 2)] public string Name { get; internal set; }
-        
-        internal RenameItem () {}
-        public RenameItem (Identity id, string name)
-        {
-            Id = id;
-            Name = name;
-        }
-    }
-    
-    [DataContract] public sealed class NoteRenamed : IEvent
-    {
-        [DataMember(Order = 1)] public NoteId NoteId { get; internal set; }
-        [DataMember(Order = 2)] public string OldName { get; internal set; }
-        [DataMember(Order = 3)] public string NewName { get; internal set; }
-        [DataMember(Order = 4)] public ICollection<StoryId> StoryIds { get; internal set; }
-        
-        internal NoteRenamed () {}
-        public NoteRenamed (NoteId noteId, string oldName, string newName, ICollection<StoryId> storyIds)
-        {
-            NoteId = noteId;
-            OldName = oldName;
-            NewName = newName;
-            StoryIds = storyIds;
-        }
-    }
-    
-    [DataContract] public sealed class TaskRenamed : IEvent
-    {
-        [DataMember(Order = 1)] public TaskId TaskId { get; internal set; }
-        [DataMember(Order = 2)] public string OldText { get; internal set; }
-        [DataMember(Order = 3)] public string NewText { get; internal set; }
-        [DataMember(Order = 4)] public ICollection<StoryId> StoryIds { get; internal set; }
-        
-        internal TaskRenamed () {}
-        public TaskRenamed (TaskId taskId, string oldText, string newText, ICollection<StoryId> storyIds)
-        {
-            TaskId = taskId;
-            OldText = oldText;
-            NewText = newText;
-            StoryIds = storyIds;
-        }
-    }
-    
-    [DataContract] public sealed class SimpleStoryRenamed : IEvent
-    {
-        [DataMember(Order = 1)] public StoryId StoryId { get; internal set; }
-        [DataMember(Order = 2)] public string OldName { get; internal set; }
-        [DataMember(Order = 3)] public string NewName { get; internal set; }
-        
-        internal SimpleStoryRenamed () {}
-        public SimpleStoryRenamed (StoryId storyId, string oldName, string newName)
-        {
-            StoryId = storyId;
-            OldName = oldName;
-            NewName = newName;
         }
     }
     
@@ -226,39 +136,77 @@ namespace FarleyFile
         [DataMember(Order = 1)] public NoteId NoteId { get; internal set; }
         [DataMember(Order = 2)] public string NewText { get; internal set; }
         [DataMember(Order = 3)] public string OldText { get; internal set; }
-        [DataMember(Order = 4)] public ICollection<StoryId> StoryIds { get; internal set; }
+        [DataMember(Order = 4)] public StoryId StoryId { get; internal set; }
         
         internal NoteEdited () {}
-        public NoteEdited (NoteId noteId, string newText, string oldText, ICollection<StoryId> storyIds)
+        public NoteEdited (NoteId noteId, string newText, string oldText, StoryId storyId)
         {
             NoteId = noteId;
             NewText = newText;
             OldText = oldText;
-            StoryIds = storyIds;
+            StoryId = storyId;
         }
     }
     
-    [DataContract] public sealed class NoteRemoved : IEvent
+    [DataContract] public sealed class RenameItem : ICommand
     {
-        [DataMember(Order = 1)] public NoteId NoteId { get; internal set; }
+        [DataMember(Order = 1)] public Identity Id { get; internal set; }
+        [DataMember(Order = 2)] public string Name { get; internal set; }
         
-        internal NoteRemoved () {}
-        public NoteRemoved (NoteId noteId)
+        internal RenameItem () {}
+        public RenameItem (Identity id, string name)
         {
-            NoteId = noteId;
+            Id = id;
+            Name = name;
         }
     }
     
-    [DataContract] public sealed class MergeNotes : ICommand
+    [DataContract] public sealed class NoteRenamed : IEvent
     {
         [DataMember(Order = 1)] public NoteId NoteId { get; internal set; }
-        [DataMember(Order = 2)] public NoteId Secondary { get; internal set; }
+        [DataMember(Order = 2)] public string OldName { get; internal set; }
+        [DataMember(Order = 3)] public string NewName { get; internal set; }
+        [DataMember(Order = 4)] public StoryId StoryId { get; internal set; }
         
-        internal MergeNotes () {}
-        public MergeNotes (NoteId noteId, NoteId secondary)
+        internal NoteRenamed () {}
+        public NoteRenamed (NoteId noteId, string oldName, string newName, StoryId storyId)
         {
             NoteId = noteId;
-            Secondary = secondary;
+            OldName = oldName;
+            NewName = newName;
+            StoryId = storyId;
+        }
+    }
+    
+    [DataContract] public sealed class TaskRenamed : IEvent
+    {
+        [DataMember(Order = 1)] public TaskId TaskId { get; internal set; }
+        [DataMember(Order = 2)] public string OldText { get; internal set; }
+        [DataMember(Order = 3)] public string NewText { get; internal set; }
+        [DataMember(Order = 4)] public StoryId StoryId { get; internal set; }
+        
+        internal TaskRenamed () {}
+        public TaskRenamed (TaskId taskId, string oldText, string newText, StoryId storyId)
+        {
+            TaskId = taskId;
+            OldText = oldText;
+            NewText = newText;
+            StoryId = storyId;
+        }
+    }
+    
+    [DataContract] public sealed class SimpleStoryRenamed : IEvent
+    {
+        [DataMember(Order = 1)] public StoryId StoryId { get; internal set; }
+        [DataMember(Order = 2)] public string OldName { get; internal set; }
+        [DataMember(Order = 3)] public string NewName { get; internal set; }
+        
+        internal SimpleStoryRenamed () {}
+        public SimpleStoryRenamed (StoryId storyId, string oldName, string newName)
+        {
+            StoryId = storyId;
+            OldName = oldName;
+            NewName = newName;
         }
     }
     
@@ -279,67 +227,52 @@ namespace FarleyFile
     {
         [DataMember(Order = 1)] public TaskId TaskId { get; internal set; }
         [DataMember(Order = 2)] public string Text { get; internal set; }
+        [DataMember(Order = 3)] public StoryId StoryId { get; internal set; }
         
         internal TaskAdded () {}
-        public TaskAdded (TaskId taskId, string text)
+        public TaskAdded (TaskId taskId, string text, StoryId storyId)
         {
             TaskId = taskId;
             Text = text;
-        }
-    }
-    
-    [DataContract] public sealed class TaskAssignedToStory : IEvent
-    {
-        [DataMember(Order = 1)] public TaskId TaskId { get; internal set; }
-        [DataMember(Order = 2)] public StoryId StoryId { get; internal set; }
-        [DataMember(Order = 3)] public string Text { get; internal set; }
-        [DataMember(Order = 4)] public bool Completed { get; internal set; }
-        
-        internal TaskAssignedToStory () {}
-        public TaskAssignedToStory (TaskId taskId, StoryId storyId, string text, bool completed)
-        {
-            TaskId = taskId;
-            StoryId = storyId;
-            Text = text;
-            Completed = completed;
-        }
-    }
-    
-    [DataContract] public sealed class TaskRemovedFromStory : IEvent
-    {
-        [DataMember(Order = 1)] public TaskId TaskId { get; internal set; }
-        [DataMember(Order = 2)] public StoryId StoryId { get; internal set; }
-        
-        internal TaskRemovedFromStory () {}
-        public TaskRemovedFromStory (TaskId taskId, StoryId storyId)
-        {
-            TaskId = taskId;
             StoryId = storyId;
         }
     }
     
-    [DataContract] public sealed class AddToStory : ICommand
-    {
-        [DataMember(Order = 1)] public Identity ItemId { get; internal set; }
-        [DataMember(Order = 2)] public StoryId StoryId { get; internal set; }
-        
-        internal AddToStory () {}
-        public AddToStory (Identity itemId, StoryId storyId)
-        {
-            ItemId = itemId;
-            StoryId = storyId;
-        }
-    }
-    
-    [DataContract] public sealed class RemoveFromStory : ICommand
+    [DataContract] public sealed class ArchiveItem : ICommand
     {
         [DataMember(Order = 1)] public Identity Id { get; internal set; }
         [DataMember(Order = 2)] public StoryId StoryId { get; internal set; }
         
-        internal RemoveFromStory () {}
-        public RemoveFromStory (Identity id, StoryId storyId)
+        internal ArchiveItem () {}
+        public ArchiveItem (Identity id, StoryId storyId)
         {
             Id = id;
+            StoryId = storyId;
+        }
+    }
+    
+    [DataContract] public sealed class NoteArchived : IEvent
+    {
+        [DataMember(Order = 1)] public NoteId NoteId { get; internal set; }
+        [DataMember(Order = 2)] public StoryId StoryId { get; internal set; }
+        
+        internal NoteArchived () {}
+        public NoteArchived (NoteId noteId, StoryId storyId)
+        {
+            NoteId = noteId;
+            StoryId = storyId;
+        }
+    }
+    
+    [DataContract] public sealed class TaskArchived : IEvent
+    {
+        [DataMember(Order = 1)] public TaskId TaskId { get; internal set; }
+        [DataMember(Order = 2)] public StoryId StoryId { get; internal set; }
+        
+        internal TaskArchived () {}
+        public TaskArchived (TaskId taskId, StoryId storyId)
+        {
+            TaskId = taskId;
             StoryId = storyId;
         }
     }
@@ -371,13 +304,13 @@ namespace FarleyFile
     [DataContract] public sealed class TaskCompleted : IEvent
     {
         [DataMember(Order = 1)] public TaskId TaskId { get; internal set; }
-        [DataMember(Order = 2)] public ICollection<StoryId> StoryIds { get; internal set; }
+        [DataMember(Order = 2)] public StoryId StoryId { get; internal set; }
         
         internal TaskCompleted () {}
-        public TaskCompleted (TaskId taskId, ICollection<StoryId> storyIds)
+        public TaskCompleted (TaskId taskId, StoryId storyId)
         {
             TaskId = taskId;
-            StoryIds = storyIds;
+            StoryId = storyId;
         }
     }
     #endregion
