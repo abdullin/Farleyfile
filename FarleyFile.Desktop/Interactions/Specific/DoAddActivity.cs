@@ -12,7 +12,7 @@ namespace FarleyFile.Interactions.Specific
             get { return new[] {"aa"}; }
         }
 
-        public static readonly Regex Reference = new Regex(@"\[(?<name>[ \w]+)\]\((?<id>\w+)\)", RegexOptions.Compiled);
+        public static readonly Regex Reference = new Regex(@"\[(?<name>[ \w]+)\](?<id>\.\d+)", RegexOptions.Compiled);
         public static readonly Regex Point = new Regex(@"\.(?<id>\d+)", RegexOptions.Compiled);
 
         public override InteractionResult Handle(InteractionContext context)

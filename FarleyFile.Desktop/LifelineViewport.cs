@@ -71,7 +71,7 @@ namespace FarleyFile
 
         public void SelectStory(StoryId storyId, string storyName)
         {
-            _statusLabel.Text = string.Format("Story: {0} ({1})", storyName, storyId);
+            _statusLabel.Text = string.Format("Story: {0}", storyName);
         }
 
         public void Clear()
@@ -171,15 +171,15 @@ namespace FarleyFile
                     foreach (var r in activity.References)
                     {
                         var rid = AddReference(r.Item);
-                        var newRef = string.Format("[{0}]({1})", r.Title, rid);
+                        var newRef = string.Format("[{0}].{1}", r.Title, rid);
                         text = text.Replace(r.Source, newRef);
                     }
-                    _rich.AppendLine(text);
+                    _rich.AppendText(text);
                     using (_rich.Styled(Solarized.Base1))
                     {
-                        var refid = AddReference(activity.ActivityId);
-                        _rich.AppendLine("  {0:yyyy-MM-dd HH:mm} .{1}", FormatEvil.OffsetUtc(activity.Created), refid);
+                        _rich.AppendLine("  -- " + FormatEvil.OffsetUtc(activity.Created));
                     }
+                    
                 }
                 _rich.AppendLine();
             }
