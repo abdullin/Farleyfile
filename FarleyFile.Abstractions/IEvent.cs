@@ -1,20 +1,16 @@
 using System;
-using System.Reflection;
 using System.Runtime.Serialization;
-using System.Linq;
 
 namespace FarleyFile
 {
-    public interface IEvent : IBaseMessage
-    {
-
-    }
+    public interface IEvent : IBaseMessage {}
 
     [DataContract]
     public class Identity : IComparable
     {
         [DataMember(Order = 1)]
         public Guid Id { get; protected set; }
+
         [DataMember(Order = 2)]
         public int Tag { get; protected set; }
 
@@ -24,7 +20,10 @@ namespace FarleyFile
             Tag = tag;
         }
 
-        public bool IsEmpty { get { return Id == Guid.Empty; } }
+        public bool IsEmpty
+        {
+            get { return Id == Guid.Empty; }
+        }
 
         public static readonly Identity Empty = new Identity(Guid.Empty, 0);
 
@@ -72,12 +71,14 @@ namespace FarleyFile
         {
             return string.Format("{0}({1})-{2}", GetType().Name.Replace("Id", ""), Tag, Id);
         }
+
         public static bool operator ==(Identity a, Identity b)
         {
-            if (ReferenceEquals(a,null))
+            if (ReferenceEquals(a, null))
                 return ReferenceEquals(b, null);
             return a.Equals(b);
         }
+
         public static bool operator !=(Identity a, Identity b)
         {
             if (ReferenceEquals(a, null))
@@ -91,18 +92,16 @@ namespace FarleyFile
     public sealed class NoteId : Identity
     {
         public const int Tag = 1;
-        public NoteId(Guid id) : base(id, Tag)
-        {
-            
-        }
+        public NoteId(Guid id) : base(id, Tag) {}
     }
+
     [DataContract]
     public sealed class StoryId : Identity
     {
         public const int Tag = 2;
         public StoryId(Guid id) : base(id, Tag) {}
-        
     }
+
     [DataContract]
     public sealed class ActivityId : Identity
     {
