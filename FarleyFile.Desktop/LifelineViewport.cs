@@ -184,7 +184,9 @@ namespace FarleyFile
                 _rich.AppendLine();
             }
 
-            if (view.Notes.Count > 0)
+            var notes = composite.Notes.Notes;
+
+            if (notes.Count > 0)
             {
                 _rich.AppendLine();
                 using (_rich.Styled(Solarized.Green))
@@ -192,12 +194,12 @@ namespace FarleyFile
                     _rich.AppendLine("## Notes");
                 }
 
-                foreach (var note in view.Notes.OrderBy(s => s.Title))
+                foreach (var note in notes.OrderBy(s => s.Title))
                 {
                     _rich.AppendLine("{0} .{1}", note.Title, AddReference(note.NoteId));
                 }
             }
-            if (view.Notes.Count == 0 && tasks.Count == 0 && activities.Count == 0)
+            if (notes.Count == 0 && tasks.Count == 0 && activities.Count == 0)
             {
                 using (_rich.Styled(Solarized.Red))
                 {

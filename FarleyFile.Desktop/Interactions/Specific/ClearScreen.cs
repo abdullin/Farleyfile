@@ -75,7 +75,8 @@ namespace FarleyFile.Interactions.Specific
             var story = result.Value;
             var activities = store.GetEntity<ActivityList>(id).GetValue(new ActivityList());
             var tasks = store.GetEntity<TaskList>(id).GetValue(new TaskList());
-            var composite = new StoryComposite(story, activities, tasks);
+            var notes = store.GetEntity<NoteList>(id).GetValue(new NoteList());
+            var composite = new StoryComposite(story, activities, tasks, notes);
             context.Response.RenderView(composite);
             context.Response.FocusStory(story.StoryId, story.Name);
 
@@ -256,8 +257,8 @@ namespace FarleyFile.Interactions.Specific
             var story = result.Value;
             var activities = context.Storage.GetEntity<ActivityList>(id).GetValue(new ActivityList());
             var tasks = context.Storage.GetEntity<TaskList>(id).GetValue(new TaskList());
-            var composite = new StoryComposite(story, activities, tasks);
-
+            var notes = context.Storage.GetEntity<NoteList>(id).GetValue(new NoteList());
+            var composite = new StoryComposite(story, activities, tasks, notes);
             
             context.Response.RenderView(composite);
             context.Response.FocusStory(id, story.Name);

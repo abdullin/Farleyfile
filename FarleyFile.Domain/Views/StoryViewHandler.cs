@@ -6,14 +6,6 @@ namespace FarleyFile
 {
     public sealed class StoryViewHandler : 
         IConsume<SimpleStoryStarted>,
-        
-
-        IConsume<NoteAssignedToStory>,
-
-        IConsume<NoteRemovedFromStory>,
-        
-        IConsume<NoteRenamed>,
-        
         IConsume<SimpleStoryRenamed>
 
     {
@@ -21,11 +13,6 @@ namespace FarleyFile
         public StoryViewHandler(IAtomicEntityWriter<Identity,StoryView> writer)
         {
             _writer = writer;
-        }
-
-        public void Consume(NoteAssignedToStory e)
-        {
-            _writer.UpdateOrThrow(e.StoryId, sv => sv.AddNote(e.NoteId, e.Title, e.Text));
         }
 
         public void Consume(SimpleStoryStarted e)
@@ -36,22 +23,6 @@ namespace FarleyFile
                     StoryId = e.StoryId
                 });
         }
-
-        public void Consume(NoteRemovedFromStory e)
-        {
-            _writer.UpdateOrThrow(e.StoryId, sv => sv.RemoveNote(e.NoteId));
-        }
-
-        public void Consume(NoteRenamed e)
-        {
-            if (e.StoryIds == null) return;
-            foreach (var storyId in e.StoryIds)
-            {
-                _writer.UpdateOrThrow(storyId, sv => sv.UpdateNote(e.NoteId, n => n.Title = e.NewName));
-            }
-        }
-
-     
 
         public void Consume(SimpleStoryRenamed e)
         {
