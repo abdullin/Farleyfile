@@ -2,7 +2,9 @@
 
 Farleyfile is an information management system that uses Lokad.CQRS with a dash of event sourcing, DDD and "cloud magic".
 
-Unlike other CQRS samples available out there, I'm developing it for a real use. It is supposed to helping me in manage my notes, ideas, articles and projects in a way that is native to my thinking process (read about [Farley File](http://en.wikipedia.org/wiki/Farley_File)). That's something I always wanted to have, but always failed to implement.
+> Note, that this project is currently developed using only _Lokad.CQRS.Portable.dll_ in a fully-persisted scenario. On other words, it does not require any Azure dependencies (but could still be ported to the cloud later).
+
+Unlike other CQRS samples available out there, I'm developing it for a real use. It is supposed to help me to manage notes, ideas, articles and projects in a way that is native to my thinking process (read about [Farley File](http://en.wikipedia.org/wiki/Farley_File)). That's something I always wanted to have, but always failed to implement.
 
 Currently I'm still evolving the functionality and features (stories, contexts, note management etc). Because of that, the actual codebase might be a little bit confusing and hacky - not suitable for learning or presenting concepts of Lokad.CQRS (i.e.: aggregate roots and tests are messed up).
 
