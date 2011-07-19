@@ -52,7 +52,7 @@ namespace FarleyFile
                     m.HandlerSample<IConsume<IBaseMessage>>(c => c.Consume(null));
                     m.InAssemblyOf<StoryViewHandler>();
                     m.InAssemblyOf<AddNote>();
-                    m.InAssemblyOf<StoryListView>();
+                    m.InAssemblyOf<StoryList>();
                 });
             builder.Advanced.CustomDataSerializer(t => new DevSerializer(t));
             //builder.Advanced.CustomEnvelopeSerializer(new DevEnvelopeSerializer());

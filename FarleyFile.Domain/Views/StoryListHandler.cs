@@ -6,16 +6,16 @@ namespace FarleyFile.Views
         IConsume<SimpleStoryStarted>,
         IConsume<SimpleStoryRenamed>
     {
-        readonly IAtomicSingletonWriter<StoryListView> _writer;
+        readonly IAtomicSingletonWriter<StoryList> _writer;
 
-        public StoryListHandler(IAtomicSingletonWriter<StoryListView> writer)
+        public StoryListHandler(IAtomicSingletonWriter<StoryList> writer)
         {
             _writer = writer;
         }
 
         public void Consume(SimpleStoryStarted e)
         {
-            var item = new StoryListItem
+            var item = new StoryList.Item
                 {
                     Name = e.Name,
                     StoryId = e.StoryId,

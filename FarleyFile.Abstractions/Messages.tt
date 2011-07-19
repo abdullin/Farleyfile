@@ -28,8 +28,8 @@ SimpleStoryStarted! (storyId, string name)
 // Done something witReh [john](7) and [jill](78) and
 ActivityReference (id, string text, string originalRef)
 
-AddActivity? (storyId, string text, time, ICollection<ActivityReference> references)
-ActivityAdded! (storyId, string text, time, activity, ICollection<ActivityReference> references)
+AddActivity? (string text, time, ICollection<ActivityReference> references)
+ActivityAdded! (string text, time, activity, ICollection<ActivityReference> references)
 
 
 AddNote? (string title, string text, storyId)

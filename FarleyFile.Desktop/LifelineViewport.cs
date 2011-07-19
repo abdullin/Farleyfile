@@ -121,7 +121,7 @@ namespace FarleyFile
             RedirectToWhen.InvokeOptional(this, view, (i,v) => _rich.AppendText(ServiceStack.Text.TypeSerializer.SerializeAndFormat(view)));
         }
 
-        public void When(StoryListView list)
+        public void When(StoryList list)
         {
             using (_rich.Styled(Solarized.Yellow))
             {
@@ -135,8 +135,9 @@ namespace FarleyFile
             }
         }
 
-        public void When(StoryView view)
+        public void When(StoryComposite composite)
         {
+            var view = composite.View;
             var txt = string.Format("Story: {0} .{1}", view.Name, AddReference(view.StoryId, view.Name));
             using (_rich.Styled(Solarized.Yellow))
             {
@@ -144,15 +145,15 @@ namespace FarleyFile
             }
             _rich.AppendLine(new string('=', txt.Length));
 
-            var completed = view.Tasks.Where(c => !c.Completed).ToArray();
-            if (view.Tasks.Count > 0)
+            var tasks = composite.Tasks.List.Where(c => !c.Completed).ToList();
+            if (tasks.Count > 0)
             {
                 using (_rich.Styled(Solarized.Green))
                 {
                     _rich.AppendLine("## Tasks");
                 }
 
-                foreach (var task in completed)
+                foreach (var task in tasks)
                 {
                     _rich.AppendLine(string.Format("  {1} {2} .{0}", AddReference(task.TaskId), task.Completed ? "x" : "□",
                             task.Text));
@@ -160,9 +161,11 @@ namespace FarleyFile
                 _rich.AppendLine();
             }
 
-            if (view.Activities.Count > 0)
+            var activities = composite.Activities.List;
+
+            if (activities.Count > 0)
             {
-                foreach (var activity in view.Activities)
+                foreach (var activity in activities)
                 {
                     var text = activity.Text;
                     foreach (var r in activity.References)
@@ -194,7 +197,7 @@ namespace FarleyFile
                     _rich.AppendLine("{0} .{1}", note.Title, AddReference(note.NoteId));
                 }
             }
-            if (view.Notes.Count == 0 && view.Tasks.Count == 0 && view.Activities.Count == 0)
+            if (view.Notes.Count == 0 && tasks.Count == 0 && activities.Count == 0)
             {
                 using (_rich.Styled(Solarized.Red))
                 {

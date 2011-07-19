@@ -40,7 +40,7 @@ namespace FarleyFile.Interactions.Specific
 
             
 
-            context.Response.SendToProject(new AddActivity(storyId, txt, DateTimeOffset.Now, references));
+            context.Response.SendToProject(new AddActivity(txt, DateTimeOffset.Now, references));
             return Handled();
         }
     }

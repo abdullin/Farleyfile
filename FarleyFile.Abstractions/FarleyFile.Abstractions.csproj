@@ -54,10 +54,13 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
+    <Compile Include="Views\ActivityList.cs" />
     <Compile Include="Views\NoteView.cs" />
+    <Compile Include="Views\StoryComposite.cs" />
+    <Compile Include="Views\StoryList.cs" />
     <Compile Include="Views\StoryView.cs" />
     <Compile Include="Views\StoryViewNote.cs" />
-    <Compile Include="Views\StoryViewTask.cs" />
+    <Compile Include="Views\TaskList.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Messages.tt">

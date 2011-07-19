@@ -65,14 +65,18 @@ namespace FarleyFile.Interactions.Specific
             {
                 return Error("Could not find story ID '{0}'", source);
             }
-            
-            var result = context.Storage.GetEntity<StoryView>(id);
+
+            var store = context.Storage;
+            var result = store.GetEntity<StoryView>(id);
             if (!result.HasValue)
             {
                 return Error("Story id not found '{0}'", id);
             }
             var story = result.Value;
-            context.Response.RenderView(story);
+            var activities = store.GetEntity<ActivityList>(id).GetValue(new ActivityList());
+            var tasks = store.GetEntity<TaskList>(id).GetValue(new TaskList());
+            var composite = new StoryComposite(story, activities, tasks);
+            context.Response.RenderView(composite);
             context.Response.FocusStory(story.StoryId, story.Name);
 
             return Handled();
@@ -175,7 +179,7 @@ namespace FarleyFile.Interactions.Specific
 
         public override InteractionResult Handle(InteractionContext context)
         {
-            var view = context.Storage.GetSingletonOrNew<StoryListView>();
+            var view = context.Storage.GetSingletonOrNew<StoryList>();
             context.Response.RenderView(view);
             return Handled();
         }
@@ -248,8 +252,14 @@ namespace FarleyFile.Interactions.Specific
             {
                 return Error("Story {0} not found", id);
             }
+
             var story = result.Value;
-            context.Response.RenderView(story);
+            var activities = context.Storage.GetEntity<ActivityList>(id).GetValue(new ActivityList());
+            var tasks = context.Storage.GetEntity<TaskList>(id).GetValue(new TaskList());
+            var composite = new StoryComposite(story, activities, tasks);
+
+            
+            context.Response.RenderView(composite);
             context.Response.FocusStory(id, story.Name);
             return Handled();
         }

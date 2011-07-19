@@ -66,13 +66,9 @@ namespace FarleyFile.Aggregates
 
         public void When(AddActivity c)
         {
-            if (!_state.StoryExists(c.StoryId))
-            {
-                throw Error("Story not found {0}", c.StoryId);
-            }
             var id = _state.GetNext(g => new ActivityId(g));
             var date = DateTime.UtcNow;
-            Apply(new ActivityAdded(c.StoryId, c.Text, date, id, c.References)) ;
+            Apply(new ActivityAdded(c.Text, date, id, c.References)) ;
         }
 
         public void When(MergeNotes c)

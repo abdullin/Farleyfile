@@ -72,6 +72,18 @@ namespace FarleyFile
         {
             return string.Format("{0}({1})-{2}", GetType().Name.Replace("Id", ""), Tag, Id);
         }
+        public static bool operator ==(Identity a, Identity b)
+        {
+            if (ReferenceEquals(a,null))
+                return ReferenceEquals(b, null);
+            return a.Equals(b);
+        }
+        public static bool operator !=(Identity a, Identity b)
+        {
+            if (ReferenceEquals(a, null))
+                return !ReferenceEquals(b, null);
+            return !a.Equals(b);
+        }
     }
 
 

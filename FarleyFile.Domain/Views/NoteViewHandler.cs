@@ -1,4 +1,5 @@
 using System;
+using FarleyFile.Views;
 using Lokad.Cqrs.Feature.AtomicStorage;
 
 namespace FarleyFile

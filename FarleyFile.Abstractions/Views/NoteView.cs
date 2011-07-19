@@ -1,4 +1,4 @@
-namespace FarleyFile
+namespace FarleyFile.Views
 {
     public sealed class NoteView : IEntityBase
     {

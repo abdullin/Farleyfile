@@ -54,15 +54,13 @@ namespace FarleyFile
     
     [DataContract] public sealed class AddActivity : ICommand
     {
-        [DataMember(Order = 1)] public StoryId StoryId { get; internal set; }
-        [DataMember(Order = 2)] public string Text { get; internal set; }
-        [DataMember(Order = 3)] public DateTimeOffset Time { get; internal set; }
-        [DataMember(Order = 4)] public ICollection<ActivityReference> References { get; internal set; }
+        [DataMember(Order = 1)] public string Text { get; internal set; }
+        [DataMember(Order = 2)] public DateTimeOffset Time { get; internal set; }
+        [DataMember(Order = 3)] public ICollection<ActivityReference> References { get; internal set; }
         
         internal AddActivity () {}
-        public AddActivity (StoryId storyId, string text, DateTimeOffset time, ICollection<ActivityReference> references)
+        public AddActivity (string text, DateTimeOffset time, ICollection<ActivityReference> references)
         {
-            StoryId = storyId;
             Text = text;
             Time = time;
             References = references;
@@ -71,16 +69,14 @@ namespace FarleyFile
     
     [DataContract] public sealed class ActivityAdded : IEvent
     {
-        [DataMember(Order = 1)] public StoryId StoryId { get; internal set; }
-        [DataMember(Order = 2)] public string Text { get; internal set; }
-        [DataMember(Order = 3)] public DateTimeOffset Time { get; internal set; }
-        [DataMember(Order = 4)] public ActivityId ActivityId { get; internal set; }
-        [DataMember(Order = 5)] public ICollection<ActivityReference> References { get; internal set; }
+        [DataMember(Order = 1)] public string Text { get; internal set; }
+        [DataMember(Order = 2)] public DateTimeOffset Time { get; internal set; }
+        [DataMember(Order = 3)] public ActivityId ActivityId { get; internal set; }
+        [DataMember(Order = 4)] public ICollection<ActivityReference> References { get; internal set; }
         
         internal ActivityAdded () {}
-        public ActivityAdded (StoryId storyId, string text, DateTimeOffset time, ActivityId activityId, ICollection<ActivityReference> references)
+        public ActivityAdded (string text, DateTimeOffset time, ActivityId activityId, ICollection<ActivityReference> references)
         {
-            StoryId = storyId;
             Text = text;
             Time = time;
             ActivityId = activityId;

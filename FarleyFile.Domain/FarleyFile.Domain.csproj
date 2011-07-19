@@ -49,9 +49,11 @@
     <Compile Include="Aggregates\PerspectiveAggregateState.cs" />
     <Compile Include="FormatEvil.cs" />
     <Compile Include="RedirectToWhen.cs" />
+    <Compile Include="Views\ActivityListHandler.cs" />
     <Compile Include="Views\NoteViewHandler.cs" />
     <Compile Include="Views\StoryListHandler.cs" />
     <Compile Include="Views\StoryViewHandler.cs" />
+    <Compile Include="Views\TaskListHandler.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\FarleyFile.Abstractions\FarleyFile.Abstractions.csproj">
