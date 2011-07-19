@@ -13,6 +13,13 @@ namespace FarleyFile.Interactions.Specific
             var text = "Recorded this test at [CaffeeInn caffee](2)";
             Assert.IsTrue(DoAddActivity.Reference.IsMatch(text));
         }
+
+        [Test]
+        public void Verify_pointer()
+        {
+            var text = "Recorded this test at .2.";
+            Assert.IsTrue(DoAddActivity.Point.IsMatch(text));
+        }
          
     }
 }

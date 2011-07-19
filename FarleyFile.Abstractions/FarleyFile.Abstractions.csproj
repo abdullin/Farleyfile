@@ -55,6 +55,7 @@
       <DesignTime>True</DesignTime>
     </Compile>
     <Compile Include="Views\ActivityList.cs" />
+    <Compile Include="Views\ItemIndex.cs" />
     <Compile Include="Views\NoteList.cs" />
     <Compile Include="Views\NoteView.cs" />
     <Compile Include="Views\StoryComposite.cs" />

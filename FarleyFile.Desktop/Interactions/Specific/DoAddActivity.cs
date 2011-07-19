@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using FarleyFile.Views;
 
 namespace FarleyFile.Interactions.Specific
 {
@@ -12,33 +13,47 @@ namespace FarleyFile.Interactions.Specific
         }
 
         public static readonly Regex Reference = new Regex(@"\[(?<name>[ \w]+)\]\((?<id>\w+)\)", RegexOptions.Compiled);
+        public static readonly Regex Point = new Regex(@"\.(?<id>\d+)", RegexOptions.Compiled);
 
         public override InteractionResult Handle(InteractionContext context)
         {
             var txt = context.Request.Data;
-            var storyId = context.Request.CurrentStoryId;
+            
             if (string.IsNullOrEmpty(txt))
             {
                 return Error("Tweet err.. activity can't be longer than 140 chars. Use notes to record data");
             }
 
-            var match = Reference.Match(txt);
-
+            
             var references = new List<ActivityReference>();
-            while (match.Success)
+            
+            var refMatch = Reference.Match(txt);
+            while (refMatch.Success)
             {
-                var id = match.Groups["id"].Value;
-                var name = match.Groups["name"].Value;
+                var id = refMatch.Groups["id"].Value;
+                var name = refMatch.Groups["name"].Value;
                 Identity guid;
                 if (!context.Request.TryGetId(id, out guid))
                 {
                     return Error("Can't find id for '{0}'", id);
                 }
-                references.Add(new ActivityReference(guid, name, match.Value));
-                match = match.NextMatch();
+                references.Add(new ActivityReference(guid, name, refMatch.Value));
+                refMatch = refMatch.NextMatch();
             }
-
-            
+            var point = Point.Match(txt);
+            while(point.Success)
+            {
+                var id = point.Groups["id"].Value;
+                Identity guid;
+                if (!context.Request.TryGetId(id, out guid))
+                {
+                    return Error("Can't find id for '{0}'", id);
+                }
+                var index = context.Storage.GetSingletonOrNew<ItemIndex>();
+                var leaf = index.Index[guid.Id];
+                references.Add(new ActivityReference(guid, leaf.Name, point.Value));
+                point = point.NextMatch();
+            }
 
             context.Response.SendToProject(new AddActivity(txt, DateTimeOffset.Now, references));
             return Handled();
