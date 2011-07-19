@@ -48,7 +48,7 @@ namespace FarleyFile.Interactions
 
         public void GrabFile(string text, Action<string, string> whenDone)
         {
-            var temp = Path.Combine(Path.GetTempPath(), Guid.NewGuid() + ".md");
+            var temp = Path.Combine(Path.GetTempPath(), Guid.NewGuid() + ".markdown");
             File.WriteAllText(temp, text, Encoding.UTF8);
             var process = Process.Start("gvim.exe", temp);
             var changed = File.GetLastWriteTimeUtc(temp);
