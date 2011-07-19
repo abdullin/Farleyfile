@@ -1,8 +1,8 @@
-## This project you see not!
+# Farley File - This project you see not!
 
 Farleyfile is an information management system that uses Lokad.CQRS with a dash of event sourcing, DDD and "cloud magic".
 
-Unlike other CQRS samples I'm developing it for real use in helping me to manage my notes, ideas, articles and projects (read about [Farley File](http://en.wikipedia.org/wiki/Farley_File)). 
+Unlike other CQRS samples available out there, I'm developing it for a real use. It is supposed to helping me in manage my notes, ideas, articles and projects in a way that is native to my thinking process (read about [Farley File](http://en.wikipedia.org/wiki/Farley_File)). That's something I always wanted to have, but always failed to implement.
 
 Currently I'm still evolving the functionality and features (stories, contexts, note management etc). Because of that, the actual codebase might be a little bit confusing and hacky - not suitable for learning or presenting concepts of Lokad.CQRS (i.e.: aggregate roots and tests are messed up).
 
@@ -10,7 +10,7 @@ So if you accidentally stumble across this project, I recommend to avoid diving 
 
 Publishing of this sample is planned closer towards the end of August - beginning of September, when we'll be releasing v3 refresh of Lokad.CQRS.
 
-Meanwhile, you can just enjoy the summer and stay tuned to my blog abdullin.com. You can also grab a copy of DDD book by Eric Evans, practice vim or check out LMAX implementations.
+Meanwhile, you can just enjoy the summer and stay tuned to my blog. You can also grab a copy of DDD book by Eric Evans, practice vim or check out LMAX implementations.
 
 Best regards,
 
