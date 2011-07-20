@@ -10,7 +10,6 @@ namespace FarleyFile
     {
         [DataMember(Order = 1)]
         public Guid Id { get; protected set; }
-
         [DataMember(Order = 2)]
         public int Tag { get; protected set; }
 
@@ -81,7 +80,6 @@ namespace FarleyFile
         }
     }
 
-
     [DataContract]
     public sealed class NoteId : Identity
     {
@@ -94,7 +92,6 @@ namespace FarleyFile
         
         NoteId() {}
     }
-
     [DataContract]
     public sealed class StoryId : Identity
     {
@@ -107,7 +104,6 @@ namespace FarleyFile
         
         StoryId() {}
     }
-
     [DataContract]
     public sealed class ActivityId : Identity
     {
@@ -118,9 +114,9 @@ namespace FarleyFile
             Id = id;
         }
 
+        
         ActivityId() {}
     }
-
     [DataContract]
     public sealed class TaskId : Identity
     {

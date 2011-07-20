@@ -33,11 +33,22 @@ namespace FarleyFile
         }
 
         [Test]
+        public void Protobuf_should_handle_DTO()
+        {
+            var expected = new DateTimeOffset(2011, 12, 2, 4, 5, 1, TimeSpan.FromHours(3));
+            RuntimeTypeModel.Default[typeof (DateTimeOffset)].Add("m_dateTime", "m_offsetMinutes");
+            var actual = Serializer.DeepClone(expected);
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
         public void ProtoBuf_should_work_with_identities()
         {
-            var id = new StoryId(Guid.NewGuid());
-            RuntimeTypeModel.Default[typeof(Identity)]
-                .AddSubType(3, typeof(StoryId));
+            var id = new StoryId(Guid.Empty);
+            var metaType = RuntimeTypeModel.Default[typeof(StoryId)];
+            RuntimeTypeModel.Default.Add(typeof (Identity), true);
+            metaType.UseConstructor = false;
+            metaType.Add("Tag", "Id");
             var deserialized = Serializer.DeepClone(id);
             Assert.AreEqual(id, deserialized);
         }

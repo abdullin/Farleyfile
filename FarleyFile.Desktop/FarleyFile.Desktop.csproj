@@ -30,6 +30,9 @@
     <Reference Include="Lokad.Cqrs.Portable">
       <HintPath>..\Library\Lokad.Cqrs.Portable.dll</HintPath>
     </Reference>
+    <Reference Include="protobuf-net">
+      <HintPath>..\Library\protobuf-net.dll</HintPath>
+    </Reference>
     <Reference Include="ServiceStack.Text">
       <HintPath>..\Library\ServiceStack.Text.dll</HintPath>
     </Reference>
@@ -42,6 +45,7 @@
       <HintPath>..\Library\System.Reactive.dll</HintPath>
     </Reference>
     <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Interactions\AbstractInteraction.cs" />
@@ -55,9 +59,6 @@
     <Compile Include="Interactions\InteractionResultStatus.cs" />
     <Compile Include="Interactions\Specific\DoAddActivity.cs" />
     <Compile Include="Solarized.cs" />
-    <Compile Include="Sys.cs" />
-    <Compile Include="AggregateDispatcher.cs" />
-    <Compile Include="DevSerializer.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -66,6 +67,10 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="LifelineViewport.cs" />
+    <Compile Include="Wires\AggregateDispatcher.cs" />
+    <Compile Include="Wires\DataSerializerWithProtoBuf.cs" />
+    <Compile Include="Wires\EnvelopeSerializerWithProtoBuf.cs" />
+    <Compile Include="Wires\Sys.cs" />
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>

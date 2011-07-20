@@ -17,17 +17,6 @@ namespace FarleyFile
 {
     class Sys
     {
-        static string SimpleDispatchRule(ImmutableEnvelope e)
-        {
-            if (e.GetAttribute("to-entity","")!="")
-                return "files:aggregates";
-            if (e.Items.All(i => typeof(IEvent).IsAssignableFrom(i.MappedType)))
-                return "files:events";
-            if (e.Items.All(i => typeof(ICommand).IsAssignableFrom(i.MappedType)))
-                return "files:commands";
-            throw new InvalidOperationException("Unsuported envelope");
-        }
-
         public static CqrsEngineBuilder Configure(FileStorageConfig cache)
         {
             
@@ -54,8 +43,8 @@ namespace FarleyFile
                     m.InAssemblyOf<AddNote>();
                     m.InAssemblyOf<StoryList>();
                 });
-            builder.Advanced.CustomDataSerializer(t => new DevSerializer(t));
-            //builder.Advanced.CustomEnvelopeSerializer(new DevEnvelopeSerializer());
+            builder.Advanced.CustomDataSerializer(t => new DataSerializerWithProtoBuf(t));
+            builder.Advanced.CustomEnvelopeSerializer(new EnvelopeSerializerWithProtoBuf());
             builder.Storage(c =>
                 {
                     RegisterAtomicStorage(cache, c);
@@ -65,9 +54,8 @@ namespace FarleyFile
             builder.File(m =>
             {
                 m.AddFileSender(cache, "router", cm => cm.IdGeneratorForTests());
-                m.AddFileRouter(cache, "router", SimpleDispatchRule);
+                m.AddFileProcess(cache, "router", x => x.DispatcherIsLambda(SaveAndRoute));
                 m.AddFileProcess(cache, "events", p => p.DispatchAsEvents(md => md.WhereMessagesAre<IEvent>()));
-                m.AddFileProcess(cache, "commands", p => p.DispatchAsCommandBatch(md => md.WhereMessagesAre<ICommand>()));
                 m.AddFileProcess(cache, "aggregates", p => p.DispatcherIs(context =>
                     {
                         var readers = context.Resolve<ITapeStorageFactory>();
@@ -79,6 +67,39 @@ namespace FarleyFile
             return builder;
         }
 
+        static Action<ImmutableEnvelope> SaveAndRoute(IComponentContext ctx)
+        {
+            var registry = ctx.Resolve<QueueWriterRegistry>();
+            IQueueWriterFactory factory;
+            if (!registry.TryGet("files", out factory))
+                throw new InvalidOperationException("file queue not configured, yet.");
+
+            var agg = factory.GetWriteQueue("aggregates");
+            var events = factory.GetWriteQueue("events");
+            var tapeFactory = ctx.Resolve<ITapeStorageFactory>();
+            var log = tapeFactory.GetOrCreateStream("full-log");
+            var streamer = ctx.Resolve<IEnvelopeStreamer>();
+
+            return e =>
+                {
+                    if (!log.TryAppend(streamer.SaveEnvelopeData(e)))
+                    {
+                        throw new InvalidOperationException("Failed to save envelope");
+                    }
+                    if (e.GetAttribute("to-entity", "") != "")
+                    {
+                        agg.PutMessage(e);
+                        return;
+                    }
+                    if (e.Items.All(i => typeof (IEvent).IsAssignableFrom(i.MappedType)))
+                    {
+                        events.PutMessage(e);
+                        return;
+                    }
+                    throw new InvalidOperationException("Unsuported envelope");
+                };
+        }
+
         static void RegisterAtomicStorage(FileStorageConfig cache, StorageModule c)
         {
             c.AtomicIsInFiles(cache.Folder.FullName, cb =>
@@ -88,8 +109,8 @@ namespace FarleyFile
                         JsonSerializer.DeserializeFromStream);
                     cb.WhereEntityIs<IEntityBase>();
 
-                    cb.FolderForEntity(t => "view-" + t.Name.ToLowerInvariant());
-                    cb.FolderForSingleton("view-single");
+                    cb.FolderForEntity(t => "views/" + t.Name.ToLowerInvariant());
+                    cb.FolderForSingleton("views");
                     cb.NameForSingleton(type => type.Name + ".txt");
                     cb.NameForEntity((type, o) =>
                         {

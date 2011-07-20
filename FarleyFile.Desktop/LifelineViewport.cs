@@ -52,7 +52,7 @@ namespace FarleyFile
                     // collision
                     if (!reference.Equals(i))
                     {
-                        LookupRef[name] = Identity.Empty;
+                        LookupRef[name] = null;
                         Log("Collision: '{0}' -> '{1}' by '{2}'", reference, i, name);
                         continue;
                     }
