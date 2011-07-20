@@ -39,7 +39,7 @@ namespace FarleyFile
 
                 if (failed != null)
                 {
-                    Debug.WriteLine(failed.Exception);
+                    Trace.WriteLine(failed.Exception);
                 }
             };
 
@@ -66,17 +66,9 @@ namespace FarleyFile
             {
                 m.AddFileSender(cache, "router", cm => cm.IdGeneratorForTests());
                 m.AddFileRouter(cache, "router", SimpleDispatchRule);
-                m.AddFileProcess(cache, "events", p =>
-                {
-                    p.DispatchAsEvents();
-                    p.WhereFilter(md => md.WhereMessagesAre<IEvent>());
-                });
-                m.AddFileProcess(cache, "commands", p =>
-                {
-                    p.DispatchAsCommandBatch();
-                    p.WhereFilter(md => md.WhereMessagesAre<ICommand>());
-                });
-                m.AddFileProcess(cache, "aggregates", p => p.DispatcherIs((context, infos, arg3) =>
+                m.AddFileProcess(cache, "events", p => p.DispatchAsEvents(md => md.WhereMessagesAre<IEvent>()));
+                m.AddFileProcess(cache, "commands", p => p.DispatchAsCommandBatch(md => md.WhereMessagesAre<ICommand>()));
+                m.AddFileProcess(cache, "aggregates", p => p.DispatcherIs(context =>
                     {
                         var readers = context.Resolve<ITapeStorageFactory>();
                         var streamer = context.Resolve<IEnvelopeStreamer>();
