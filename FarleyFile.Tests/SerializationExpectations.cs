@@ -1,5 +1,8 @@
 using System;
+using System.IO;
 using NUnit.Framework;
+using ProtoBuf;
+using ProtoBuf.Meta;
 using ServiceStack.Text;
 
 namespace FarleyFile
@@ -17,6 +20,26 @@ namespace FarleyFile
             var s = JsonSerializer.SerializeToString(expected);
             var actual = JsonSerializer.DeserializeFromString<DateTimeOffset>(s);
             Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void Json_should_work_with_identities()
+        {
+            var id = new StoryId(Guid.NewGuid());
+            var s = JsonSerializer.SerializeToString(id);
+            Console.WriteLine(s);
+            var deserialized = JsonSerializer.DeserializeFromString<StoryId>(s);
+            Assert.AreEqual(id, deserialized);
+        }
+
+        [Test]
+        public void ProtoBuf_should_work_with_identities()
+        {
+            var id = new StoryId(Guid.NewGuid());
+            RuntimeTypeModel.Default[typeof(Identity)]
+                .AddSubType(3, typeof(StoryId));
+            var deserialized = Serializer.DeepClone(id);
+            Assert.AreEqual(id, deserialized);
         }
     }
 }

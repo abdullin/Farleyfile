@@ -16,7 +16,7 @@ namespace FarleyFile.Views
         {
             foreach (var reference in e.References)
             {
-                if (reference.Id.Tag == StoryId.Tag)
+                if (reference.Id.Tag == StoryId.TagId)
                 {
                     _writer.UpdateEnforcingNew(reference.Id, v => v.AddActivity(e));
                 }

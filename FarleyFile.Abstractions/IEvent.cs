@@ -14,18 +14,12 @@ namespace FarleyFile
         [DataMember(Order = 2)]
         public int Tag { get; protected set; }
 
-        public Identity(Guid id, int tag)
-        {
-            Id = id;
-            Tag = tag;
-        }
-
         public bool IsEmpty
         {
             get { return Id == Guid.Empty; }
         }
 
-        public static readonly Identity Empty = new Identity(Guid.Empty, 0);
+        public static readonly Identity Empty = new Identity();
 
         public override bool Equals(object obj)
         {
@@ -91,28 +85,52 @@ namespace FarleyFile
     [DataContract]
     public sealed class NoteId : Identity
     {
-        public const int Tag = 1;
-        public NoteId(Guid id) : base(id, Tag) {}
+        public const int TagId = 1;
+        public NoteId(Guid id)
+        {
+            Tag = TagId;
+            Id = id;
+        }
+        
+        NoteId() {}
     }
 
     [DataContract]
     public sealed class StoryId : Identity
     {
-        public const int Tag = 2;
-        public StoryId(Guid id) : base(id, Tag) {}
+        public const int TagId = 2;
+        public StoryId(Guid id)
+        {
+            Id = id;
+            Tag = TagId;
+        }
+        
+        StoryId() {}
     }
 
     [DataContract]
     public sealed class ActivityId : Identity
     {
-        public const int Tag = 3;
-        public ActivityId(Guid id) : base(id, Tag) {}
+        public const int TagId = 3;
+        public ActivityId(Guid id)
+        {
+            Tag = TagId;
+            Id = id;
+        }
+
+        ActivityId() {}
     }
 
     [DataContract]
     public sealed class TaskId : Identity
     {
-        public const int Tag = 4;
-        public TaskId(Guid id) : base(id, Tag) {}
+        public const int TagId = 4;
+        public TaskId(Guid id)
+        {
+            Tag = TagId;
+            Id = id;
+        }
+        
+        TaskId() {}
     }
 }

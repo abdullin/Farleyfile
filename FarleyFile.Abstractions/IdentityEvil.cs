@@ -11,10 +11,10 @@ namespace FarleyFile
         {
             Dictionary = new Dictionary<int, Func<Guid, Identity>>
                 {
-                    {NoteId.Tag, g => new NoteId(g)},
-                    {StoryId.Tag, g => new StoryId(g)},
-                    {TaskId.Tag, g => new TaskId(g)},
-                    {ActivityId.Tag, g => new ActivityId(g)}
+                    {NoteId.TagId, g => new NoteId(g)},
+                    {StoryId.TagId, g => new StoryId(g)},
+                    {TaskId.TagId, g => new TaskId(g)},
+                    {ActivityId.TagId, g => new ActivityId(g)}
                 };
         }
 

@@ -34,14 +34,18 @@
     <Reference Include="nunit.framework">
       <HintPath>..\Library\nunit.framework.dll</HintPath>
     </Reference>
+    <Reference Include="protobuf-net, Version=2.0.0.431, Culture=neutral, PublicKeyToken=257b51d87d2e4d67, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Library\protobuf-net.dll</HintPath>
+    </Reference>
     <Reference Include="ServiceStack.Text">
       <HintPath>..\Library\ServiceStack.Text.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IdentityTests.cs" />
     <Compile Include="Interactions\Specific\DoAddActivityTests.cs" />
     <Compile Include="SerializationExpectations.cs" />
   </ItemGroup>
