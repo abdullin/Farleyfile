@@ -4,20 +4,6 @@ using FarleyFile.Views;
 
 namespace FarleyFile.Interactions.Specific
 {
-    public sealed class ClearScreen : AbstractInteraction
-    {
-        protected override string[] Alias
-        {
-            get { return new[]{"clr"}; }
-        }
-
-        public override InteractionResult Handle(InteractionContext context)
-        {
-            context.Response.ClearView();
-            return Handled();
-        }
-    }
-
     //public sealed class DoRemoveFromStory : AbstractInteraction
     //{
     //    protected override string[] Alias
@@ -54,14 +40,22 @@ namespace FarleyFile.Interactions.Specific
     {
         protected override string[] Alias
         {
-            get { return new[] { "cd"}; }
+            get { return new[] { "cd",""}; }
         }
 
         public override InteractionResult Handle(InteractionContext context)
         {
             StoryId id;
             var source = context.Request.Data;
-            if (!context.Request.TryGetId(source, out id))
+            if (string.IsNullOrEmpty(source))
+            {
+                id = context.Request.CurrentStoryId;
+                if (id.IsEmpty)
+                {
+                    return Error("Story id was not specified and there is no focused story");
+                }
+            }
+            else if (!context.Request.TryGetId(source, out id))
             {
                 return Error("Could not find story ID '{0}'", source);
             }
@@ -231,39 +225,6 @@ namespace FarleyFile.Interactions.Specific
         public override InteractionResult Handle(InteractionContext context)
         {
             context.Response.SendToProject(new StartSimpleStory(context.Request.Data));
-            return Handled();
-        }
-    }
-
-    public sealed class ReloadStory : AbstractInteraction
-    {
-        protected override string[] Alias
-        {
-            get { return new[] {""}; }
-        }
-
-        public override InteractionResult Handle(InteractionContext context)
-        {
-            if (context.Request.Raw == " ")
-            {
-                context.Response.ClearView();
-            }
-
-            var id = context.Request.CurrentStoryId;
-            var result = context.Storage.GetEntity<StoryView>(id);
-            if (!result.HasValue)
-            {
-                return Error("Story {0} not found", id);
-            }
-
-            var story = result.Value;
-            var activities = context.Storage.GetEntity<ActivityList>(id).GetValue(new ActivityList());
-            var tasks = context.Storage.GetEntity<TaskList>(id).GetValue(new TaskList());
-            var notes = context.Storage.GetEntity<NoteList>(id).GetValue(new NoteList());
-            var composite = new StoryComposite(story, activities, tasks, notes);
-            
-            context.Response.RenderView(composite);
-            context.Response.FocusStory(id, story.Name);
             return Handled();
         }
     }

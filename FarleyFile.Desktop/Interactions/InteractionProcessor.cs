@@ -46,6 +46,8 @@ namespace FarleyFile.Interactions
 
         public InteractionResultStatus Handle(string data)
         {
+            var startsWithSpace = data.StartsWith(" ");
+            data = data.TrimStart(' ');
             _viewport.Log("> " + data);
 
             try
@@ -56,6 +58,10 @@ namespace FarleyFile.Interactions
                     string text;
                     if (interaction.WillProcess(data, out @alias, out text))
                     {
+                        if (startsWithSpace)
+                        {
+                            _viewport.Clear();
+                        }
                         var request = new InteractionRequest(text, CurrentStoryId, data, _viewport.LookupRef);
                         var response = new InteractionResponse(_viewport, l => { CurrentStoryId = l; }, _sender);
                         var context = new InteractionContext(request, _storage, response);
