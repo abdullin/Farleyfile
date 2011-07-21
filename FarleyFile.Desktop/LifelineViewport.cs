@@ -167,17 +167,28 @@ namespace FarleyFile
             {
                 foreach (var activity in activities)
                 {
+                    
                     var text = activity.Text;
-                    foreach (var r in activity.References)
+                    var explicitRefs = activity.References.Where(r => !string.IsNullOrEmpty(r.Source));
+                    
+                    foreach (var r in explicitRefs)
                     {
                         var rid = AddReference(r.Item);
                         var newRef = string.Format("[{0}].{1}", r.Title, rid);
                         text = text.Replace(r.Source, newRef);
                     }
-                    _rich.AppendText(text);
+                    _rich.AppendLine(text);
+                    var implicitRefs = activity.References.Where(r => string.IsNullOrEmpty(r.Source)).ToList();
                     using (_rich.Styled(Solarized.Base1))
                     {
-                        _rich.AppendLine("  -- " + FormatEvil.OffsetUtc(activity.Created));
+                        _rich.AppendText("  -- " + FormatEvil.OffsetUtc(activity.Created));
+                        if (implicitRefs.Any())
+                        {
+                            var values = implicitRefs
+                                .Select(r => string.Format("[{0}].{1}", r.Title, AddReference(r.Item))).ToArray();
+                            _rich.AppendText(" from " + string.Join(", ", values));
+                        }
+                        _rich.AppendLine();
                     }
                     
                 }

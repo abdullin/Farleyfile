@@ -23,8 +23,6 @@ namespace FarleyFile.Interactions.Specific
             {
                 return Error("Tweet err.. activity can't be longer than 140 chars. Use notes to record data");
             }
-
-            
             var references = new List<ActivityReference>();
             
             var refMatch = Reference.Match(txt);
@@ -54,6 +52,13 @@ namespace FarleyFile.Interactions.Specific
                 references.Add(new ActivityReference(guid, leaf.Name, point.Value));
                 point = point.NextMatch();
             }
+
+            // by default activity relates to the current story
+            if (context.Request.CurrentStoryId.IsEmpty)
+            {
+                return Error("By default activity relates to the current story, but you haven't selected any");
+            }
+            references.Add(new ActivityReference(context.Request.CurrentStoryId, context.Request.CurrentStoryName, null));
 
             context.Response.SendToProject(new AddActivity(txt, DateTimeOffset.Now, references));
             return Handled();

@@ -35,6 +35,7 @@ namespace FarleyFile.Interactions
         readonly LifelineViewport _viewport;
         readonly NuclearStorage _storage;
         StoryId CurrentStoryId { get; set; }
+        string CurrentStoryName { get; set; }
 
         public InteractionProcessor(IMessageSender sender, LifelineViewport viewport, NuclearStorage storage)
         {
@@ -62,8 +63,12 @@ namespace FarleyFile.Interactions
                         {
                             _viewport.Clear();
                         }
-                        var request = new InteractionRequest(text, CurrentStoryId, data, _viewport.LookupRef);
-                        var response = new InteractionResponse(_viewport, l => { CurrentStoryId = l; }, _sender);
+                        var request = new InteractionRequest(text, CurrentStoryId, data, _viewport.LookupRef, CurrentStoryName);
+                        var response = new InteractionResponse(_viewport, (l, s) =>
+                            {
+                                CurrentStoryId = l;
+                                CurrentStoryName = s;
+                            }, _sender);
                         var context = new InteractionContext(request, _storage, response);
 
                         var result = interaction.Handle(context);

@@ -9,6 +9,7 @@ namespace FarleyFile.Interactions
         readonly IDictionary<string, Identity> _lookup;
         public readonly string Data;
         public readonly StoryId CurrentStoryId;
+        public readonly string CurrentStoryName;
 
 
         public bool TryGetId<TIdentity>(string source, out TIdentity id)
@@ -30,12 +31,13 @@ namespace FarleyFile.Interactions
             return false;
         }
 
-        public InteractionRequest(string data, StoryId currentStoryId, string raw, IDictionary<string, Identity> lookup)
+        public InteractionRequest(string data, StoryId currentStoryId, string raw, IDictionary<string, Identity> lookup, string currentStoryName)
         {
             Data = data;
             CurrentStoryId = currentStoryId;
             Raw = raw;
             _lookup = lookup;
+            CurrentStoryName = currentStoryName;
         }
     }
 }
