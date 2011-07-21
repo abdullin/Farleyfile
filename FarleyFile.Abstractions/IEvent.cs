@@ -24,8 +24,7 @@ namespace FarleyFile
         {
             if (ReferenceEquals(null, obj)) return false;
             var identity = obj as Identity;
-
-            if (identity == null)
+            if (ReferenceEquals(identity, null))
             {
                 return false;
             }

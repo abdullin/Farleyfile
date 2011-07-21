@@ -58,10 +58,11 @@ namespace FarleyFile.Aggregates
                 {
                     Apply(new SimpleStoryRenamed(new StoryId(c.Id), story.Name, c.Name));
                 }
+                return;
             }
             throw Error("Renaming item {0} is not supported", c.Id);
 
-        }
+         }
 
 
         public void When(AddActivity c)
