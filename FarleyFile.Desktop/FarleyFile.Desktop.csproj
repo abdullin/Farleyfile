@@ -58,6 +58,7 @@
     <Compile Include="Interactions\InteractionProcessor.cs" />
     <Compile Include="Interactions\InteractionResultStatus.cs" />
     <Compile Include="Interactions\Specific\DoAddActivity.cs" />
+    <Compile Include="Interactions\Specific\FocusOnStory.cs" />
     <Compile Include="Solarized.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>

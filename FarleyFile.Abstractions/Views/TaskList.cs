@@ -47,4 +47,43 @@ namespace FarleyFile.Views
             public bool Completed { get; set; }
         }
     }
+
+    public sealed class TagList : IEntityBase
+    {
+        public Dictionary<string, TagId> Items { get; private set; }
+
+        public TagList()
+        {
+            Items = new Dictionary<string, TagId>();
+        }
+    }
+
+    public sealed class TagView : IEntityBase
+    {
+        public string Name { get; set; }
+        public TagId Id { get; set; }
+
+        public List<StoryItem> Stories { get; private set; }
+
+        public void AddStory(StoryId id, string name)
+        {
+            Stories.Add(new StoryItem()
+                {
+                    Name = name,
+                    Story = id
+                });
+        }
+
+        public TagView()
+        {
+            Stories = new List<StoryItem>();
+        }
+
+
+        public sealed class StoryItem
+        {
+            public string Name { get; set; }
+            public StoryId Story { get; set; }
+        }
+    }
 }

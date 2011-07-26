@@ -58,7 +58,7 @@
     <Compile Include="Views\ItemIndex.cs" />
     <Compile Include="Views\NoteList.cs" />
     <Compile Include="Views\NoteView.cs" />
-    <Compile Include="Views\StoryComposite.cs" />
+    <Compile Include="Views\FocusComposite.cs" />
     <Compile Include="Views\StoryList.cs" />
     <Compile Include="Views\StoryView.cs" />
     <Compile Include="Views\TaskList.cs" />

@@ -116,6 +116,8 @@ namespace FarleyFile
         
         ActivityId() {}
     }
+
+
     [DataContract]
     public sealed class TaskId : Identity
     {
@@ -127,5 +129,19 @@ namespace FarleyFile
         }
         
         TaskId() {}
+    }
+
+    [DataContract]
+    public sealed class TagId : Identity
+    {
+        public const int TagIdValue = 7;
+        public TagId(Guid id)
+        {
+            Tag = TagIdValue;
+            Id = id;
+        }
+
+
+        TagId() { }
     }
 }

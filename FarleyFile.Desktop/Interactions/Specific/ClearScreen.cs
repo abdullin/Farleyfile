@@ -36,48 +36,6 @@ namespace FarleyFile.Interactions.Specific
     //    }
     //}
 
-    public sealed class FocusOnStory : AbstractInteraction
-    {
-        protected override string[] Alias
-        {
-            get { return new[] { "cd",""}; }
-        }
-
-        public override InteractionResult Handle(InteractionContext context)
-        {
-            StoryId id;
-            var source = context.Request.Data;
-            if (string.IsNullOrEmpty(source))
-            {
-                id = context.Request.CurrentStoryId;
-                if (id.IsEmpty)
-                {
-                    return Error("Story id was not specified and there is no focused story");
-                }
-            }
-            else if (!context.Request.TryGetId(source, out id))
-            {
-                return Error("Could not find story ID '{0}'", source);
-            }
-
-            var store = context.Storage;
-            var result = store.GetEntity<StoryView>(id);
-            if (!result.HasValue)
-            {
-                return Error("Story id not found '{0}'", id);
-            }
-            var story = result.Value;
-            var activities = store.GetEntity<ActivityList>(id).GetValue(new ActivityList());
-            var tasks = store.GetEntity<TaskList>(id).GetValue(new TaskList());
-            var notes = store.GetEntity<NoteList>(id).GetValue(new NoteList());
-            var composite = new StoryComposite(story, activities, tasks, notes);
-            context.Response.RenderView(composite);
-            context.Response.FocusStory(story.StoryId, story.Name);
-
-            return Handled();
-        }
-    }
-
     public sealed class DoAddNote : AbstractInteraction
     {
         protected override string[] Alias

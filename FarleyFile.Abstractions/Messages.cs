@@ -238,6 +238,49 @@ namespace FarleyFile
         }
     }
     
+    [DataContract] public sealed class TagItem : ICommand
+    {
+        [DataMember(Order = 1)] public string Tag { get; internal set; }
+        [DataMember(Order = 2)] public Identity ItemId { get; internal set; }
+        
+        internal TagItem () {}
+        public TagItem (string tag, Identity itemId)
+        {
+            Tag = tag;
+            ItemId = itemId;
+        }
+    }
+    
+    [DataContract] public sealed class TagCreated : IEvent
+    {
+        [DataMember(Order = 1)] public string Tag { get; internal set; }
+        [DataMember(Order = 2)] public TagId TagId { get; internal set; }
+        
+        internal TagCreated () {}
+        public TagCreated (string tag, TagId tagId)
+        {
+            Tag = tag;
+            TagId = tagId;
+        }
+    }
+    
+    [DataContract] public sealed class TagAddedToStory : IEvent
+    {
+        [DataMember(Order = 1)] public StoryId StoryId { get; internal set; }
+        [DataMember(Order = 2)] public TagId TagId { get; internal set; }
+        [DataMember(Order = 3)] public string Tag { get; internal set; }
+        [DataMember(Order = 4)] public string StoryName { get; internal set; }
+        
+        internal TagAddedToStory () {}
+        public TagAddedToStory (StoryId storyId, TagId tagId, string tag, string storyName)
+        {
+            StoryId = storyId;
+            TagId = tagId;
+            Tag = tag;
+            StoryName = storyName;
+        }
+    }
+    
     [DataContract] public sealed class ArchiveItem : ICommand
     {
         [DataMember(Order = 1)] public Identity Id { get; internal set; }

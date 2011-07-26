@@ -14,7 +14,8 @@ namespace FarleyFile
                     {NoteId.TagId, g => new NoteId(g)},
                     {StoryId.TagId, g => new StoryId(g)},
                     {TaskId.TagId, g => new TaskId(g)},
-                    {ActivityId.TagId, g => new ActivityId(g)}
+                    {ActivityId.TagId, g => new ActivityId(g)},
+                    {TagId.TagIdValue, g => new TagId(g)}
                 };
         }
 

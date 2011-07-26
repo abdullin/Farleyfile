@@ -38,4 +38,43 @@ namespace FarleyFile
             _writer.UpdateOrThrow(e.StoryId, sv => sv.ArchiveTask(e.TaskId));
         }
     }
+
+    public sealed class TagListHandler : IConsume<TagCreated>
+    {
+        IAtomicSingletonWriter<TagList> _writer;
+        public TagListHandler(IAtomicSingletonWriter<TagList> writer)
+        {
+            _writer = writer;
+        }
+
+        public void Consume(TagCreated e)
+        {
+            _writer.UpdateEnforcingNew(v => v.Items.Add(e.Tag, e.TagId));
+        }
+    }
+
+    public sealed class TagViewHandler : 
+        IConsume<TagAddedToStory>,
+        IConsume<TagCreated>
+    {
+        IAtomicEntityWriter<TagId, TagView> _writer;
+        public TagViewHandler(IAtomicEntityWriter<TagId, TagView> writer)
+        {
+            _writer = writer;
+        }
+
+        public void Consume(TagAddedToStory e)
+        {
+            _writer.UpdateOrThrow(e.TagId, v => v.AddStory(e.StoryId, e.StoryName));
+        }
+
+        public void Consume(TagCreated e)
+        {
+            _writer.Add(e.TagId, new TagView()
+                {
+                    Id = e.TagId,
+                    Name = e.Tag
+                });
+        }
+    }
 }

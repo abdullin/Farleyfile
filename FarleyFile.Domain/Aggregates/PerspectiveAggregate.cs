@@ -30,6 +30,29 @@ namespace FarleyFile.Aggregates
             Apply(new SimpleStoryStarted(id, c.Name));
         }
 
+        public void When(TagItem c)
+        {
+            TagId id;
+            if (!_state.TryGetTag(c.Tag, out id))
+            {
+                id = _state.GetNext(g => new TagId(g));
+                Apply(new TagCreated(c.Tag, id));
+            }
+
+            SimpleStory story;
+            if (_state.TryGetStory(new StoryId(c.ItemId),out story))
+            {
+                if (!story.Tags.Contains(id))
+                {
+                    Apply(new TagAddedToStory(story.Id, id, c.Tag, story.Name));
+                }
+                return;
+            }
+
+            throw Error("Can't tag item '{0}'", c.ItemId);
+
+        }
+
         public void When(RenameItem c)
         {
             NoteItem note;

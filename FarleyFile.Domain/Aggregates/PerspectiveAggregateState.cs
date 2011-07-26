@@ -12,6 +12,13 @@ namespace FarleyFile.Aggregates
         readonly Dictionary<Identity, AbstractItem> _items = new Dictionary<Identity, AbstractItem>();
         readonly SortedDictionary<Identity,Activity> _activities = new SortedDictionary<Identity, Activity>(); 
 
+        readonly Dictionary<string,TagId> _tags = new Dictionary<string, TagId>();
+
+        public bool TryGetTag(string tag, out TagId id)
+        {
+            return _tags.TryGetValue(tag, out id);
+        }
+
         public void When(ActivityAdded e)
         {
             _activities.Add(e.ActivityId, new Activity());
@@ -82,6 +89,15 @@ namespace FarleyFile.Aggregates
         {
             var story = (SimpleStory) _stories[e.StoryId];
             story.Rename(e.NewName);
+        }
+
+        public void When(TagCreated e)
+        {
+            _tags.Add(e.Tag, e.TagId);
+        }
+        public void When(TagAddedToStory e)
+        {
+            _stories[e.StoryId].Tags.Add(e.TagId);
         }
 
         public bool TryGetStory<TStory>(StoryId storyId, out TStory story)
@@ -189,9 +205,8 @@ namespace FarleyFile.Aggregates
 
     public abstract class AbstractStory
     {
-        public HashSet<Identity> AsItGoes = new HashSet<Identity>();
-
-        
+        public readonly HashSet<Identity> AsItGoes = new HashSet<Identity>();
+        public readonly HashSet<TagId> Tags = new HashSet<TagId>(); 
     }
 
     public sealed class SimpleStory : AbstractStory

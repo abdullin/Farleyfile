@@ -18,6 +18,7 @@ let taskId = TaskId TaskId;
 let date = DateTime Date;
 let activity = ActivityId ActivityId;
 let id = Identity Id;
+let tagId = TagId TagId;
 let time = DateTimeOffset Time;
 PerspectiveCreated! ()
 
@@ -49,6 +50,13 @@ SimpleStoryRenamed! (storyId, string oldName, string newName)
 
 AddTask? (string text, storyId)
 TaskAdded! (taskId, string text, storyId)
+
+
+TagItem? (string tag, Identity itemId)
+TagCreated! (string tag, tagId)
+
+TagAddedToStory! (storyId, tagId, string tag, string storyName)
+
 
 
 ArchiveItem? (id, storyId)

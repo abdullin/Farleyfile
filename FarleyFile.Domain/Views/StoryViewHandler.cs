@@ -6,7 +6,8 @@ namespace FarleyFile
 {
     public sealed class StoryViewHandler : 
         IConsume<SimpleStoryStarted>,
-        IConsume<SimpleStoryRenamed>
+        IConsume<SimpleStoryRenamed>,
+        IConsume<TagAddedToStory>
 
     {
         readonly IAtomicEntityWriter<Identity,StoryView> _writer;
@@ -27,6 +28,11 @@ namespace FarleyFile
         public void Consume(SimpleStoryRenamed e)
         {
             _writer.UpdateOrThrow(e.StoryId, v => v.Name = e.NewName);
+        }
+
+        public void Consume(TagAddedToStory e)
+        {
+            _writer.UpdateOrThrow(e.StoryId, v => v.Tags.Add(e.Tag, e.TagId));
         }
     }
 }

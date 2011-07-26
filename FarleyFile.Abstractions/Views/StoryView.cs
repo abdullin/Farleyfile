@@ -8,9 +8,12 @@ namespace FarleyFile.Views
     {
         public string Name { get; set; }
         public StoryId StoryId { get; set; }
+        public IDictionary<string, TagId> Tags { get; private set; }
 
-        
-        
+        public StoryView()
+        {
+            Tags = new Dictionary<string,TagId>();
+        }
 
         
     }

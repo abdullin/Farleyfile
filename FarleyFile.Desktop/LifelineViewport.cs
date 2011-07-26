@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using FarleyFile.Views;
@@ -118,8 +119,17 @@ namespace FarleyFile
 
         public void RenderView<T>(T view)
         {
-            RedirectToWhen.InvokeOptional(this, view, (i,v) => _rich.AppendText(ServiceStack.Text.TypeSerializer.SerializeAndFormat(view)));
+            RedirectToWhen.InvokeOptional(this, view, (i,v) =>
+                {
+                    using (_rich.Styled(Solarized.Yellow))
+                    {
+                        _rich.AppendLine(view.GetType().Name);
+                    }
+                    _rich.AppendText(ServiceStack.Text.TypeSerializer.SerializeAndFormat(view));
+                });
         }
+
+
 
         public void When(StoryList list)
         {
@@ -135,17 +145,46 @@ namespace FarleyFile
             }
         }
 
-        public void When(StoryComposite composite)
+        public void When(TagList list)
         {
-            var view = composite.View;
-            var txt = string.Format("Story: {0} .{1}", view.Name, AddReference(view.StoryId, view.Name));
+            using (_rich.Styled(Solarized.Violet))
+            {
+                _rich.AppendLine("Tags");
+            }
+            foreach (var item in list.Items.OrderBy(s => s.Key))
+            {
+                var reference = AddReference(item.Value, item.Key);
+                _rich.AppendLine("{0} .{1}", item.Key, reference);
+            }
+        }
+
+        public void When(FocusComposite composite)
+        {
+            //var view = composite.View;
+
+            string txt;
+            if (composite.Focus is StoryId)
+            {
+                txt = string.Format("Story: {0} .{1}", composite.Name, AddReference(composite.Focus, composite.Name));
+            }
+            else if (composite.Focus is TagId)
+            {
+                txt = string.Format("Tag: {0} .{1}", composite.Name, AddReference(composite.Focus, composite.Name));
+            }
+            else
+            {
+                throw new InvalidOperationException("Unexpected thing to focus on");
+            }
+
+
+            
             using (_rich.Styled(Solarized.Yellow))
             {
                 _rich.AppendLine(txt);
             }
             _rich.AppendLine(new string('=', txt.Length));
 
-            var tasks = composite.Tasks.List.Where(c => !c.Completed).ToList();
+            var tasks = composite.Tasks.Where(c => !c.Completed).ToList();
             if (tasks.Count > 0)
             {
                 using (_rich.Styled(Solarized.Green))
@@ -161,7 +200,7 @@ namespace FarleyFile
                 _rich.AppendLine();
             }
 
-            var activities = composite.Activities.List;
+            var activities = composite.Activities;
 
             if (activities.Count > 0)
             {
@@ -195,7 +234,7 @@ namespace FarleyFile
                 _rich.AppendLine();
             }
 
-            var notes = composite.Notes.Notes;
+            var notes = composite.Notes;
 
             if (notes.Count > 0)
             {
