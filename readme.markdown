@@ -1,5 +1,9 @@
-# Farley File
+# Farley File - Obsolete
 ## This project you see not!
+
+This project is based on design principles that could be considered as counter-productive or harmful (for complex projects in the long term). It is kept as a reference only.
+
+##
 
 Farleyfile is an information management system that uses Lokad.CQRS with a dash of event sourcing, DDD and "cloud magic".
 
